@@ -57,7 +57,7 @@ export default function Header() {
               DDDesign TW
             </span>
           </Link>
-          <div className="hidden md:flex items-center space-x-8 text-sm">
+          <div className="hidden md:flex items-center space-x-8 text-base">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -92,7 +92,7 @@ export default function Header() {
                   href={link.href}
                   onClick={closeMenu}
                   className={clsx(
-                    "block py-2 text-sm hover:text-white transition-colors",
+                    "block py-2 text-base hover:text-white transition-colors",
                     pathname === link.href ? "text-white" : "text-gray-300"
                   )}
                 >
