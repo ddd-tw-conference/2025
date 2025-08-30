@@ -238,7 +238,7 @@ export default function SpeakersPage() {
                   </h3>
                   <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-6 border border-purple-200">
                     <h4 className="text-xl font-semibold text-purple-800 mb-2">{selectedSpeaker.topic}</h4>
-                    <p className="text-slate-700">深入探討該主題的核心概念與實務應用，分享豐富的實戰經驗與最佳實踐。</p>
+                    <p className="text-slate-700">{selectedSpeaker.content}</p>
                   </div>
                 </div>
 
