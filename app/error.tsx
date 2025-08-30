@@ -1,7 +1,9 @@
 'use client'
 
 import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
+import { getRoutePath } from '@/lib/paths'
 
 export default function Error({
   error,
@@ -10,6 +12,8 @@ export default function Error({
   error: Error & { digest?: string }
   reset: () => void
 }) {
+  const router = useRouter()
+
   useEffect(() => {
     // Log the error to an error reporting service
     console.error(error)
@@ -52,8 +56,8 @@ export default function Error({
               </Button>
               <Button
                 variant="outline"
-                onClick={() => window.location.href = '/'}
-                className="w-full border-white/50 text-white hover:bg-white/10"
+                onClick={() => router.push(getRoutePath('/'))}
+                className="w-full border-white/50 text-white hover:bg-white/10 hover:text-white bg-transparent"
               >
                 返回首頁
               </Button>

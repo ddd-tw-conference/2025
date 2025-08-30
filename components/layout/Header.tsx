@@ -6,11 +6,14 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
 import { Menu, X } from "lucide-react";
-import { getImagePath } from "@/lib/paths";
+import { getImagePath, getRoutePath } from "@/lib/paths";
 
 export default function Header() {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
+  // 檢查是否為首頁的邏輯，考慮 basePath
+  const isHomePage = pathname === "/" || pathname === getRoutePath("/");
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const closeMenu = () => setIsMenuOpen(false);
@@ -34,7 +37,7 @@ export default function Header() {
       </a>
       <div className="container mx-auto px-4 py-4">
         <nav className="flex items-center justify-between" role="navigation" aria-label="主要導航">
-          <Link href="/" className="flex items-center space-x-2">
+          <Link href={getRoutePath("/")} className="flex items-center space-x-2">
             <div className="w-8 h-8 rounded-lg overflow-hidden relative">
               <Image
                 src={getImagePath("/DDDTW-logo.png")}
@@ -47,7 +50,7 @@ export default function Header() {
             <span
               className={clsx(
                 "font-semibold text-lg",
-                pathname === "/" ? "text-white" : "text-gray-300"
+                isHomePage ? "text-white" : "text-gray-300"
               )}
             >
               DDDesign TW

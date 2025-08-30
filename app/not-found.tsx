@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { getRoutePath } from '@/lib/paths'
 
 export default function NotFound() {
   return (
@@ -20,7 +21,7 @@ export default function NotFound() {
                 asChild
                 className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
               >
-                <Link href="/">返回首頁</Link>
+                <Link href={getRoutePath("/")}>返回首頁</Link>
               </Button>
               
               <div className="grid grid-cols-2 gap-2">
