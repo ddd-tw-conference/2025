@@ -207,7 +207,6 @@ export default function TicketsPage() {
                     <ul className="space-y-2 text-sm">
                       <li>• 購票問題請洽客服</li>
                       <li>• Email: dddtw2018@gmail.com</li>
-                      <li>• 發票將以電子發票寄送</li>
                     </ul>
                   </div>
                 </div>
