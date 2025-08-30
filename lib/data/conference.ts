@@ -166,7 +166,7 @@ export const SPEAKERS_DATA: SpeakerTopic[] = [
   {
     topic: "文件即程式碼",
     shortTitle: "文件即程式碼，串接版本控制與自動化",
-    description: "不只寫文件，也會針對題目做簡單的功能開發，體驗真實專案中從「規格 → 文件 → 實作」的完整流程",
+    description: "不只寫文件，也會進行功能開發，體驗真實專案中從「規格 → 文件 → 實作」的完整流程",
     color: "indigo",
     speakers: [
       {

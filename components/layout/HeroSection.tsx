@@ -60,7 +60,7 @@ export default function HeroSection() {
 
       {/* Content overlay */}
       <div className="container mx-auto px-4 py-20 relative z-20 min-h-screen flex items-center">
-        <div className="max-w-4xl">
+        <div className="max-w-4xl mx-auto sm:mx-0">
           <div className="space-y-8">
             <div className="space-y-4">
               <div className="flex items-center space-x-2 text-blue-300">
