@@ -11,7 +11,7 @@ export default function HeroSection() {
       <div className="absolute inset-0 w-full h-full">
         <Image
           src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/banner-xn9bBuzd5R8KxIhvKIsqdiHn8uNEE6.png"
-          alt="DDDTW 2025 大會主視覺 - AI時代軟體開發方法成果發表會"
+          alt="DDDTW 2025 - AI時代軟體開發方法成果發表會"
           className="w-full h-full object-cover"
           priority
           fill

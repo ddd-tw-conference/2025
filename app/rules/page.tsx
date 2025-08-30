@@ -92,8 +92,8 @@ export default function RulesPage() {
               <p className="text-gray-300 mb-4">如果您在大會期間遇到任何問題或需要協助，請立即聯繫我們的工作人員。</p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <span className="text-gray-300">緊急聯絡：</span>
-                <a href="mailto:help@dddesign.tw" className="text-blue-400 hover:text-blue-300 transition-colors">
-                  help@dddesign.tw
+                <a href="mailto:dddtw2018@gmail.com" className="text-blue-400 hover:text-blue-300 transition-colors">
+                  dddtw2018@gmail.com
                 </a>
                 <span className="text-gray-300">|</span>
                 <span className="text-blue-400">現場工作人員</span>

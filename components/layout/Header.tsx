@@ -22,13 +22,13 @@ export default function Header() {
     { href: "/transportation", label: "交通資訊" },
     { href: "/speakers", label: "講者資訊" },
   ];
-  
+
   return (
-    <header className="bg-blue-900/80 backdrop-blur-sm border-blue-700/50 relative z-20" role="banner">
+    <header className="bg-blue-900/80 backdrop-blur-sm border-blue-700/50 relative z-50" role="banner">
       {/* Skip to main content link */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-white text-blue-900 px-4 py-2 rounded-md z-50"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-white text-blue-900 px-4 py-2 rounded-md z-[60]"
       >
         跳至主要內容
       </a>
@@ -83,7 +83,7 @@ export default function Header() {
 
         {/* Mobile menu */}
         {isMenuOpen && (
-          <div className="md:hidden absolute top-full left-0 right-0 bg-blue-900/95 backdrop-blur-sm border-t border-blue-700/50 z-30">
+          <div className="md:hidden absolute top-full left-0 right-0 bg-blue-900/95 backdrop-blur-sm border-t border-blue-700/50 z-50">
             <nav className="px-4 py-4 space-y-3">
               {navLinks.map((link) => (
                 <Link
@@ -98,8 +98,8 @@ export default function Header() {
                   {link.label}
                 </Link>
               ))}
-              <Link 
-                href="/tickets" 
+              <Link
+                href="/tickets"
                 onClick={closeMenu}
                 className="block py-2 text-sm text-gray-300 hover:text-white transition-colors"
               >
