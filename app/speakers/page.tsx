@@ -260,7 +260,7 @@ export default function SpeakersPage() {
                       專業領域
                     </h3>
                     <div className="flex flex-wrap gap-2">
-                      {["領域驅動設計", "系統架構", "微服務", "團隊管理"].map((skill, index) => (
+                      {selectedSpeaker.expertise.map((skill, index) => (
                         <span
                           key={index}
                           className="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-sm font-medium border border-orange-200"
