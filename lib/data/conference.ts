@@ -10,6 +10,7 @@ export interface Speaker {
   title: string
   company: string
   topic: string
+  content: string
   bio: string
   image: string
   linkedin?: string
@@ -65,6 +66,7 @@ export const SPEAKERS_DATA: SpeakerTopic[] = [
         title: "產品處副總經理",
         company: "樂屋國際資訊股份有限公司",
         topic: "從敘事到塑模",
+        content: "用Domain Storytelling建立跨職能對齊的語意基礎",
         bio: "專注於領域驅動設計與Domain Storytelling應用於軟體工程流程中，促進人跡協作與語意對齊，讓AI工具能真正參與需求建模與架構設計，實現貼近業務語境且可持續演進的軟體工程實踐。",
         image: getImagePath("/placeholder-user.jpg"),
         linkedin: "#",
@@ -93,6 +95,7 @@ export const SPEAKERS_DATA: SpeakerTopic[] = [
         title: "資深後端工程師",
         company: "Appier",
         topic: "從警示到行動：打造AI驅動的自動化Incident Response工具",
+        content: "整合Logs、Code、Docs與Insights，重塑On-Call流程與團隊知識管理",
         bio: "喜歡團隊一同開發勝過一人默默獨自寫程式。",
         image: getImagePath("/placeholder-user.jpg"),
         linkedin: "#",
@@ -122,6 +125,7 @@ export const SPEAKERS_DATA: SpeakerTopic[] = [
         company: "金融公司",
         topic: "AI輔助軟體開發",
         bio: "致力於軟體開發實務，並推廣領域驅動開發方法。",
+        content: "軟體3.0, AI時代下的開發方法",
         image: getImagePath("/placeholder-user.jpg"),
         linkedin: "#",
         twitter: "#",
@@ -141,6 +145,7 @@ export const SPEAKERS_DATA: SpeakerTopic[] = [
         title: "開發團隊領導",
         company: "長照公司",
         topic: "AI輔助軟體開發",
+        content: "AI開發工作坊",
         bio: "目前專注於探討雲端資源、容器化與監控的統整，在支撐業務價值的同時，有效降低建置/營運成本、並系統的可靠性。。",
         image: getImagePath("/placeholder-user.jpg"),
         linkedin: "#",
@@ -169,6 +174,7 @@ export const SPEAKERS_DATA: SpeakerTopic[] = [
         title: "技術領導",
         company: "新創科技",
         topic: "文件即程式碼",
+        content: "文件即程式碼，串接版本控制與自動化",
         bio: "參與多個電子商務平台開發，並且在團隊領導與規劃軟體架構方面具有豐富經驗。",
         image: getImagePath("/placeholder-user.jpg"),
         linkedin: "#",
@@ -189,6 +195,7 @@ export const SPEAKERS_DATA: SpeakerTopic[] = [
         title: "後端工程師",
         company: "文創公司",
         topic: "文件即程式碼",
+        content: "DaC自動化工作坊",
         bio: "將DDD視為人生哲學，並將其應用於生活各個面向。",
         image: getImagePath("/placeholder-user.jpg"),
         linkedin: "#",
@@ -209,6 +216,7 @@ export const SPEAKERS_DATA: SpeakerTopic[] = [
         title: "軟工革命軍團長",
         company: "軟體設計模式精通之旅創辦人",
         topic: "文件即程式碼",
+        content: "靠 BDD + DDD 做到 AI 100% 全自動化後端開發",
         bio: "把架構設計變成可以自動化的 SOP，每天都全職把自己取代的軟工熱血老師。",
         image: getImagePath("/placeholder-user.jpg"),
         linkedin: "#",
