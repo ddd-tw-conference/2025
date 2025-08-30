@@ -242,33 +242,53 @@ export default function SpeakersPage() {
                   </div>
                 </div>
 
-                {/* Experience & Expertise */}
-                <div className="grid md:grid-cols-2 gap-8">
+                {/* Experience Section */}
+                <div>
+                  <h3 className="text-2xl font-bold text-slate-800 mb-4 flex items-center">
+                    <Briefcase className="w-6 h-6 mr-2 text-green-600" />
+                    專業經驗
+                  </h3>
+                  <p className="text-slate-700 leading-relaxed text-lg">
+                    {selectedSpeaker.experience || "擁有豐富的軟體開發與系統架構經驗，專精於領域驅動設計的理論與實踐，曾參與多個大型專案的架構設計與技術決策。"}
+                  </p>
+                </div>
+
+                {/* Achievements Section */}
+                {selectedSpeaker.achievements && selectedSpeaker.achievements.length > 0 && (
                   <div>
-                    <h3 className="text-xl font-bold text-slate-800 mb-4 flex items-center">
-                      <Briefcase className="w-5 h-5 mr-2 text-green-600" />
-                      專業經驗
+                    <h3 className="text-2xl font-bold text-slate-800 mb-4 flex items-center">
+                      <Award className="w-6 h-6 mr-2 text-yellow-600" />
+                      重要成就
                     </h3>
-                    <p className="text-slate-700 leading-relaxed">
-                      擁有豐富的軟體開發與系統架構經驗，專精於領域驅動設計的理論與實踐，
-                      曾參與多個大型專案的架構設計與技術決策。
-                    </p>
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-slate-800 mb-4 flex items-center">
-                      <Award className="w-5 h-5 mr-2 text-orange-600" />
-                      專業領域
-                    </h3>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedSpeaker.expertise.map((skill, index) => (
-                        <span
+                    <div className="grid gap-3">
+                      {selectedSpeaker.achievements.map((achievement, index) => (
+                        <div
                           key={index}
-                          className="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-sm font-medium border border-orange-200"
+                          className="flex items-start space-x-3 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg border border-yellow-200"
                         >
-                          {skill}
-                        </span>
+                          <div className="w-2 h-2 bg-yellow-500 rounded-full mt-2 flex-shrink-0"></div>
+                          <span className="text-slate-700 leading-relaxed">{achievement}</span>
+                        </div>
                       ))}
                     </div>
+                  </div>
+                )}
+
+                {/* Expertise Section */}
+                <div>
+                  <h3 className="text-2xl font-bold text-slate-800 mb-4 flex items-center">
+                    <Award className="w-6 h-6 mr-2 text-orange-600" />
+                    專業領域
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedSpeaker.expertise.map((skill, index) => (
+                      <span
+                        key={index}
+                        className="px-4 py-2 bg-orange-100 text-orange-700 rounded-full text-sm font-medium border border-orange-200 hover:bg-orange-200 transition-colors"
+                      >
+                        {skill}
+                      </span>
+                    ))}
                   </div>
                 </div>
 
