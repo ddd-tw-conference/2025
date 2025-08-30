@@ -3,7 +3,6 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-import { getRoutePath } from '@/lib/paths'
 
 export default function Error({
   error,
@@ -56,7 +55,7 @@ export default function Error({
               </Button>
               <Button
                 variant="outline"
-                onClick={() => router.push(getRoutePath('/'))}
+                onClick={() => router.push('/')}
                 className="w-full border-white/50 text-white hover:bg-white/10 hover:text-white bg-transparent"
               >
                 返回首頁
