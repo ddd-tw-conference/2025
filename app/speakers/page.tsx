@@ -17,6 +17,7 @@ import {
 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useState, useRef, useEffect } from "react"
+import Image from "next/image"
 import Header from "@/components/layout/Header"
 import Footer from "@/components/layout/Footer"
 import { SPEAKERS_DATA, type Speaker } from "@/lib/data/conference"
@@ -259,8 +260,25 @@ export default function SpeakersPage() {
                   >
                     <CardHeader className="text-center pb-4">
                       <div className="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden bg-gradient-to-br from-blue-400 to-purple-600 p-1">
-                        <div className="w-full h-full rounded-full bg-slate-200 flex items-center justify-center">
-                          <Users className="w-8 h-8 text-slate-600" />
+                        <div className="w-full h-full rounded-full bg-slate-200 flex items-center justify-center overflow-hidden">
+                          <Image
+                            src={speaker.image}
+                            alt={speaker.name}
+                            width={96}
+                            height={96}
+                            className="w-full h-full object-cover rounded-full"
+                            onError={(e) => {
+                              // 如果圖片載入失敗，顯示預設圖標
+                              e.currentTarget.style.display = 'none'
+                              const fallback = e.currentTarget.nextElementSibling as HTMLElement
+                              if (fallback) {
+                                fallback.style.display = 'flex'
+                              }
+                            }}
+                          />
+                          <div className="w-full h-full hidden items-center justify-center">
+                            <Users className="w-8 h-8 text-slate-600" />
+                          </div>
                         </div>
                       </div>
                       <CardTitle className="text-slate-800 text-lg">{speaker.name}</CardTitle>
@@ -327,8 +345,25 @@ export default function SpeakersPage() {
               <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 md:p-8">
                 <div className="flex flex-col md:flex-row items-center gap-6">
                   <div className="w-32 h-32 rounded-full overflow-hidden bg-white/20 p-1 flex-shrink-0">
-                    <div className="w-full h-full rounded-full bg-white/90 flex items-center justify-center">
-                      <Users className="w-16 h-16 text-slate-600" />
+                    <div className="w-full h-full rounded-full bg-white/90 flex items-center justify-center overflow-hidden">
+                      <Image
+                        src={selectedSpeaker.image}
+                        alt={selectedSpeaker.name}
+                        width={128}
+                        height={128}
+                        className="w-full h-full object-cover rounded-full"
+                        onError={(e) => {
+                          // 如果圖片載入失敗，顯示預設圖標
+                          e.currentTarget.style.display = 'none'
+                          const fallback = e.currentTarget.nextElementSibling as HTMLElement
+                          if (fallback) {
+                            fallback.style.display = 'flex'
+                          }
+                        }}
+                      />
+                      <div className="w-full h-full hidden items-center justify-center">
+                        <Users className="w-16 h-16 text-slate-600" />
+                      </div>
                     </div>
                   </div>
                   <div className="text-center md:text-left">
