@@ -19,11 +19,12 @@ export default function Header() {
   const closeMenu = () => setIsMenuOpen(false);
 
   const navLinks = [
-    { href: "/about", label: "關於我們" },
-    { href: "/rules", label: "大會守則" },
     { href: "/agenda", label: "議程資訊" },
-    { href: "/transportation", label: "交通資訊" },
     { href: "/speakers", label: "講者資訊" },
+    { href: "/tickets", label: "購票" },
+    { href: "/transportation", label: "交通資訊" },
+    { href: "/rules", label: "大會守則" },
+    { href: "/about", label: "關於我們" },
   ];
 
   return (
@@ -69,9 +70,6 @@ export default function Header() {
                 {link.label}
               </Link>
             ))}
-            <Link href="/tickets" className="text-gray-300 hover:text-white transition-colors">
-              購票
-            </Link>
           </div>
 
           {/* Mobile menu button */}
@@ -101,13 +99,6 @@ export default function Header() {
                   {link.label}
                 </Link>
               ))}
-              <Link
-                href="/tickets"
-                onClick={closeMenu}
-                className="block py-2 text-sm text-gray-300 hover:text-white transition-colors"
-              >
-                購票
-              </Link>
             </nav>
           </div>
         )}
