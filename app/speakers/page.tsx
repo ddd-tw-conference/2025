@@ -12,9 +12,11 @@ import {
   Award,
   Globe,
   Github,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import Header from "@/components/layout/Header"
 import Footer from "@/components/layout/Footer"
 import { SPEAKERS_DATA, type Speaker } from "@/lib/data/conference"
@@ -23,9 +25,78 @@ export default function SpeakersPage() {
   const [activeTab, setActiveTab] = useState(0)
   const [selectedSpeaker, setSelectedSpeaker] = useState<Speaker | null>(null)
   const [isLightboxOpen, setIsLightboxOpen] = useState(false)
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
 
   // 使用統一的數據層，避免重複程式碼
   const speakersByTopic = SPEAKERS_DATA
+
+  // 主題導航函數
+  const navigateToTopic = (direction: 'prev' | 'next') => {
+    const newIndex = direction === 'prev'
+      ? (activeTab - 1 + speakersByTopic.length) % speakersByTopic.length
+      : (activeTab + 1) % speakersByTopic.length
+
+    setActiveTab(newIndex)
+
+    // 滾動到對應的主題標籤居中位置 (考慮循環結構)
+    if (scrollContainerRef.current) {
+      const container = scrollContainerRef.current
+      // 真實的目標索引 = 原始索引 + 1 (因為前面有一個重複項)
+      const realTargetIndex = newIndex + 1
+      const targetButton = container.children[realTargetIndex] as HTMLElement
+      if (targetButton) {
+        const containerWidth = container.clientWidth
+        const buttonWidth = targetButton.clientWidth
+        const buttonLeft = targetButton.offsetLeft
+        const scrollLeft = buttonLeft - (containerWidth - buttonWidth) / 2
+
+        container.scrollTo({
+          left: scrollLeft,
+          behavior: 'smooth'
+        })
+      }
+    }
+  }
+
+  // 創建循環數組：[最後一個] + [所有主題] + [第一個]
+  const createCircularTopics = () => {
+    if (speakersByTopic.length === 0) return []
+
+    const lastTopic = speakersByTopic[speakersByTopic.length - 1]
+    const firstTopic = speakersByTopic[0]
+
+    return [
+      { ...lastTopic, isClone: true, originalIndex: speakersByTopic.length - 1 },
+      ...speakersByTopic.map((topic, index) => ({ ...topic, isClone: false, originalIndex: index })),
+      { ...firstTopic, isClone: true, originalIndex: 0 }
+    ]
+  }
+
+  const circularTopics = createCircularTopics()
+
+  // 初始化時將滾動位置設置到正確位置
+  useEffect(() => {
+    if (scrollContainerRef.current && circularTopics.length > 0) {
+      const container = scrollContainerRef.current
+      // 初始時滾動到真實的第一個主題位置 (索引1，因為索引0是克隆的最後一個)
+      const initialTargetIndex = activeTab + 1
+      const targetButton = container.children[initialTargetIndex] as HTMLElement
+      if (targetButton) {
+        const containerWidth = container.clientWidth
+        const buttonWidth = targetButton.clientWidth
+        const buttonLeft = targetButton.offsetLeft
+        const scrollLeft = buttonLeft - (containerWidth - buttonWidth) / 2
+
+        // 使用 setTimeout 確保在 DOM 渲染完成後執行
+        setTimeout(() => {
+          container.scrollTo({
+            left: scrollLeft,
+            behavior: 'auto' // 初始化時不需要動畫
+          })
+        }, 100)
+      }
+    }
+  }, [activeTab, circularTopics.length])
 
   const getColorClasses = (color: string, isActive: boolean) => {
     const colors = {
@@ -91,7 +162,8 @@ export default function SpeakersPage() {
 
           {/* Topic Tabs */}
           <div className="mb-8">
-            <div className="flex flex-wrap justify-center gap-2 mb-8">
+            {/* Desktop & Tablet Layout */}
+            <div className="hidden md:flex flex-wrap justify-center gap-2 mb-8">
               {speakersByTopic.map((topic, index) => {
                 const colorClasses = getColorClasses(topic.color, activeTab === index)
                 return (
@@ -109,15 +181,66 @@ export default function SpeakersPage() {
               })}
             </div>
 
+            {/* Mobile Layout - Horizontal Scroll with Navigation */}
+            <div className="md:hidden mb-6">
+              <div className="relative">
+                {/* Left Arrow */}
+                <button
+                  onClick={() => navigateToTopic('prev')}
+                  className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-all duration-300 shadow-lg"
+                  aria-label="上一個主題"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+
+                {/* Right Arrow */}
+                <button
+                  onClick={() => navigateToTopic('next')}
+                  className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-all duration-300 shadow-lg"
+                  aria-label="下一個主題"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+
+                {/* Scrollable Topics */}
+                <div
+                  ref={scrollContainerRef}
+                  className="flex gap-3 overflow-x-auto pb-2 px-12 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+                >
+                  {circularTopics.map((topic, index) => {
+                    const isActive = topic.originalIndex === activeTab
+                    const colorClasses = getColorClasses(topic.color, isActive)
+                    return (
+                      <button
+                        key={`${topic.originalIndex}-${topic.isClone ? 'clone' : 'original'}-${index}`}
+                        onClick={() => setActiveTab(topic.originalIndex)}
+                        className={`flex-shrink-0 px-4 py-3 rounded-lg border backdrop-blur-sm transition-all duration-300 font-medium shadow-lg min-w-[200px] ${colorClasses.tab} ${topic.isClone ? 'opacity-80' : ''}`}
+                      >
+                        <div className="text-center">
+                          <div className="text-sm font-semibold">主題 {topic.originalIndex + 1}</div>
+                          <div className="text-xs mt-1 leading-tight">{topic.shortTitle}</div>
+                        </div>
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+
+              {/* Mobile navigation hint */}
+              <div className="text-center text-white/60 text-xs mt-2">
+                點擊箭頭或滑動切換主題
+              </div>
+            </div>
+
             {/* Topic Overview */}
-            <div className="text-center mb-8">
+            <div className="text-center mb-6">
               <div
                 className={`inline-flex items-center justify-center px-6 py-3 rounded-full border backdrop-blur-sm mb-4 shadow-lg ${getColorClasses(currentTopic.color, true).badge}`}
               >
                 <span className="font-semibold text-lg">主題 {activeTab + 1}</span>
               </div>
-              <h2 className="text-3xl font-bold text-white mb-4">{currentTopic.topic}</h2>
-              <p className="text-gray-200 max-w-2xl mx-auto">{currentTopic.description}</p>
+              <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">{currentTopic.topic}</h2>
+              <p className="text-gray-200 max-w-2xl mx-auto text-sm md:text-base">{currentTopic.description}</p>
             </div>
           </div>
 
