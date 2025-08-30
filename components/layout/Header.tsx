@@ -19,9 +19,9 @@ export default function Header() {
   const closeMenu = () => setIsMenuOpen(false);
 
   const navLinks = [
+    { href: "/tickets", label: "購票" },
     { href: "/agenda", label: "議程資訊" },
     { href: "/speakers", label: "講者資訊" },
-    { href: "/tickets", label: "購票" },
     { href: "/transportation", label: "交通資訊" },
     { href: "/rules", label: "大會守則" },
     { href: "/about", label: "關於我們" },
