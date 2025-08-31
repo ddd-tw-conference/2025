@@ -59,7 +59,7 @@ export default function TicketsPage() {
                   <rect width="18" height="18" x="3" y="4" rx="2"></rect>
                   <path d="M3 10h18"></path>
                 </svg>
-                <span className="text-slate-700 font-medium">2025 / 11 / 08</span>
+                <span className="text-slate-700 font-medium">{t("hero.date")}</span>
               </div>
               <div className="flex items-center justify-center space-x-2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-purple-600">
@@ -291,30 +291,30 @@ export default function TicketsPage() {
                       <svg className="w-5 h-5 text-blue-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd"/>
                       </svg>
-                      <span className="font-semibold text-white">日期時間</span>
+                      <span className="font-semibold text-white">{t("tickets.eventDetails.date")}</span>
                     </div>
-                    <p className="text-sm">2025年11月8日</p>
-                    <p className="text-sm">09:00 - 17:00</p>
+                    <p className="text-sm">{t("tickets.eventDetails.dateValue")}</p>
+                    <p className="text-sm">{t("tickets.eventDetails.time")}</p>
                   </div>
                   <div className="text-center">
                     <div className="flex items-center justify-center mb-2">
                       <svg className="w-5 h-5 text-green-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd"/>
                       </svg>
-                      <span className="font-semibold text-white">地點</span>
+                      <span className="font-semibold text-white">{t("tickets.eventDetails.location")}</span>
                     </div>
-                    <p className="text-sm">台北市商業會</p>
-                    <p className="text-xs text-gray-400">南京東路二段72號6樓</p>
+                    <p className="text-sm">{t("tickets.eventDetails.locationValue")}</p>
+                    <p className="text-xs text-gray-400">{t("tickets.eventDetails.address")}</p>
                   </div>
                   <div className="text-center">
                     <div className="flex items-center justify-center mb-2">
                       <svg className="w-5 h-5 text-purple-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"/>
                       </svg>
-                      <span className="font-semibold text-white">活動名稱</span>
+                      <span className="font-semibold text-white">{t("tickets.eventDetails.eventName")}</span>
                     </div>
-                    <p className="text-sm">DDDTW 2025</p>
-                    <p className="text-xs text-gray-400">成果發表會</p>
+                    <p className="text-sm">{t("tickets.eventDetails.eventValue")}</p>
+                    <p className="text-xs text-gray-400">{t("tickets.eventDetails.eventSubtitle")}</p>
                   </div>
                 </div>
               </div>
@@ -334,7 +334,7 @@ export default function TicketsPage() {
               
               <div className="text-center mt-4">
                 <p className="text-xs text-gray-400">
-                  💡 加入行事曆後，您將在活動開始前收到提醒通知
+                  {t("tickets.calendarReminder")}
                 </p>
               </div>
             </div>

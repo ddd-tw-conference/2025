@@ -16,7 +16,7 @@ export default function HeroSection() {
       <div className="absolute inset-0 w-full h-full">
         <Image
           src={getImagePath("/images/banners/banner-main.png")}
-          alt="DDDTW 2025 - AI時代軟體開發方法成果發表會"
+          alt={t("hero.bannerAlt")}
           className="w-full h-full object-cover"
           priority
           fill
@@ -70,20 +70,20 @@ export default function HeroSection() {
             <div className="space-y-4">
               <div className="flex items-center space-x-2 text-blue-300">
                 <Calendar className="w-5 h-5" />
-                <span className="text-lg font-medium">2025 / 11 / 08</span>
+                <span className="text-lg font-medium">{t("hero.date")}</span>
               </div>
-              <p className="text-gray-200 text-lg">臺灣領域驅動設計成果發表會</p>
+              <p className="text-gray-200 text-lg">{t("hero.subtitle")}</p>
             </div>
 
             <div className="space-y-6">
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold text-white leading-tight drop-shadow-lg">
-                AI時代
+                {t("hero.title.line1")}
                 <br />
                 <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
-                  軟體開發方法
+                  {t("hero.title.line2")}
                 </span>
               </h1>
-              <p className="text-lg sm:text-xl text-gray-200 font-light drop-shadow-md">AI‑Era Software Development Practices</p>
+              <p className="text-lg sm:text-xl text-gray-200 font-light drop-shadow-md">{t("hero.englishSubtitle")}</p>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
@@ -91,7 +91,7 @@ export default function HeroSection() {
                 size="lg"
                 className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 shadow-lg"
               >
-                立即報名
+                {t("hero.registerNow")}
               </Button>
               <Button
                 size="lg"
@@ -99,7 +99,7 @@ export default function HeroSection() {
                 className="border-white/50 text-white hover:bg-white/10 px-8 py-3 bg-white/5 backdrop-blur-sm"
                 asChild
               >
-                <Link href="/agenda">查看議程</Link>
+                <Link href="/agenda">{t("hero.viewAgenda")}</Link>
               </Button>
             </div>
 

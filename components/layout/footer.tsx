@@ -106,7 +106,7 @@ export default function Footer() {
                       </a>
                     </TooltipTrigger>
                     <TooltipContent side="top" className="bg-blue-800 text-white border-blue-700">
-                      <p>追蹤我們的 Facebook</p>
+                      <p>{t("footer.followFacebook")}</p>
                     </TooltipContent>
                   </Tooltip>
                   
@@ -126,7 +126,7 @@ export default function Footer() {
                       </a>
                     </TooltipTrigger>
                     <TooltipContent side="top" className="bg-blue-800 text-white border-blue-700">
-                      <p>加入我們的 Line 社群</p>
+                      <p>{t("footer.joinLine")}</p>
                     </TooltipContent>
                   </Tooltip>
                   
@@ -146,7 +146,7 @@ export default function Footer() {
                       </a>
                     </TooltipTrigger>
                     <TooltipContent side="top" className="bg-blue-800 text-white border-blue-700">
-                      <p>觀看我們的 YouTube 頻道</p>
+                      <p>{t("footer.watchYoutube")}</p>
                     </TooltipContent>
                   </Tooltip>
                 </div>
@@ -154,7 +154,7 @@ export default function Footer() {
             </div>
           </div>
           <div className="border-t border-slate-700 mt-8 pt-8 text-center text-sm text-gray-400">
-            <p>© 2025 DDDesign TW. All rights reserved.</p>
+            <p>{t("footer.copyright")}</p>
           </div>
         </div>
       </footer>
