@@ -7,6 +7,7 @@ import Header from "@/components/layout/header"
 import Footer from "@/components/layout/footer"
 import { Metadata } from 'next'
 import { useI18n } from "@/contexts/i18n-context"
+import { getImagePath } from "@/lib/paths"
 
 // export const metadata: Metadata = {
 //   title: '關於我們',
@@ -26,7 +27,7 @@ export default function AboutPage() {
         <div className="mb-12">
           <div className="relative w-full h-96 lg:h-[500px] rounded-lg overflow-hidden">
             <Image
-              src="https://conference.ddd-tw.com/2024/assets/images/banner-about.png"
+              src={getImagePath("/images/banners/banner-about.png")}
               alt="DDD Taiwan Community"
               className="object-cover"
               fill

@@ -293,5 +293,130 @@ public/images/speakers/         # 本地化講者圖片資源
 
 ---
 
-*報告生成時間: 2024年12月*
+*報告生成時間: 2025年08月*
 *專案狀態: ✅ 已完成並部署就緒*
+
+# DDDTW 2025 專案編碼慣例
+
+## 🎯 核心原則
+
+統一使用 **kebab-case** 命名，無例外。所有檔案與目錄遵循一致的命名標準，避免跨平台大小寫問題。
+
+---
+
+## 📁 檔案命名規範
+
+### ✅ 正確示例
+```
+components/structured-data.tsx
+components/layout/hero-section.tsx
+hooks/use-conference-data.ts
+contexts/i18n-context.tsx
+lib/web-vitals-reporter.ts
+```
+
+### ❌ 錯誤示例
+```
+components/StructuredData.tsx
+components/layout/HeroSection.tsx
+hooks/useConferenceData.ts
+contexts/I18nContext.tsx
+```
+
+---
+
+## ⚛️ React 元件慣例
+
+### Import 語法
+```typescript
+// ✅ 統一使用 namespace import
+import * as React from "react"
+
+// 元件內使用
+const [state, setState] = React.useState(false)
+React.useEffect(() => {}, [])
+```
+
+### 元件結構
+```typescript
+// ✅ 基礎元件 - default export
+export default function ComponentName() {
+  return <div>...</div>
+}
+
+// ✅ UI 元件 - forwardRef + named export
+const ComponentName = React.forwardRef<HTMLElement, Props>(
+  ({ className, ...props }, ref) => {
+    return <div ref={ref} {...props} />
+  }
+)
+ComponentName.displayName = "ComponentName"
+export { ComponentName }
+```
+
+### 樣式處理
+```typescript
+import { cn } from "@/lib/utils"
+
+// ✅ 複雜 className
+className={cn("base-classes", condition && "active", className)}
+
+// ✅ 簡單 className
+className="fixed inset-0 bg-black/50"
+```
+
+---
+
+## 📂 檔案結構組織
+
+```
+src/
+├── app/                    # Next.js App Router (kebab-case 目錄)
+├── components/
+│   ├── ui/                # shadcn/ui 元件 (kebab-case)
+│   ├── layout/            # 版面元件 (kebab-case)
+│   └── *.tsx              # 基礎元件 (kebab-case)
+├── hooks/                 # use-*.ts (kebab-case)
+├── lib/                   # 工具函數 (kebab-case)
+└── contexts/              # React Context (kebab-case)
+```
+
+---
+
+## 🔄 Git 版本控制
+
+### 檔案重命名
+```bash
+# ✅ 正確的重命名步驟
+git mv OldFile.tsx new-file.tsx
+git commit -m "rename: OldFile.tsx -> new-file.tsx"
+
+# ❌ 避免直接重命名 (會導致跨平台問題)
+```
+
+### 注意事項
+- Windows/macOS 檔案系統大小寫不敏感，Linux 敏感
+- 重命名檔案必須透過 `git mv` 確保版本控制正確追蹤
+- CI/CD 環境通常為 Linux，須注意大小寫一致性
+
+---
+
+## 📦 模組引入
+
+```typescript
+// ✅ 路徑別名與雙引號
+import { Component } from "@/components/component-name"
+import { utils } from "@/lib/utils"
+import * as React from "react"
+```
+
+---
+
+## 🎖️ 總結
+
+- **檔案命名**: 100% kebab-case
+- **React 慣例**: namespace import + forwardRef 模式
+- **跨平台相容**: 避免大小寫問題
+- **工具整合**: 搭配 shadcn/ui 與 Next.js 最佳實踐
+
+*更新日期: 2025年08月*
