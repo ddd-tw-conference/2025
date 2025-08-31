@@ -113,6 +113,18 @@
   "tickets.faq2Answer": "A: 目前暫無學生優惠，但早鳥票已是優惠價格，建議把握機會。",
   "tickets.faq3Question": "Q: 會議是否提供線上直播？",
   "tickets.faq3Answer": "A: 為維護現場參與者權益，本次會議不提供線上直播，敬請見諒。",
+  "tickets.addToCalendar": "加入行事曆",
+  "tickets.calendarDescription": "點擊下方按鈕將 DDDTW 2025 成果發表會加入您的行事曆，避免錯過精彩活動！",
+  "tickets.notYetAvailable": "尚未開賣",
+  "tickets.notYetAvailableMessage": "票券尚未開始販售，請關注我們的最新消息以獲得開賣通知！",
+  "tickets.comingSoon": "即將開賣",
+  "tickets.stayTuned": "敬請期待",
+
+  "calendar.addToGoogle": "加入 Google 行事曆",
+  "calendar.addToApple": "下載 Apple 行事曆",
+  "calendar.eventTitle": "DDDTW 2025 成果發表會",
+  "calendar.eventDescription": "Domain Driven Design Taiwan 2025年會 - AI時代的軟體開發方法。與頂尖專家一同探討最新技術趨勢，分享實務經驗與最佳實踐。",
+  "calendar.eventLocation": "台北市商業會 (台北市中山區南京東路二段72號6樓)",
 
   "about.pageTitle": "關於我們",
   "about.mainDescription": "Domain Driven Design Taiwan (DDD Taiwan) 致力於在台灣推廣領域驅動設計與實踐經驗。",

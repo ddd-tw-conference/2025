@@ -113,6 +113,18 @@
   "tickets.faq2Answer": "A: There are currently no student discounts, but the early bird ticket is already discounted, so we recommend taking advantage of it.",
   "tickets.faq3Question": "Q: Will there be online streaming?",
   "tickets.faq3Answer": "A: To protect the rights of on-site participants, this conference does not provide online streaming. We appreciate your understanding.",
+  "tickets.addToCalendar": "Add to Calendar",
+  "tickets.calendarDescription": "Click the buttons below to add DDDTW 2025 Conference to your calendar and don't miss this exciting event!",
+  "tickets.notYetAvailable": "Not Yet Available",
+  "tickets.notYetAvailableMessage": "Tickets are not yet available for sale. Please follow our latest news for sale notifications!",
+  "tickets.comingSoon": "Coming Soon",
+  "tickets.stayTuned": "Stay Tuned",
+
+  "calendar.addToGoogle": "Add to Google Calendar",
+  "calendar.addToApple": "Download Apple Calendar",
+  "calendar.eventTitle": "DDDTW 2025 Conference",
+  "calendar.eventDescription": "Domain Driven Design Taiwan 2025 Conference - Software Development Methods in the AI Era. Explore the latest technology trends with top experts and share practical experience and best practices.",
+  "calendar.eventLocation": "Taipei Chamber of Commerce (6F, No.72, Sec.2, Nanjing E. Rd., Zhongshan Dist., Taipei City)",
 
   "about.pageTitle": "About Us",
   "about.mainDescription": "Domain Driven Design Taiwan (DDD Taiwan) is committed to promoting Domain-Driven Design and practical experience in Taiwan.",

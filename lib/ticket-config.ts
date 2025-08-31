@@ -1,0 +1,52 @@
+/**
+ * 票券販售配置
+ * 當需要開始販售票券時，只需要將 isTicketSaleActive 設為 true
+ */
+
+export interface TicketSaleConfig {
+  isTicketSaleActive: boolean
+  earlyBirdSaleStartDate?: string // YYYY-MM-DD format
+  regularSaleStartDate?: string // YYYY-MM-DD format
+  saleEndDate?: string // YYYY-MM-DD format
+}
+
+export const TICKET_SALE_CONFIG: TicketSaleConfig = {
+  // 🎯 開賣控制開關 - 設為 true 即可開始販售
+  isTicketSaleActive: false,
+  
+  // 預計開賣日期 (可選，用於顯示)
+  earlyBirdSaleStartDate: "2025-09-03",
+  regularSaleStartDate: "2025-10-16", 
+  saleEndDate: "2025-11-07"
+}
+
+/**
+ * 檢查票券是否可以販售
+ */
+export const isTicketAvailable = (): boolean => {
+  return TICKET_SALE_CONFIG.isTicketSaleActive
+}
+
+/**
+ * 檢查早鳥票是否可以販售
+ */
+export const isEarlyBirdAvailable = (): boolean => {
+  if (!TICKET_SALE_CONFIG.isTicketSaleActive) return false
+  
+  const today = new Date()
+  const earlyBirdEnd = new Date(TICKET_SALE_CONFIG.regularSaleStartDate || "2025-10-16")
+  
+  return today < earlyBirdEnd
+}
+
+/**
+ * 檢查一般票是否可以販售
+ */
+export const isRegularTicketAvailable = (): boolean => {
+  if (!TICKET_SALE_CONFIG.isTicketSaleActive) return false
+  
+  const today = new Date()
+  const saleEnd = new Date(TICKET_SALE_CONFIG.saleEndDate || "2025-11-07")
+  
+  return today <= saleEnd
+}

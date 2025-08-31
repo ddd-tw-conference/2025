@@ -1,48 +1,93 @@
 'use client'
 
+import { useState } from "react"
 import Header from "@/components/layout/header"
 import Footer from "@/components/layout/footer"
+import CalendarEvent from "@/components/calendar-event"
 import { useI18n } from "@/contexts/i18n-context"
+import { AlertDialog, AlertDialogAction, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
+import { isTicketAvailable, isEarlyBirdAvailable, isRegularTicketAvailable } from "@/lib/ticket-config"
 
 export default function TicketsPage() {
   const { t } = useI18n()
+  const [isEarlyBirdDialogOpen, setIsEarlyBirdDialogOpen] = useState(false)
+  const [isRegularDialogOpen, setIsRegularDialogOpen] = useState(false)
+  
+  // 檢查票券販售狀態
+  const ticketSaleActive = isTicketAvailable()
+  const earlyBirdAvailable = isEarlyBirdAvailable()
+  const regularTicketAvailable = isRegularTicketAvailable()
+
+  // 處理購票按鈕點擊
+  const handleEarlyBirdClick = () => {
+    if (!ticketSaleActive || !earlyBirdAvailable) {
+      setIsEarlyBirdDialogOpen(true)
+    } else {
+      // TODO: 導向到實際的購票頁面
+      window.open('https://your-ticket-sales-url.com/early-bird', '_blank')
+    }
+  }
+
+  const handleRegularTicketClick = () => {
+    if (!ticketSaleActive || !regularTicketAvailable) {
+      setIsRegularDialogOpen(true)
+    } else {
+      // TODO: 導向到實際的購票頁面
+      window.open('https://your-ticket-sales-url.com/regular', '_blank')
+    }
+  }
   
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-700 to-blue-500">
       <Header />
 
-      {/* Hero Section */}
-      <main>
-      <section className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-900/70 via-blue-800/50 to-transparent"></div>
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-4xl mx-auto text-center space-y-8">
-            <div className="space-y-4">
-              <div className="flex items-center justify-center space-x-2 text-blue-300">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+      {/* Main Content */}
+      <main className="container mx-auto px-4 py-12">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">{t("tickets.title")}</h1>
+            <p className="text-lg sm:text-xl text-gray-200">{t("tickets.subtitle")}</p>
+          </div>
+
+          {/* Conference Date and Info */}
+          <div className="bg-slate-100/95 rounded-lg p-6 backdrop-blur-sm mb-8 shadow-lg border border-slate-200">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-center">
+              <div className="flex items-center justify-center space-x-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-blue-600">
                   <path d="M8 2v4"></path>
                   <path d="M16 2v4"></path>
                   <rect width="18" height="18" x="3" y="4" rx="2"></rect>
                   <path d="M3 10h18"></path>
                 </svg>
-                <span className="text-lg font-medium">2025 / 11 / 08</span>
+                <span className="text-slate-700 font-medium">2025 / 11 / 08</span>
               </div>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
-                {t("tickets.title")}
-              </h1>
-              <p className="text-xl text-gray-300 leading-relaxed">
-                {t("tickets.subtitle")}
-              </p>
+              <div className="flex items-center justify-center space-x-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-purple-600">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                <a
+                  href="https://maps.app.goo.gl/JeeWMfDoyFPPmxPi9"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-slate-700 font-medium hover:text-blue-500 transition-colors"
+                >
+                  {t("agenda.venue")}
+                </a>
+              </div>
+              <div className="flex items-center justify-center space-x-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-indigo-600">
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="m22 21-3-3m0 0a4 4 0 0 0 0-5.656 4 4 0 0 0-5.656 0L16 16l3 3Z"></path>
+                </svg>
+                <span className="text-slate-700 font-medium">{t("agenda.participants")}</span>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* Tickets Section */}
-      <section className="py-20 bg-blue-900/60">
-        <div className="container mx-auto px-4">
-          <div className="max-w-5xl mx-auto space-y-12">
-            
+          {/* Tickets Section */}
+          <div className="space-y-12">
             {/* Ticket Options */}
             <div className="grid md:grid-cols-2 gap-8">
               {/* Early Bird Ticket */}
@@ -84,15 +129,54 @@ export default function TicketsPage() {
                       {t("tickets.speakerInteraction")}
                     </li>
                   </ul>
-                  <button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-4 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg">
-                    {t("tickets.buyEarlyBird")}
-                  </button>
+                  {/* 早鳥票購買按鈕 - 根據配置決定是否顯示彈跳視窗 */}
+                  {!ticketSaleActive || !earlyBirdAvailable ? (
+                    <AlertDialog open={isEarlyBirdDialogOpen} onOpenChange={setIsEarlyBirdDialogOpen}>
+                      <AlertDialogTrigger asChild>
+                        <button 
+                          onClick={handleEarlyBirdClick}
+                          className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-4 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg"
+                        >
+                          {t("tickets.buyEarlyBird")}
+                        </button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent className="bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-600 shadow-2xl">
+                        <AlertDialogHeader className="text-center">
+                          <div className="flex justify-center mb-4">
+                            <div className="w-16 h-16 bg-yellow-400/20 rounded-full flex items-center justify-center">
+                              <svg className="w-8 h-8 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
+                              </svg>
+                            </div>
+                          </div>
+                          <AlertDialogTitle className="text-white text-xl font-bold">
+                            🎯 {t("tickets.notYetAvailable")}
+                          </AlertDialogTitle>
+                          <AlertDialogDescription className="text-gray-300 text-base mt-2 leading-relaxed">
+                            {t("tickets.notYetAvailableMessage")}
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter className="flex justify-center pt-6">
+                          <AlertDialogAction className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-2 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg">
+                            {t("common.confirm")}
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  ) : (
+                    <button 
+                      onClick={handleEarlyBirdClick}
+                      className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-4 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg"
+                    >
+                      {t("tickets.buyEarlyBird")}
+                    </button>
+                  )}
                   <div className="text-center">
                     <p className="text-sm text-yellow-400 font-medium">
-                      {t("tickets.earlyBirdDeadline")}
+                      {ticketSaleActive && earlyBirdAvailable ? t("tickets.earlyBirdDeadline") : t("tickets.comingSoon")}
                     </p>
                     <p className="text-xs text-gray-400 mt-1">
-                      {t("tickets.limitedQuantity")}
+                      {ticketSaleActive && earlyBirdAvailable ? t("tickets.limitedQuantity") : t("tickets.stayTuned")}
                     </p>
                   </div>
                 </div>
@@ -133,15 +217,125 @@ export default function TicketsPage() {
                       {t("tickets.speakerInteraction")}
                     </li>
                   </ul>
-                  <button className="w-full bg-slate-600 hover:bg-slate-500 text-white font-medium py-4 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg">
-                    {t("tickets.buyRegular")}
-                  </button>
+                  {/* 一般票購買按鈕 - 根據配置決定是否顯示彈跳視窗 */}
+                  {!ticketSaleActive || !regularTicketAvailable ? (
+                    <AlertDialog open={isRegularDialogOpen} onOpenChange={setIsRegularDialogOpen}>
+                      <AlertDialogTrigger asChild>
+                        <button 
+                          onClick={handleRegularTicketClick}
+                          className="w-full bg-slate-600 hover:bg-slate-500 text-white font-medium py-4 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg"
+                        >
+                          {t("tickets.buyRegular")}
+                        </button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent className="bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-600 shadow-2xl">
+                        <AlertDialogHeader className="text-center">
+                          <div className="flex justify-center mb-4">
+                            <div className="w-16 h-16 bg-yellow-400/20 rounded-full flex items-center justify-center">
+                              <svg className="w-8 h-8 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
+                              </svg>
+                            </div>
+                          </div>
+                          <AlertDialogTitle className="text-white text-xl font-bold">
+                            {t("tickets.notYetAvailable")}
+                          </AlertDialogTitle>
+                          <AlertDialogDescription className="text-gray-300 text-base mt-2 leading-relaxed">
+                            {t("tickets.notYetAvailableMessage")}
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter className="flex justify-center pt-6">
+                          <AlertDialogAction className="bg-slate-600 hover:bg-slate-500 text-white px-8 py-2 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg">
+                            {t("common.confirm")}
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  ) : (
+                    <button 
+                      onClick={handleRegularTicketClick}
+                      className="w-full bg-slate-600 hover:bg-slate-500 text-white font-medium py-4 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg"
+                    >
+                      {t("tickets.buyRegular")}
+                    </button>
+                  )}
                   <div className="text-center">
                     <p className="text-sm text-gray-300">
-                      {t("tickets.regularAvailable")}
+                      {ticketSaleActive && regularTicketAvailable ? t("tickets.regularAvailable") : t("tickets.comingSoon")}
                     </p>
                   </div>
                 </div>
+              </div>
+            </div>
+
+            {/* Calendar Event Section */}
+            <div className="bg-gradient-to-r from-blue-900/40 to-purple-900/40 rounded-xl p-8 backdrop-blur-sm border border-blue-700/30">
+              <h4 className="text-2xl font-semibold text-white mb-4 text-center flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 mr-3 text-blue-400">
+                  <path d="M8 2v4"></path>
+                  <path d="M16 2v4"></path>
+                  <rect width="18" height="18" x="3" y="4" rx="2"></rect>
+                  <path d="M3 10h18"></path>
+                </svg>
+                {t("tickets.addToCalendar")}
+              </h4>
+              <p className="text-gray-300 text-center mb-6">
+                {t("tickets.calendarDescription")}
+              </p>
+              
+              {/* Event Details */}
+              <div className="bg-slate-800/50 rounded-lg p-6 mb-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-gray-300">
+                  <div className="text-center">
+                    <div className="flex items-center justify-center mb-2">
+                      <svg className="w-5 h-5 text-blue-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd"/>
+                      </svg>
+                      <span className="font-semibold text-white">日期時間</span>
+                    </div>
+                    <p className="text-sm">2025年11月8日</p>
+                    <p className="text-sm">09:00 - 17:00</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="flex items-center justify-center mb-2">
+                      <svg className="w-5 h-5 text-green-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd"/>
+                      </svg>
+                      <span className="font-semibold text-white">地點</span>
+                    </div>
+                    <p className="text-sm">台北市商業會</p>
+                    <p className="text-xs text-gray-400">南京東路二段72號6樓</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="flex items-center justify-center mb-2">
+                      <svg className="w-5 h-5 text-purple-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"/>
+                      </svg>
+                      <span className="font-semibold text-white">活動名稱</span>
+                    </div>
+                    <p className="text-sm">DDDTW 2025</p>
+                    <p className="text-xs text-gray-400">成果發表會</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-center">
+                <CalendarEvent
+                  eventTitle={t("calendar.eventTitle")}
+                  eventDescription={t("calendar.eventDescription")}
+                  location={t("calendar.eventLocation")}
+                  startDate="2025-11-08"
+                  startTime="09:00"
+                  endTime="17:00"
+                  size="lg"
+                  className="max-w-md w-full"
+                />
+              </div>
+              
+              <div className="text-center mt-4">
+                <p className="text-xs text-gray-400">
+                  💡 加入行事曆後，您將在活動開始前收到提醒通知
+                </p>
               </div>
             </div>
 
@@ -214,7 +408,6 @@ export default function TicketsPage() {
             </div>
           </div>
         </div>
-      </section>
       </main>
 
       <Footer />
