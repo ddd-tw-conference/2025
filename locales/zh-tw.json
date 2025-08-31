@@ -237,5 +237,15 @@
   "transportation.precautions": "注意事項",
   "transportation.precaution1": "活動當天避開上下班尖峰（07:30–09:00, 17:00–19:00）",
   "transportation.precaution2": "建議提前30分鐘出發",
-  "transportation.precaution3": "如需協助請聯繫大會工作人員"
+  "transportation.precaution3": "如需協助請聯繫大會工作人員",
+  
+  "error.pageNotFound": "找不到頁面",
+  "error.pageNotFoundDescription": "抱歉，您要找的頁面不存在或已被移動。請檢查網址是否正確，或返回首頁繼續瀏覽。",
+  "error.somethingWentWrong": "發生錯誤",
+  "error.tryAgainLater": "系統發生未預期的錯誤，請稍後再試。",
+  
+  "button.backHome": "返回首頁",
+  "button.goBack": "回上一頁",
+  "button.tryAgain": "重新嘗試",
+  "button.contactUs": "聯繫我們"
 }

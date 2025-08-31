@@ -3,10 +3,10 @@
 import { Button } from "@/components/ui/button"
 import { Mail, MessageCircle, Users } from "lucide-react"
 import Image from "next/image"
-import Header from "@/components/layout/Header"
-import Footer from "@/components/layout/Footer"
+import Header from "@/components/layout/header"
+import Footer from "@/components/layout/footer"
 import { Metadata } from 'next'
-import { useI18n } from "@/contexts/I18nContext"
+import { useI18n } from "@/contexts/i18n-context"
 
 // export const metadata: Metadata = {
 //   title: '關於我們',

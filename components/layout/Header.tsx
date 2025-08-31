@@ -7,8 +7,8 @@ import { usePathname } from "next/navigation";
 import clsx from "clsx";
 import { Menu, X } from "lucide-react";
 import { getImagePath } from "@/lib/paths";
-import { useI18n } from "@/contexts/I18nContext";
-import { LanguageSelector } from "@/components/LanguageSelector";
+import { useI18n } from "@/contexts/i18n-context";
+import { LanguageSelector } from "@/components/language-selector";
 
 export default function Header() {
   const pathname = usePathname();

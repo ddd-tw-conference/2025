@@ -5,7 +5,7 @@
 
 import { useState, useMemo, useCallback } from 'react'
 import { SPEAKERS_DATA, AGENDA_DATA, type Speaker, type SpeakerTopic, getLocalizedText, getLocalizedArray } from '@/lib/data/conference'
-import { useI18n } from '@/contexts/I18nContext'
+import { useI18n } from '@/contexts/i18n-context'
 
 /**
  * 會議資料管理 Hook

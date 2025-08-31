@@ -9,9 +9,9 @@ import {
   Navigation,
 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import Header from "@/components/layout/Header"
-import Footer from "@/components/layout/Footer"
-import { useI18n } from "@/contexts/I18nContext"
+import Header from "@/components/layout/header"
+import Footer from "@/components/layout/footer"
+import { useI18n } from "@/contexts/i18n-context"
 
 export default function TransportationPage() {
   const { t } = useI18n()

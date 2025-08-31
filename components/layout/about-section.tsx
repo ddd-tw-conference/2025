@@ -1,7 +1,7 @@
 'use client'
 
 import { Users, Clock, MapPin } from "lucide-react";
-import { useI18n } from "@/contexts/I18nContext";
+import { useI18n } from "@/contexts/i18n-context";
 
 export default function AboutSection() {
   const { t } = useI18n();

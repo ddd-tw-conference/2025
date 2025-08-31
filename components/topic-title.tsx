@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import * as React from 'react';
 
 interface TopicTitleProps {
   title: string;
@@ -7,7 +7,7 @@ interface TopicTitleProps {
 }
 
 export const TopicTitle = ({ title, maxLength = 50 }: TopicTitleProps) => {
-  const [showTooltip, setShowTooltip] = useState(false);
+  const [showTooltip, setShowTooltip] = React.useState(false);
   const shouldTruncate = title.length > maxLength;
   const displayTitle = shouldTruncate ? `${title.substring(0, maxLength)}...` : title;
 

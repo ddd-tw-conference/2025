@@ -5,7 +5,7 @@ import { Calendar, MapPin, Users, Clock } from "lucide-react";
 import { UI_CONSTANTS } from "@/lib/constants";
 import Link from "next/link";
 import Image from "next/image";
-import { useI18n } from "@/contexts/I18nContext";
+import { useI18n } from "@/contexts/i18n-context";
 
 export default function HeroSection() {
   const { t } = useI18n();

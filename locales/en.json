@@ -237,5 +237,15 @@
   "transportation.precautions": "Precautions",
   "transportation.precaution1": "Avoid rush hours on event day (07:30–09:00, 17:00–19:00)",
   "transportation.precaution2": "Recommend departing 30 minutes early",
-  "transportation.precaution3": "Contact conference staff if assistance needed"
+  "transportation.precaution3": "Contact conference staff if assistance needed",
+  
+  "error.pageNotFound": "Page Not Found",
+  "error.pageNotFoundDescription": "Sorry, the page you are looking for does not exist or has been moved. Please check if the URL is correct or return to the homepage to continue browsing.",
+  "error.somethingWentWrong": "Something Went Wrong",
+  "error.tryAgainLater": "An unexpected error occurred. Please try again later.",
+  
+  "button.backHome": "Back to Home",
+  "button.goBack": "Go Back",
+  "button.tryAgain": "Try Again",
+  "button.contactUs": "Contact Us"
 }

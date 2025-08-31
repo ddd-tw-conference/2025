@@ -1,15 +1,15 @@
 'use client'
 
-import React, { useState, useEffect, useRef } from 'react'
-import { useI18n } from '@/contexts/I18nContext'
+import * as React from 'react'
+import { useI18n } from '@/contexts/i18n-context'
 
 export const LanguageSelector = () => {
   const { language, changeLanguage } = useI18n()
-  const [open, setOpen] = useState(false)
-  const dropdownRef = useRef<HTMLDivElement>(null)
+  const [open, setOpen] = React.useState(false)
+  const dropdownRef = React.useRef<HTMLDivElement>(null)
 
   // 點擊外部關閉下拉選單
-  useEffect(() => {
+  React.useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setOpen(false)

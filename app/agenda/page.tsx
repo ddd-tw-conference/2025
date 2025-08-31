@@ -1,12 +1,17 @@
 'use client'
 
 import { Users, Clock, MapPin, User } from "lucide-react"
-import Header from "@/components/layout/Header"
-import Footer from "@/components/layout/Footer"
+import Header from "@/components/layout/header"
+import Footer from "@/components/layout/footer"
+import StructuredData from "@/components/structured-data"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Metadata } from 'next'
 import { AGENDA_DATA, getLocalizedText } from '@/lib/data/conference'
-import { useI18n } from "@/contexts/I18nContext"
+import { useI18n } from "@/contexts/i18n-context"
+import { 
+  generateEventStructuredData, 
+  generateBreadcrumbStructuredData 
+} from "@/lib/structured-data"
 
 // export const metadata: Metadata = {
 //   title: '議程資訊',
@@ -18,8 +23,19 @@ export default function AgendaPage() {
   // 使用統一資料層
   const sessions = AGENDA_DATA
 
+  // 生成結構化資料
+  const eventData = generateEventStructuredData(language)
+  const breadcrumbData = generateBreadcrumbStructuredData([
+    { name: t('nav.home'), url: '/' },
+    { name: t('nav.agenda') }
+  ])
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-700 to-blue-500">
+    <>
+      {/* SEO 結構化資料 */}
+      <StructuredData data={[eventData, breadcrumbData]} />
+      
+      <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-700 to-blue-500">
       <Header />
 
       {/* Main Content */}
@@ -157,5 +173,6 @@ export default function AgendaPage() {
 
       <Footer />
     </div>
+    </>
   )
 }

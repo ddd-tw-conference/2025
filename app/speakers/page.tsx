@@ -18,11 +18,16 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useState, useRef, useEffect } from "react"
 import Image from "next/image"
-import Header from "@/components/layout/Header"
-import Footer from "@/components/layout/Footer"
+import Header from "@/components/layout/header"
+import Footer from "@/components/layout/footer"
+import StructuredData from "@/components/structured-data"
 import { SPEAKERS_DATA, type Speaker, getLocalizedText, getLocalizedArray } from "@/lib/data/conference"
-import { useI18n } from "@/contexts/I18nContext"
-import { TopicTitle } from "@/components/TopicTitle"
+import { useI18n } from "@/contexts/i18n-context"
+import { TopicTitle } from "@/components/topic-title"
+import { 
+  generatePersonStructuredData, 
+  generateBreadcrumbStructuredData 
+} from "@/lib/structured-data"
 
 export default function SpeakersPage() {
   const { t, language } = useI18n()
@@ -150,8 +155,24 @@ export default function SpeakersPage() {
     document.body.style.overflow = "unset"
   }
 
+  // 生成講者結構化資料
+  const allSpeakers = SPEAKERS_DATA.flatMap(topic => topic.speakers)
+  const speakersStructuredData = allSpeakers.map(speaker => 
+    generatePersonStructuredData(speaker, language)
+  )
+
+  // 生成麵包屑結構化資料
+  const breadcrumbData = generateBreadcrumbStructuredData([
+    { name: t('nav.home'), url: '/' },
+    { name: t('nav.speakers') }
+  ])
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-700 to-blue-500">
+    <>
+      {/* SEO 結構化資料 */}
+      <StructuredData data={[...speakersStructuredData, breadcrumbData]} />
+      
+      <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-700 to-blue-500">
       <Header />
 
       {/* Main Content */}
@@ -501,5 +522,6 @@ export default function SpeakersPage() {
 
       <Footer />
     </div>
+    </>
   )
 }

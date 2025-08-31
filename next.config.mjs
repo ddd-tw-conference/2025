@@ -8,8 +8,11 @@ const withBundleAnalyzer = process.env.ANALYZE === 'true' ?
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // SPA 模式核心配置
-  output: 'export',
+  // SPA 模式核心配置 (僅在生產環境)
+  ...(process.env.NODE_ENV === 'production' && {
+    output: 'export',
+    distDir: 'out', // 確保輸出到 out 目錄
+  }),
   trailingSlash: true,
   
   // SPA 必要配置
@@ -32,7 +35,6 @@ const nextConfig = {
   }),
   
   // SPA 專用配置
-  distDir: 'out', // 確保輸出到 out 目錄
   skipTrailingSlashRedirect: true, // SPA 不需要重定向
 }
 

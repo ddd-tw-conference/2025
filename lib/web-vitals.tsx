@@ -1,30 +1,15 @@
 'use client'
 
-import { onCLS, onINP, onFCP, onLCP, onTTFB, Metric } from 'web-vitals'
-
-function sendToAnalytics(metric: Metric) {
-  // SPA 專用效能監控
-  if (process.env.NODE_ENV === 'development') {
-    console.log('🚀 SPA Web Vitals:', {
-      name: metric.name,
-      value: metric.value,
-      rating: metric.rating,
-      delta: metric.delta,
-      id: metric.id,
-    })
-  }
-  
-  // 生產環境可以發送到分析服務
-  // 例如：Google Analytics, Vercel Analytics 等
-}
+import { onCLS, onINP, onFCP, onLCP, onTTFB } from 'web-vitals'
+import { reportWebVitals as report } from './web-vitals-reporter'
 
 export function reportWebVitals() {
-  // SPA 模式下，這些指標特別重要
-  onCLS(sendToAnalytics)    // 累積版面位移
-  onINP(sendToAnalytics)    // 互動至下一個繪製
-  onFCP(sendToAnalytics)    // 首次內容繪製
-  onLCP(sendToAnalytics)    // 最大內容繪製
-  onTTFB(sendToAnalytics)   // 首位元組時間
+  // SPA 模式下，使用增強的報告系統
+  onCLS(report)     // 累積版面位移
+  onINP(report)     // 互動至下一個繪製
+  onFCP(report)     // 首次內容繪製
+  onLCP(report)     // 最大內容繪製
+  onTTFB(report)    // 首位元組時間
 }
 
 export function WebVitalsReporter() {

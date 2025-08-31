@@ -3,6 +3,7 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
+import { useI18n } from '@/contexts/i18n-context'
 
 export default function Error({
   error,
@@ -12,6 +13,7 @@ export default function Error({
   reset: () => void
 }) {
   const router = useRouter()
+  const { t } = useI18n()
 
   useEffect(() => {
     // Log the error to an error reporting service
@@ -40,9 +42,11 @@ export default function Error({
                   />
                 </svg>
               </div>
-              <h1 className="text-2xl font-bold text-white mb-2">發生錯誤</h1>
+              <h1 className="text-2xl font-bold text-white mb-2">
+                {t('error.somethingWentWrong')}
+              </h1>
               <p className="text-gray-300 mb-6">
-                很抱歉，頁面載入時發生了錯誤。請嘗試重新載入頁面。
+                {t('error.tryAgainLater')}
               </p>
             </div>
             
@@ -51,14 +55,14 @@ export default function Error({
                 onClick={reset}
                 className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
               >
-                重新載入
+                🔄 {t('button.tryAgain')}
               </Button>
               <Button
                 variant="outline"
                 onClick={() => router.push('/')}
                 className="w-full border-white/50 text-white hover:bg-white/10 hover:text-white bg-transparent"
               >
-                返回首頁
+                🏠 {t('button.backHome')}
               </Button>
             </div>
             
@@ -69,9 +73,19 @@ export default function Error({
                 </summary>
                 <pre className="mt-2 text-xs text-red-300 bg-red-900/20 p-2 rounded overflow-auto">
                   {error.message}
+                  {error.stack && '\n\nStack trace:\n' + error.stack}
                 </pre>
               </details>
             )}
+
+            <div className="mt-6 pt-6 border-t border-white/20">
+              <p className="text-sm text-gray-400">
+                錯誤代碼: {error.digest || 'UNKNOWN'}
+              </p>
+              <p className="text-sm text-gray-400 mt-1">
+                如問題持續發生，請 {t('button.contactUs')}
+              </p>
+            </div>
           </div>
         </div>
       </div>

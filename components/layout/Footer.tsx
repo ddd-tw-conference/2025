@@ -9,7 +9,7 @@ import {
   TooltipTrigger 
 } from "@/components/ui/tooltip";
 import { getImagePath } from "@/lib/paths";
-import { useI18n } from "@/contexts/I18nContext";
+import { useI18n } from "@/contexts/i18n-context";
 
 export default function Footer() {
   const { t } = useI18n();

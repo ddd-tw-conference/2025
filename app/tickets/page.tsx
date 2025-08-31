@@ -1,9 +1,9 @@
 'use client'
 
 import { Metadata } from 'next'
-import Header from "@/components/layout/Header"
-import Footer from "@/components/layout/Footer"
-import { useI18n } from "@/contexts/I18nContext"
+import Header from "@/components/layout/header"
+import Footer from "@/components/layout/footer"
+import { useI18n } from "@/contexts/i18n-context"
 
 // export const metadata: Metadata = {
 //   title: 'DDDTW 2025 - 購票資訊',
