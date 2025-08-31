@@ -93,24 +93,34 @@ function storeMetric(metric: PerformanceData) {
 
 // 主要的效能報告函數
 export function reportWebVitals(metric: WebVitalsMetric) {
-  const deviceInfo = getDeviceInfo();
+  // 檢查是否在支援的環境中執行
+  if (typeof window === 'undefined') return;
   
-  const performanceData: PerformanceData = {
-    name: metric.name,
-    value: metric.value,
-    rating: getRating(metric.name, metric.value),
-    delta: metric.delta,
-    id: metric.id,
-    url: window.location.href,
-    timestamp: Date.now(),
-    userAgent: navigator.userAgent,
-    ...deviceInfo
-  };
+  try {
+    const deviceInfo = getDeviceInfo();
+    
+    const performanceData: PerformanceData = {
+      name: metric.name,
+      value: metric.value,
+      rating: getRating(metric.name, metric.value),
+      delta: metric.delta,
+      id: metric.id,
+      url: window.location.href,
+      timestamp: Date.now(),
+      userAgent: navigator.userAgent,
+      ...deviceInfo
+    };
 
-  // 發送到各種目標
-  sendToConsole(performanceData);
-  sendToGA4(performanceData);
-  storeMetric(performanceData);
+    // 發送到各種目標
+    sendToConsole(performanceData);
+    sendToGA4(performanceData);
+    storeMetric(performanceData);
+  } catch (error) {
+    // 靜默處理錯誤，避免影響用戶體驗
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('Web Vitals reporting failed:', error);
+    }
+  }
 }
 
 // 獲取儲存的效能資料
