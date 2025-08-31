@@ -4,12 +4,15 @@
  */
 
 import { useState, useMemo, useCallback } from 'react'
-import { SPEAKERS_DATA, AGENDA_DATA, type Speaker, type SpeakerTopic } from '@/lib/data/conference'
+import { SPEAKERS_DATA, AGENDA_DATA, type Speaker, type SpeakerTopic, getLocalizedText, getLocalizedArray } from '@/lib/data/conference'
+import { useI18n } from '@/contexts/I18nContext'
 
 /**
  * 會議資料管理 Hook
  */
 export const useConferenceData = () => {
+  const { language } = useI18n()
+  
   // 講者資料
   const speakers = useMemo(() => SPEAKERS_DATA, [])
   
@@ -26,20 +29,20 @@ export const useConferenceData = () => {
       .map(topic => ({
         ...topic,
         speakers: topic.speakers.filter(speaker =>
-          speaker.name.toLowerCase().includes(lowercaseQuery) ||
-          speaker.title.toLowerCase().includes(lowercaseQuery) ||
-          speaker.company.toLowerCase().includes(lowercaseQuery) ||
-          speaker.expertise.some(skill => skill.toLowerCase().includes(lowercaseQuery))
+          getLocalizedText(speaker.name, language).toLowerCase().includes(lowercaseQuery) ||
+          getLocalizedText(speaker.title, language).toLowerCase().includes(lowercaseQuery) ||
+          getLocalizedText(speaker.company, language).toLowerCase().includes(lowercaseQuery) ||
+          getLocalizedArray(speaker.expertise, language).some(skill => skill.toLowerCase().includes(lowercaseQuery))
         )
       }))
       .filter(topic => topic.speakers.length > 0)
-  }, [speakers])
+  }, [speakers, language])
   
   // 依主題篩選講者
   const getSpeakersByTopic = useCallback((topicName: string): Speaker[] => {
-    const topic = speakers.find(t => t.topic === topicName)
+    const topic = speakers.find(t => getLocalizedText(t.topic, language) === topicName)
     return topic?.speakers || []
-  }, [speakers])
+  }, [speakers, language])
   
   // 依時間篩選議程
   const getSessionsByTimeSlot = useCallback((timeSlot: string) => {

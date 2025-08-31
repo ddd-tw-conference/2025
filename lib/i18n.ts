@@ -1,0 +1,58 @@
+/**
+ * i18n 工具函式
+ */
+
+// 語言檔案動態載入
+export const loadLocale = async (lang: string): Promise<Record<string, string>> => {
+  try {
+    const messages = await import(`../locales/${lang}.json`)
+    return messages.default
+  } catch (error) {
+    console.warn(`Failed to load locale ${lang}, falling back to zh-tw`)
+    const fallback = await import('../locales/zh-tw.json')
+    return fallback.default
+  }
+}
+
+// 初始語言判斷
+export const detectLanguage = (): string => {
+  if (typeof window !== 'undefined') {
+    const stored = localStorage.getItem('language')
+    if (stored) return stored
+    
+    const browserLang = navigator.language.toLowerCase()
+    if (browserLang.includes('en')) return 'en'
+    return 'zh-tw'
+  }
+  return 'zh-tw'
+}
+
+// 翻譯函式
+export const t = (messages: Record<string, string>, key: string, params?: Record<string, any>): string => {
+  const keys = key.split('.')
+  let value: any = messages
+  
+  for (const k of keys) {
+    value = value?.[k]
+    if (value === undefined) break
+  }
+  
+  let result = value || key // fallback 到 key
+  
+  // 參數插值
+  if (params && typeof result === 'string') {
+    Object.entries(params).forEach(([param, val]) => {
+      result = result.replace(`{{${param}}}`, String(val))
+    })
+  }
+  
+  return result
+}
+
+// 支援的語言列表
+export const SUPPORTED_LANGUAGES = [
+  { code: 'zh-tw', name: '繁體中文' },
+  { code: 'en', name: 'English' }
+] as const
+
+export type SupportedLanguage = typeof SUPPORTED_LANGUAGES[number]['code']

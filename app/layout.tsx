@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
 import { WebVitalsReporter } from '@/lib/web-vitals'
+import { I18nProvider } from '@/contexts/I18nContext'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -52,7 +53,9 @@ html {
       </head>
       <body>
         <WebVitalsReporter />
-        {children}
+        <I18nProvider>
+          {children}
+        </I18nProvider>
       </body>
     </html>
   )

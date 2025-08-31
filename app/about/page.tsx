@@ -1,16 +1,21 @@
+'use client'
+
 import { Button } from "@/components/ui/button"
 import { Mail, MessageCircle, Users } from "lucide-react"
 import Image from "next/image"
 import Header from "@/components/layout/Header"
 import Footer from "@/components/layout/Footer"
 import { Metadata } from 'next'
+import { useI18n } from "@/contexts/I18nContext"
 
-export const metadata: Metadata = {
-  title: '關於我們',
-  description: 'Domain Driven Design Taiwan (DDD Taiwan) 致力於在台灣推廣領域驅動設計與實踐經驗，建立專業技術社群。',
-}
+// export const metadata: Metadata = {
+//   title: '關於我們',
+//   description: 'Domain Driven Design Taiwan (DDD Taiwan) 致力於在台灣推廣領域驅動設計與實踐經驗，建立專業技術社群。',
+// }
 
 export default function AboutPage() {
+  const { t } = useI18n()
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-700 to-blue-500">
       <Header />
@@ -32,25 +37,18 @@ export default function AboutPage() {
 
         {/* About Content */}
         <div className="max-w-4xl mx-auto text-center space-y-8">
-          <h1 className="text-4xl lg:text-5xl font-bold text-white mb-8">關於我們</h1>
+          <h1 className="text-4xl lg:text-5xl font-bold text-white mb-8">{t("about.pageTitle")}</h1>
 
           <div className="space-y-6 text-lg text-gray-300 leading-relaxed">
-            <p>Domain Driven Design Taiwan (DDD Taiwan) 致力於在台灣推廣領域驅動設計與實踐經驗。</p>
+            <p>{t("about.paragraph1")}</p>
 
-            <p>
-              並透過舉辦各式軟體開發的工作者各自能夠透過 DDD
-              在專案執行工程設計計畫實踐流程，促進團隊，並產生出具有價值的產品與服務，呈現對於世界的 DDD
-              領域專業技術的交流。
-            </p>
+            <p>{t("about.paragraph2")}</p>
 
-            <p>在 Domain Driven Design Taiwan (DDD Taiwan)，我們致力於所有熱愛解決問題的大家一起群體共創。</p>
+            <p>{t("about.paragraph3")}</p>
 
-            <p>
-              在這裡我們將試著著重行實多的交流活動，一起來發展 Problem Domain 去催生出 Solution Domain，並一起建構 DDD
-              的思維讓更多人認識。
-            </p>
+            <p>{t("about.paragraph4")}</p>
 
-            <p className="text-blue-300">前往 Facebook 社團，瞭解更多資訊與學習討論。</p>
+            <p className="text-blue-300">{t("about.facebookCallout")}</p>
           </div>
 
           {/* Call to Action */}
@@ -61,7 +59,7 @@ export default function AboutPage() {
               asChild
             >
               <a href="https://www.facebook.com/groups/dddtaiwan" target="_blank" rel="noopener noreferrer">
-                加入 Facebook 社團
+                {t("about.joinFacebookGroup")}
               </a>
             </Button>
           </div>
@@ -74,9 +72,9 @@ export default function AboutPage() {
               <div className="w-16 h-16 bg-blue-600 rounded-lg flex items-center justify-center mb-6 mx-auto">
                 <Users className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-xl font-semibold text-white mb-4">社群交流</h3>
+              <h3 className="text-xl font-semibold text-white mb-4">{t("about.communityExchange")}</h3>
               <p className="text-gray-400">
-                建立一個開放、友善的技術社群，讓所有對 DDD 有興趣的朋友都能參與討論與學習。
+                {t("about.communityExchangeDesc")}
               </p>
             </div>
 
@@ -84,9 +82,9 @@ export default function AboutPage() {
               <div className="w-16 h-16 bg-purple-600 rounded-lg flex items-center justify-center mb-6 mx-auto">
                 <MessageCircle className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-xl font-semibold text-white mb-4">知識分享</h3>
+              <h3 className="text-xl font-semibold text-white mb-4">{t("about.knowledgeSharing")}</h3>
               <p className="text-gray-400">
-                透過工作坊、演講和實作活動，分享 Domain Driven Design 的實務經驗與最佳實踐。
+                {t("about.knowledgeSharingDesc")}
               </p>
             </div>
 
@@ -94,8 +92,8 @@ export default function AboutPage() {
               <div className="w-16 h-16 bg-indigo-600 rounded-lg flex items-center justify-center mb-6 mx-auto">
                 <Mail className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-xl font-semibold text-white mb-4">實務應用</h3>
-              <p className="text-gray-400">協助開發者將 DDD 概念應用到實際專案中，解決真實世界的軟體設計挑戰。</p>
+              <h3 className="text-xl font-semibold text-white mb-4">{t("about.practicalApplication")}</h3>
+              <p className="text-gray-400">{t("about.practicalApplicationDesc")}</p>
             </div>
           </div>
         </div>

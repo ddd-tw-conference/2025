@@ -1,10 +1,14 @@
+'use client'
+
 import { Button } from "@/components/ui/button";
 import { Calendar, MapPin, Users, Clock } from "lucide-react";
 import { UI_CONSTANTS } from "@/lib/constants";
 import Link from "next/link";
 import Image from "next/image";
+import { useI18n } from "@/contexts/I18nContext";
 
 export default function HeroSection() {
+  const { t } = useI18n();
   return (
     <section className="relative min-h-screen overflow-hidden">
       {/* Full-width Banner Background */}
@@ -103,29 +107,29 @@ export default function HeroSection() {
                 <div className="flex items-center justify-center w-12 h-12 bg-blue-600/30 rounded-lg mb-2 mx-auto">
                   <Users className="w-6 h-6 text-blue-300" />
                 </div>
-                <div className="text-2xl font-bold text-white">{UI_CONSTANTS.STATISTICS.PARTICIPANTS}</div>
-                <div className="text-sm text-gray-300">參與者</div>
+                <div className="text-2xl font-bold text-white">{t("hero.statistics.participants")}</div>
+                <div className="text-sm text-gray-300">{t("hero.statistics.participantsLabel")}</div>
               </div>
               <div className="text-center bg-white/10 backdrop-blur-sm rounded-lg p-4">
                 <div className="flex items-center justify-center w-12 h-12 bg-purple-600/30 rounded-lg mb-2 mx-auto">
                   <Clock className="w-6 h-6 text-purple-300" />
                 </div>
-                <div className="text-2xl font-bold text-white">{UI_CONSTANTS.STATISTICS.HOURS}</div>
-                <div className="text-sm text-gray-300">小時</div>
+                <div className="text-2xl font-bold text-white">{t("hero.statistics.hours")}</div>
+                <div className="text-sm text-gray-300">{t("hero.statistics.hoursLabel")}</div>
               </div>
               <div className="text-center bg-white/10 backdrop-blur-sm rounded-lg p-4">
                 <div className="flex items-center justify-center w-12 h-12 bg-indigo-600/30 rounded-lg mb-2 mx-auto">
                   <Users className="w-6 h-6 text-indigo-300" />
                 </div>
-                <div className="text-2xl font-bold text-white">{UI_CONSTANTS.STATISTICS.SPEAKERS}</div>
-                <div className="text-sm text-gray-300">講者</div>
+                <div className="text-2xl font-bold text-white">{t("hero.statistics.speakers")}</div>
+                <div className="text-sm text-gray-300">{t("hero.statistics.speakersLabel")}</div>
               </div>
               <div className="text-center bg-white/10 backdrop-blur-sm rounded-lg p-4">
                 <div className="flex items-center justify-center w-12 h-12 bg-cyan-600/30 rounded-lg mb-2 mx-auto">
                   <MapPin className="w-6 h-6 text-cyan-300" />
                 </div>
-                <div className="text-2xl font-bold text-white">{UI_CONSTANTS.STATISTICS.SESSIONS}</div>
-                <div className="text-sm text-gray-300">議程</div>
+                <div className="text-2xl font-bold text-white">{t("hero.statistics.sessions")}</div>
+                <div className="text-sm text-gray-300">{t("hero.statistics.sessionsLabel")}</div>
               </div>
             </div>
           </div>

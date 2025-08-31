@@ -3,6 +3,8 @@
  * 遵循 Vibe-Coding 原則：集中化錯誤管理
  */
 
+import { t } from './i18n'
+
 export interface AppError {
   code: string
   message: string
@@ -48,10 +50,14 @@ export class ErrorHandler {
   /**
    * 處理路徑相關錯誤
    */
-  handlePathError(error: unknown, context: string): string {
+  handlePathError(error: unknown, context: string, messages?: Record<string, string>): string {
+    const errorMessage = messages 
+      ? t(messages, 'error.path', { context })
+      : `路徑處理錯誤 in ${context}` // fallback
+      
     const appError = this.createError(
       'PATH_ERROR',
-      `路徑處理錯誤 in ${context}`,
+      errorMessage,
       error
     )
     this.logError(appError)

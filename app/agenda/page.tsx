@@ -1,16 +1,20 @@
+'use client'
+
 import { Users, Clock, MapPin, User } from "lucide-react"
 import Header from "@/components/layout/Header"
 import Footer from "@/components/layout/Footer"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Metadata } from 'next'
-import { AGENDA_DATA } from '@/lib/data/conference'
+import { AGENDA_DATA, getLocalizedText } from '@/lib/data/conference'
+import { useI18n } from "@/contexts/I18nContext"
 
-export const metadata: Metadata = {
-  title: '議程資訊',
-  description: 'DDDTW 2025 議程安排 - 2025年11月8日 AI時代軟體開發方法，包含工作坊與專題演講。',
-}
+// export const metadata: Metadata = {
+//   title: '議程資訊',
+//   description: 'DDDTW 2025 議程安排 - 2025年11月8日 AI時代軟體開發方法，包含工作坊與專題演講。',
+// }
 
 export default function AgendaPage() {
+  const { t, language } = useI18n()
   // 使用統一資料層
   const sessions = AGENDA_DATA
 
@@ -22,8 +26,8 @@ export default function AgendaPage() {
       <main className="container mx-auto px-4 py-12">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">議程資訊</h1>
-            <p className="text-lg sm:text-xl text-gray-200">2025年11月8日 AI時代軟體開發方法</p>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">{t("agenda.pageTitle")}</h1>
+            <p className="text-lg sm:text-xl text-gray-200">{t("agenda.subtitle")}</p>
           </div>
 
           {/* Conference Date and Info */}
@@ -41,12 +45,12 @@ export default function AgendaPage() {
                   rel="noopener noreferrer"
                   className="text-slate-700 font-medium hover:text-blue-500 transition-colors"
                 >
-                  台北市商業會
+                  {t("agenda.venue")}
                 </a>
               </div>
               <div className="flex items-center justify-center space-x-2">
                 <Users className="w-5 h-5 text-indigo-600" />
-                <span className="text-slate-700 font-medium">100+ 參與者</span>
+                <span className="text-slate-700 font-medium">{t("agenda.participants")}</span>
               </div>
             </div>
           </div>
@@ -65,33 +69,35 @@ export default function AgendaPage() {
                       <span
                         className={`px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-700 border border-purple-200`}
                       >
-                        {"演講"}
+                        {t("agenda.talk")}
                       </span>
                       <span
                         className={`px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700 border border-green-200`}
                       >
-                        {"工作坊"}
+                        {t("agenda.workshop")}
                       </span>
                       <span
                         className={`px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700 border border-blue-200`}
                       >
-                        {"技術分享"}
+                        {t("agenda.techShare")}
                       </span>
                     </div>
                   </div>
-                  <CardTitle className="text-slate-800 text-lg">{session.title}</CardTitle>
+                  <CardTitle className="text-slate-800 text-lg">{getLocalizedText(session.title, language)}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
                     <div className="flex items-center space-x-2 text-slate-600">
                       <User className="w-4 h-4" />
+                      <span className="text-xs text-slate-500">{t("agenda.speaker")}:</span>
                       <span className="font-medium">{session.speaker}</span>
                     </div>
                     <div className="flex items-center space-x-2 text-slate-600">
                       <MapPin className="w-4 h-4" />
-                      <span>{session.track}</span>
+                      <span className="text-xs text-slate-500">{t("agenda.track")}:</span>
+                      <span>{getLocalizedText(session.track, language)}</span>
                     </div>
-                    <p className="text-slate-700 text-sm leading-relaxed">{session.description}</p>
+                    <p className="text-slate-700 text-sm leading-relaxed">{getLocalizedText(session.description, language)}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -102,7 +108,7 @@ export default function AgendaPage() {
           <div className="mt-12">
             <div className="bg-slate-100/95 rounded-lg p-8 backdrop-blur-sm shadow-lg border border-slate-200">
               <div className="text-center mb-6">
-                <h3 className="text-2xl font-bold text-blue-700 inline-block pb-2 border-b-2 border-blue-500">注意事項</h3>
+                <h3 className="text-2xl font-bold text-blue-700 inline-block pb-2 border-b-2 border-blue-500">{t("agenda.notesTitle")}</h3>
               </div>
               
               <div className="grid md:grid-cols-2 gap-8">
@@ -111,16 +117,16 @@ export default function AgendaPage() {
                     <div className="bg-blue-100 p-2 rounded-full mr-3">
                       <Clock className="w-5 h-5 text-blue-600" />
                     </div>
-                    <h4 className="font-semibold text-blue-800">會場與時間</h4>
+                    <h4 className="font-semibold text-blue-800">{t("agenda.venueAndTime")}</h4>
                   </div>
                   <ul className="space-y-2 text-slate-700">
                     <li className="flex items-start">
                       <span className="text-blue-500 mr-2">•</span>
-                      <span>請提前15分鐘到達會場</span>
+                      <span>{t("agenda.arriveEarly")}</span>
                     </li>
                     <li className="flex items-start">
                       <span className="text-blue-500 mr-2">•</span>
-                      <span>工作坊需要攜帶筆記型電腦</span>
+                      <span>{t("agenda.bringLaptop")}</span>
                     </li>
                   </ul>
                 </div>
@@ -130,16 +136,16 @@ export default function AgendaPage() {
                     <div className="bg-purple-100 p-2 rounded-full mr-3">
                       <Users className="w-5 h-5 text-purple-600" />
                     </div>
-                    <h4 className="font-semibold text-purple-800">服務與資料</h4>
+                    <h4 className="font-semibold text-purple-800">{t("agenda.servicesAndData")}</h4>
                   </div>
                   <ul className="space-y-2 text-slate-700">
                     <li className="flex items-start">
                       <span className="text-purple-500 mr-2">•</span>
-                      <span>現場提供茶點(不提供午餐)</span>
+                      <span>{t("agenda.refreshments")}</span>
                     </li>
                     <li className="flex items-start">
                       <span className="text-purple-500 mr-2">•</span>
-                      <span>會議資料將於會後提供下載</span>
+                      <span>{t("agenda.materials")}</span>
                     </li>
                   </ul>
                 </div>

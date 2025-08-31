@@ -20,9 +20,12 @@ import { useState, useRef, useEffect } from "react"
 import Image from "next/image"
 import Header from "@/components/layout/Header"
 import Footer from "@/components/layout/Footer"
-import { SPEAKERS_DATA, type Speaker } from "@/lib/data/conference"
+import { SPEAKERS_DATA, type Speaker, getLocalizedText, getLocalizedArray } from "@/lib/data/conference"
+import { useI18n } from "@/contexts/I18nContext"
+import { TopicTitle } from "@/components/TopicTitle"
 
 export default function SpeakersPage() {
+  const { t, language } = useI18n()
   const [activeTab, setActiveTab] = useState(0)
   const [selectedSpeaker, setSelectedSpeaker] = useState<Speaker | null>(null)
   const [isLightboxOpen, setIsLightboxOpen] = useState(false)
@@ -155,9 +158,9 @@ export default function SpeakersPage() {
       <main className="container mx-auto px-4 py-12">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
-            <h1 className="text-4xl lg:text-5xl font-bold text-white mb-6">講者資訊</h1>
+            <h1 className="text-4xl lg:text-5xl font-bold text-white mb-6">{t('speakers.pageTitle')}</h1>
             <p className="text-xl text-gray-200 max-w-3xl mx-auto">
-              我們很榮幸邀請到業界頂尖的專家與實務工作者，分享他們在領域驅動設計與系統架構方面的寶貴經驗與深度見解。
+              {t('speakers.subtitle')}
             </p>
           </div>
 
@@ -174,8 +177,8 @@ export default function SpeakersPage() {
                     className={`px-6 py-3 rounded-lg border backdrop-blur-sm transition-all duration-300 font-medium shadow-lg ${colorClasses.tab}`}
                   >
                     <div className="text-center">
-                      <div className="text-sm font-semibold">主題 {index + 1}</div>
-                      <div className="text-xs mt-1">{topic.shortTitle}</div>
+                      <div className="text-sm font-semibold">{t('speakers.topic')} {index + 1}</div>
+                      <div className="text-xs mt-1">{getLocalizedText(topic.shortTitle, language)}</div>
                     </div>
                   </button>
                 )
@@ -189,7 +192,7 @@ export default function SpeakersPage() {
                 <button
                   onClick={() => navigateToTopic('prev')}
                   className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-all duration-300 shadow-lg"
-                  aria-label="上一個主題"
+                  aria-label={t('speakers.previousTopic')}
                 >
                   <ChevronLeft className="w-5 h-5" />
                 </button>
@@ -198,7 +201,7 @@ export default function SpeakersPage() {
                 <button
                   onClick={() => navigateToTopic('next')}
                   className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-all duration-300 shadow-lg"
-                  aria-label="下一個主題"
+                  aria-label={t('speakers.nextTopic')}
                 >
                   <ChevronRight className="w-5 h-5" />
                 </button>
@@ -218,8 +221,8 @@ export default function SpeakersPage() {
                         className={`flex-shrink-0 px-4 py-3 rounded-lg border backdrop-blur-sm transition-all duration-300 font-medium shadow-lg min-w-[200px] ${colorClasses.tab} ${topic.isClone ? 'opacity-80' : ''}`}
                       >
                         <div className="text-center">
-                          <div className="text-sm font-semibold">主題 {topic.originalIndex + 1}</div>
-                          <div className="text-xs mt-1 leading-tight">{topic.shortTitle}</div>
+                          <div className="text-sm font-semibold">{t('speakers.topic')} {topic.originalIndex + 1}</div>
+                          <div className="text-xs mt-1 leading-tight">{getLocalizedText(topic.shortTitle, language)}</div>
                         </div>
                       </button>
                     )
@@ -229,7 +232,7 @@ export default function SpeakersPage() {
 
               {/* Mobile navigation hint */}
               <div className="text-center text-white/60 text-xs mt-2">
-                點擊箭頭或滑動切換主題
+                {t('speakers.topicNavHint')}
               </div>
             </div>
 
@@ -238,10 +241,10 @@ export default function SpeakersPage() {
               <div
                 className={`inline-flex items-center justify-center px-6 py-3 rounded-full border backdrop-blur-sm mb-4 shadow-lg ${getColorClasses(currentTopic.color, true).badge}`}
               >
-                <span className="font-semibold text-lg">主題 {activeTab + 1}</span>
+                <span className="font-semibold text-lg">{t('speakers.topic')} {activeTab + 1}</span>
               </div>
-              <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">{currentTopic.topic}</h2>
-              <p className="text-gray-200 max-w-2xl mx-auto text-sm md:text-base">{currentTopic.description}</p>
+              <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">{getLocalizedText(currentTopic.topic, language)}</h2>
+              <p className="text-gray-200 max-w-2xl mx-auto text-sm md:text-base">{getLocalizedText(currentTopic.description, language)}</p>
             </div>
           </div>
 
@@ -263,7 +266,7 @@ export default function SpeakersPage() {
                         <div className="w-full h-full rounded-full bg-slate-200 flex items-center justify-center overflow-hidden">
                           <Image
                             src={speaker.image}
-                            alt={speaker.name}
+                            alt={getLocalizedText(speaker.name, language)}
                             width={96}
                             height={96}
                             className="w-full h-full object-cover rounded-full"
@@ -281,21 +284,26 @@ export default function SpeakersPage() {
                           </div>
                         </div>
                       </div>
-                      <CardTitle className="text-slate-800 text-lg">{speaker.name}</CardTitle>
+                      <CardTitle className="text-slate-800 text-lg">{getLocalizedText(speaker.name, language)}</CardTitle>
                       <div className="space-y-1">
-                        <p className="text-blue-600 text-sm font-medium">{speaker.title}</p>
+                        <p className="text-blue-600 text-sm font-medium">{getLocalizedText(speaker.title, language)}</p>
                         <div className="flex items-center justify-center space-x-1 text-slate-600 text-xs">
                           <Building className="w-3 h-3" />
-                          <span>{speaker.company}</span>
+                          <span>{getLocalizedText(speaker.company, language)}</span>
                         </div>
                       </div>
                     </CardHeader>
                     <CardContent className="space-y-4">
                       <div className="bg-slate-200/80 rounded-lg p-3 border border-slate-300">
-                        <h4 className="text-purple-600 font-medium text-sm mb-1">演講主題</h4>
-                        <p className="text-slate-700 text-sm">{speaker.topic}</p>
+                        <h4 className="text-purple-600 font-medium text-sm mb-1">{t('speakers.speechTopic')}</h4>
+                        <div className="text-slate-700 text-sm">
+                          <TopicTitle 
+                            title={getLocalizedText(speaker.topic, language)}
+                            maxLength={language === 'en' ? 60 : 30}
+                          />
+                        </div>
                       </div>
-                      <p className="text-slate-600 text-xs leading-relaxed">{speaker.bio}</p>
+                      <p className="text-slate-600 text-xs leading-relaxed">{getLocalizedText(speaker.bio, language)}</p>
                       <div className="flex justify-center space-x-3 pt-2">
                         <a
                           href={speaker.linkedin}
@@ -321,7 +329,7 @@ export default function SpeakersPage() {
 
           {/* Navigation Hint */}
           <div className="text-center mt-8">
-            <p className="text-gray-200 text-sm">點擊上方主題標籤切換不同領域的講者資訊</p>
+            <p className="text-gray-200 text-sm">{t('speakers.switchTopicHint')}</p>
           </div>
         </div>
       </main>
@@ -334,7 +342,7 @@ export default function SpeakersPage() {
             <button
               onClick={closeLightbox}
               className="absolute top-4 right-4 z-10 w-10 h-10 bg-slate-800/80 hover:bg-slate-800 text-white rounded-full flex items-center justify-center transition-colors"
-              aria-label="關閉"
+              aria-label={t('speakers.close')}
             >
               <X className="w-5 h-5" />
             </button>
@@ -348,7 +356,7 @@ export default function SpeakersPage() {
                     <div className="w-full h-full rounded-full bg-white/90 flex items-center justify-center overflow-hidden">
                       <Image
                         src={selectedSpeaker.image}
-                        alt={selectedSpeaker.name}
+                        alt={getLocalizedText(selectedSpeaker.name, language)}
                         width={128}
                         height={128}
                         className="w-full h-full object-cover rounded-full"
@@ -367,11 +375,11 @@ export default function SpeakersPage() {
                     </div>
                   </div>
                   <div className="text-center md:text-left">
-                    <h2 className="text-3xl md:text-4xl font-bold mb-2">{selectedSpeaker.name}</h2>
-                    <p className="text-xl text-blue-100 mb-2">{selectedSpeaker.title}</p>
+                    <h2 className="text-3xl md:text-4xl font-bold mb-2">{getLocalizedText(selectedSpeaker.name, language)}</h2>
+                    <p className="text-xl text-blue-100 mb-2">{getLocalizedText(selectedSpeaker.title, language)}</p>
                     <div className="flex items-center justify-center md:justify-start space-x-2 text-blue-200">
                       <Building className="w-4 h-4" />
-                      <span>{selectedSpeaker.company}</span>
+                      <span>{getLocalizedText(selectedSpeaker.company, language)}</span>
                     </div>
                   </div>
                 </div>
@@ -383,20 +391,25 @@ export default function SpeakersPage() {
                 <div>
                   <h3 className="text-2xl font-bold text-slate-800 mb-4 flex items-center">
                     <User className="w-6 h-6 mr-2 text-blue-600" />
-                    講者介紹
+                    {t('speakers.speakerBio')}
                   </h3>
-                  <p className="text-slate-700 leading-relaxed text-lg">{selectedSpeaker.bio}</p>
+                  <p className="text-slate-700 leading-relaxed text-lg">{getLocalizedText(selectedSpeaker.bio, language)}</p>
                 </div>
 
                 {/* Topic Section */}
                 <div>
                   <h3 className="text-2xl font-bold text-slate-800 mb-4 flex items-center">
                     <MessageSquare className="w-6 h-6 mr-2 text-purple-600" />
-                    演講主題
+                    {t('speakers.speechTopic')}
                   </h3>
                   <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-6 border border-purple-200">
-                    <h4 className="text-xl font-semibold text-purple-800 mb-2">{selectedSpeaker.topic}</h4>
-                    <p className="text-slate-700">{selectedSpeaker.content}</p>
+                    <div className="text-xl font-semibold text-purple-800 mb-2">
+                      <TopicTitle 
+                        title={getLocalizedText(selectedSpeaker.topic, language)}
+                        maxLength={language === 'en' ? 80 : 40}
+                      />
+                    </div>
+                    <p className="text-slate-700">{getLocalizedText(selectedSpeaker.content, language)}</p>
                   </div>
                 </div>
 
@@ -404,22 +417,22 @@ export default function SpeakersPage() {
                 <div>
                   <h3 className="text-2xl font-bold text-slate-800 mb-4 flex items-center">
                     <Briefcase className="w-6 h-6 mr-2 text-green-600" />
-                    專業經驗
+                    {t('speakers.experience')}
                   </h3>
                   <p className="text-slate-700 leading-relaxed text-lg">
-                    {selectedSpeaker.experience || "擁有豐富的軟體開發與系統架構經驗，專精於領域驅動設計的理論與實踐，曾參與多個大型專案的架構設計與技術決策。"}
+                    {selectedSpeaker.experience ? getLocalizedText(selectedSpeaker.experience, language) : "擁有豐富的軟體開發與系統架構經驗，專精於領域驅動設計的理論與實踐，曾參與多個大型專案的架構設計與技術決策。"}
                   </p>
                 </div>
 
                 {/* Achievements Section */}
-                {selectedSpeaker.achievements && selectedSpeaker.achievements.length > 0 && (
+                {selectedSpeaker.achievements && selectedSpeaker.achievements && (
                   <div>
                     <h3 className="text-2xl font-bold text-slate-800 mb-4 flex items-center">
                       <Award className="w-6 h-6 mr-2 text-yellow-600" />
-                      重要成就
+                      {t('speakers.achievements')}
                     </h3>
                     <div className="grid gap-3">
-                      {selectedSpeaker.achievements.map((achievement, index) => (
+                      {getLocalizedArray(selectedSpeaker.achievements, language).map((achievement, index) => (
                         <div
                           key={index}
                           className="flex items-start space-x-3 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg border border-yellow-200"
@@ -436,10 +449,10 @@ export default function SpeakersPage() {
                 <div>
                   <h3 className="text-2xl font-bold text-slate-800 mb-4 flex items-center">
                     <Award className="w-6 h-6 mr-2 text-orange-600" />
-                    專業領域
+                    {t('speakers.expertise')}
                   </h3>
                   <div className="flex flex-wrap gap-2">
-                    {selectedSpeaker.expertise.map((skill, index) => (
+                    {getLocalizedArray(selectedSpeaker.expertise, language).map((skill, index) => (
                       <span
                         key={index}
                         className="px-4 py-2 bg-orange-100 text-orange-700 rounded-full text-sm font-medium border border-orange-200 hover:bg-orange-200 transition-colors"
@@ -454,7 +467,7 @@ export default function SpeakersPage() {
                 <div>
                   <h3 className="text-xl font-bold text-slate-800 mb-4 flex items-center">
                     <Globe className="w-5 h-5 mr-2 text-blue-600" />
-                    聯絡方式
+                    {t('speakers.contactInfo')}
                   </h3>
                   <div className="flex flex-wrap gap-4">
                     <a

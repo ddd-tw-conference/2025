@@ -7,10 +7,13 @@ import { usePathname } from "next/navigation";
 import clsx from "clsx";
 import { Menu, X } from "lucide-react";
 import { getImagePath } from "@/lib/paths";
+import { useI18n } from "@/contexts/I18nContext";
+import { LanguageSelector } from "@/components/LanguageSelector";
 
 export default function Header() {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { t } = useI18n();
   
   // 檢查是否為首頁的邏輯
   const isHomePage = pathname === "/";
@@ -19,12 +22,12 @@ export default function Header() {
   const closeMenu = () => setIsMenuOpen(false);
 
   const navLinks = [
-    { href: "/tickets", label: "購票" },
-    { href: "/agenda", label: "議程資訊" },
-    { href: "/speakers", label: "講者資訊" },
-    { href: "/transportation", label: "交通資訊" },
-    { href: "/rules", label: "大會守則" },
-    { href: "/about", label: "關於我們" },
+    { href: "/tickets", label: t("nav.tickets") },
+    { href: "/agenda", label: t("nav.agenda") },
+    { href: "/speakers", label: t("nav.speakers") },
+    { href: "/transportation", label: t("nav.transportation") },
+    { href: "/rules", label: t("nav.rules") },
+    { href: "/about", label: t("nav.about") },
   ];
 
   return (
@@ -34,10 +37,10 @@ export default function Header() {
         href="#main-content"
         className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-white text-blue-900 px-4 py-2 rounded-md z-[60]"
       >
-        跳至主要內容
+        {t("nav.skipToMain")}
       </a>
       <div className="container mx-auto px-4 py-4">
-        <nav className="flex items-center justify-between" role="navigation" aria-label="主要導航">
+        <nav className="flex items-center justify-between" role="navigation" aria-label={t("nav.mainNavigation")}>
           <Link href="/" className="flex items-center space-x-2">
             <div className="w-8 h-8 rounded-lg overflow-hidden relative">
               <Image
@@ -54,7 +57,7 @@ export default function Header() {
                 isHomePage ? "text-white" : "text-gray-300"
               )}
             >
-              DDDesign TW
+              {t("footer.brand")}
             </span>
           </Link>
           <div className="hidden md:flex items-center space-x-8 text-base">
@@ -70,16 +73,20 @@ export default function Header() {
                 {link.label}
               </Link>
             ))}
+            <LanguageSelector />
           </div>
 
           {/* Mobile menu button */}
-          <button
-            onClick={toggleMenu}
-            className="md:hidden text-white hover:text-gray-300 transition-colors"
-            aria-label="切換導航選單"
-          >
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          <div className="md:hidden flex items-center space-x-4">
+            <LanguageSelector />
+            <button
+              onClick={toggleMenu}
+              className="text-white hover:text-gray-300 transition-colors"
+              aria-label={t("nav.mobileMenu")}
+            >
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </nav>
 
         {/* Mobile menu */}

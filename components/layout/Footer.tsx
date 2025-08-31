@@ -1,3 +1,5 @@
+'use client'
+
 import Link from "next/link";
 import Image from "next/image";
 import { 
@@ -7,8 +9,10 @@ import {
   TooltipTrigger 
 } from "@/components/ui/tooltip";
 import { getImagePath } from "@/lib/paths";
+import { useI18n } from "@/contexts/I18nContext";
 
 export default function Footer() {
+  const { t } = useI18n();
   return (
     <TooltipProvider delayDuration={200}>
       <footer className="bg-blue-900 border-blue-700">
@@ -25,47 +29,47 @@ export default function Footer() {
                     sizes="32px"
                   />
                 </div>
-                <span className="text-white font-semibold">DDDesign TW</span>
+                <span className="text-white font-semibold">{t("footer.brand")}</span>
               </div>
-              <p className="text-gray-400 text-sm">推廣領域驅動設計在台灣的發展，建立專業技術社群。</p>
+              <p className="text-gray-400 text-sm">{t("footer.description")}</p>
             </div>
             <div>
-              <h4 className="text-white font-semibold mb-4">大會資訊</h4>
+              <h4 className="text-white font-semibold mb-4">{t("footer.quickLinks")}</h4>
               <ul className="space-y-2 text-sm text-gray-400">
                 <li>
                   <Link href="/about" className="hover:text-white transition-colors">
-                    關於我們
+                    {t("nav.about")}
                   </Link>
                 </li>
                 <li>
                   <Link href="/agenda" className="hover:text-white transition-colors">
-                    議程資訊
+                    {t("nav.agenda")}
                   </Link>
                 </li>
                 <li>
                   <Link href="/speakers" className="hover:text-white transition-colors">
-                    講者介紹
+                    {t("nav.speakers")}
                   </Link>
                 </li>
                 <li>
                   <Link href="/transportation" className="hover:text-white transition-colors">
-                    交通資訊
+                    {t("nav.transportation")}
                   </Link>
                 </li>
               </ul>
             </div>
             <div>
-              <h4 className="text-white font-semibold mb-4">參與方式</h4>
+              <h4 className="text-white font-semibold mb-4">{t("footer.participation")}</h4>
               <ul className="space-y-2 text-sm text-gray-400">
                 <li>
                   <Link href="/tickets" className="hover:text-white transition-colors">
-                    報名參加
+                    {t("nav.tickets")}
                   </Link>
                 </li>
               </ul>
             </div>
             <div>
-              <h4 className="text-white font-semibold mb-4">聯絡資訊</h4>
+              <h4 className="text-white font-semibold mb-4">{t("footer.contact")}</h4>
               <div className="space-y-3 text-sm">
                 <div className="group flex items-center hover:bg-blue-800/30 p-1.5 rounded-md transition-colors">
                   <div className="w-7 h-7 flex items-center justify-center bg-blue-800/30 rounded-md mr-2">
@@ -81,7 +85,7 @@ export default function Footer() {
                       </a>
                     </TooltipTrigger>
                     <TooltipContent side="top" className="bg-blue-800 text-white border-blue-700">
-                      <p>寄送郵件給我們</p>
+                      <p>{t("footer.sendEmail")}</p>
                     </TooltipContent>
                   </Tooltip>
                 </div>
