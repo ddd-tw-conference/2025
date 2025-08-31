@@ -95,7 +95,7 @@ export const PERFORMANCE_CONFIG = {
   preload: {
     // 關鍵資源
     critical: [
-      '/DDDTW-logo.png',
+      '/images/logos/dddtw-logo.png',
       '/images/speakers/'
     ],
     

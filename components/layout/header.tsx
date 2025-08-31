@@ -44,7 +44,7 @@ export default function Header() {
           <Link href="/" className="flex items-center space-x-2">
             <div className="w-8 h-8 rounded-lg overflow-hidden relative">
               <Image
-                src={getImagePath("/DDDTW-logo.png")}
+                src={getImagePath("/images/logos/dddtw-logo.png")}
                 alt="DDD Taiwan Logo"
                 className="object-cover"
                 fill
