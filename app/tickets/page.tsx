@@ -1,32 +1,8 @@
 'use client'
 
-import { Metadata } from 'next'
 import Header from "@/components/layout/header"
 import Footer from "@/components/layout/footer"
 import { useI18n } from "@/contexts/i18n-context"
-
-// export const metadata: Metadata = {
-//   title: 'DDDTW 2025 - 購票資訊',
-//   description: 'DDDTW 2025 AI時代軟體開發方法成果發表會 - 購票資訊',
-//   keywords: ['Domain-Driven Design', 'DDD', 'Taiwan', '軟體開發', 'AI', '領域驅動設計', '2025', '購票'],
-//   authors: [{ name: 'DDD Taiwan Community' }],
-//   creator: 'DDD Taiwan Community',
-//   publisher: 'DDD Taiwan Community',
-//   robots: 'index, follow',
-//   openGraph: {
-//     title: 'DDDTW 2025 - 購票資訊',
-//     description: 'DDDTW 2025 AI時代軟體開發方法成果發表會 - 購票資訊',
-//     url: 'https://ddd-tw-conference.github.io/2025/tickets/',
-//     siteName: 'DDDTW 2025',
-//     locale: 'zh_TW',
-//     type: 'website',
-//   },
-//   twitter: {
-//     card: 'summary_large_image',
-//     title: 'DDDTW 2025 - 購票資訊',
-//     description: 'DDDTW 2025 AI時代軟體開發方法成果發表會 - 購票資訊',
-//   }
-// }
 
 export default function TicketsPage() {
   const { t } = useI18n()

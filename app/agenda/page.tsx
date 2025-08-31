@@ -5,18 +5,12 @@ import Header from "@/components/layout/header"
 import Footer from "@/components/layout/footer"
 import StructuredData from "@/components/structured-data"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Metadata } from 'next'
 import { AGENDA_DATA, getLocalizedText } from '@/lib/data/conference'
 import { useI18n } from "@/contexts/i18n-context"
 import { 
   generateEventStructuredData, 
   generateBreadcrumbStructuredData 
 } from "@/lib/structured-data"
-
-// export const metadata: Metadata = {
-//   title: '議程資訊',
-//   description: 'DDDTW 2025 議程安排 - 2025年11月8日 AI時代軟體開發方法，包含工作坊與專題演講。',
-// }
 
 export default function AgendaPage() {
   const { t, language } = useI18n()

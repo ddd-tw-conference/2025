@@ -24,9 +24,6 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
   
   // 生產環境 GitHub Pages 配置 (使用統一配置)
   ...(process.env.NODE_ENV === 'production' && {

@@ -5,14 +5,8 @@ import { Mail, MessageCircle, Users } from "lucide-react"
 import Image from "next/image"
 import Header from "@/components/layout/header"
 import Footer from "@/components/layout/footer"
-import { Metadata } from 'next'
 import { useI18n } from "@/contexts/i18n-context"
 import { getImagePath } from "@/lib/paths"
-
-// export const metadata: Metadata = {
-//   title: '關於我們',
-//   description: 'Domain Driven Design Taiwan (DDD Taiwan) 致力於在台灣推廣領域驅動設計與實踐經驗，建立專業技術社群。',
-// }
 
 export default function AboutPage() {
   const { t } = useI18n()

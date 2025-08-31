@@ -138,6 +138,28 @@ export default function PageComponent() {
 3. **確認客戶端元件**: 所有頁面都要 `'use client'`
 4. **驗證輸出**: `out/` 目錄應有 `tickets.txt` 等直接檔案
 
+### React Hydration 錯誤 (Error #418)
+
+當 Console 出現 `Minified React error #418` 時：
+
+**原因**: SPA 模式下 metadata export 導致 server/client hydration 不一致
+
+**解決方案**:
+```typescript
+'use client' // 根 layout 也要標記為客戶端組件
+
+// 註解所有 metadata export
+// export const metadata: Metadata = { ... }
+
+// 手動在 <head> 中添加 meta 標籤
+<head>
+  <title>DDDTW 2025 - AI時代軟體開發方法</title>
+  <meta name="description" content="..." />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta property="og:title" content="..." />
+</head>
+```
+
 ### 正確輸出結構
 ```
 out/
