@@ -1,4 +1,179 @@
-# DDDTW 2025 專案資訊架構優化完成報告
+# DDDTW 2025 開發慣例
+
+## 🎯 核心原則
+
+統一使用 **kebab-case** 命名，無例外。所有檔案與目錄遵循一致的命名標準。
+
+---
+
+## 📁 檔案命名規範
+
+### ✅ 正確示例
+```
+components/structured-data.tsx
+components/layout/hero-section.tsx
+hooks/use-conference-data.ts
+contexts/i18n-context.tsx
+lib/web-vitals-reporter.ts
+```
+
+### ❌ 錯誤示例
+```
+components/StructuredData.tsx
+components/layout/HeroSection.tsx
+hooks/useConferenceData.ts
+contexts/I18nContext.tsx
+```
+
+---
+
+## ⚛️ React 元件慣例
+
+### Import 語法
+```typescript
+// ✅ 統一使用 namespace import
+import * as React from "react"
+
+// 元件內使用
+const [state, setState] = React.useState(false)
+React.useEffect(() => {}, [])
+```
+
+### 元件結構
+```typescript
+// ✅ 基礎元件 - default export
+export default function ComponentName() {
+  return <div>...</div>
+}
+
+// ✅ UI 元件 - forwardRef + named export
+const ComponentName = React.forwardRef<HTMLElement, Props>(
+  ({ className, ...props }, ref) => {
+    return <div ref={ref} {...props} />
+  }
+)
+ComponentName.displayName = "ComponentName"
+export { ComponentName }
+```
+
+### 樣式處理
+```typescript
+import { cn } from "@/lib/utils"
+
+// ✅ 複雜 className
+className={cn("base-classes", condition && "active", className)}
+
+// ✅ 簡單 className
+className="fixed inset-0 bg-black/50"
+```
+
+---
+
+## 📂 檔案結構組織
+
+```
+src/
+├── app/                    # Next.js App Router (kebab-case 目錄)
+├── components/
+│   ├── ui/                # shadcn/ui 元件 (kebab-case)
+│   ├── layout/            # 版面元件 (kebab-case)
+│   └── *.tsx              # 基礎元件 (kebab-case)
+├── hooks/                 # use-*.ts (kebab-case)
+├── lib/                   # 工具函數 (kebab-case)
+└── contexts/              # React Context (kebab-case)
+```
+
+---
+
+## 🚀 Next.js 靜態匯出 (SPA) 最佳實踐
+
+### 核心配置
+```javascript
+// next.config.mjs
+const nextConfig = {
+  ...(process.env.NODE_ENV === 'production' && {
+    output: 'export',
+    distDir: 'out',
+  }),
+  
+  // 🔥 關鍵: 產生直接 .txt 檔案
+  trailingSlash: false, // tickets.txt ✅ (不是 tickets/index.txt ❌)
+  
+  images: { unoptimized: true },
+  
+  ...(process.env.NODE_ENV === 'production' && {
+    basePath: CONFIG.deployment.basePath,
+    assetPrefix: CONFIG.deployment.basePath,
+  }),
+}
+```
+
+### Layout 限制
+```typescript
+// ❌ 會阻止靜態匯出 (除了根 layout)
+export const metadata: Metadata = { ... }
+
+// ✅ 根 layout 以外都要註解或移除
+// export const metadata: Metadata = { ... }
+```
+
+### 頁面要求
+```typescript
+// ✅ 所有頁面必須標記為客戶端元件
+'use client'
+
+export default function PageComponent() {
+  // 頁面內容
+}
+```
+
+---
+
+## 🔧 RSC 404 故障排除
+
+當 `tickets.txt?_rsc=1uhk4` 出現 404：
+
+1. **檢查 trailingSlash**: 必須為 `false`
+2. **檢查 metadata export**: 除根 layout 外都要移除
+3. **確認客戶端元件**: 所有頁面都要 `'use client'`
+4. **驗證輸出**: `out/` 目錄應有 `tickets.txt` 等直接檔案
+
+### 正確輸出結構
+```
+out/
+├── index.txt           # ✅
+├── tickets.txt         # ✅ 瀏覽器找得到
+├── agenda.txt          # ✅ 瀏覽器找得到
+└── speakers.txt        # ✅ 瀏覽器找得到
+```
+
+---
+
+## 📦 模組引入
+
+```typescript
+// ✅ 路徑別名與雙引號
+import { Component } from "@/components/component-name"
+import { utils } from "@/lib/utils"
+import * as React from "react"
+```
+
+---
+
+## 🔄 Git 版本控制
+
+### 檔案重命名
+```bash
+# ✅ 正確重命名
+git mv OldFile.tsx new-file.tsx
+git commit -m "rename: OldFile.tsx -> new-file.tsx"
+
+# ❌ 避免直接重命名 (跨平台問題)
+```
+
+---
+
+*更新: 2025年8月31日*
 
 ## 📊 執行摘要
 
@@ -468,11 +643,128 @@ import * as React from "react"
 
 ---
 
+## 🚀 Next.js 靜態匯出 (SPA) 最佳實踐
+
+### 核心原則
+基於 2025年8月31日 解決 GitHub Pages 部署 404 問題的經驗總結。
+
+### ✅ 靜態匯出必要設定
+
+#### 1. next.config.mjs 關鍵配置
+```javascript
+const nextConfig = {
+  // 生產環境啟用靜態匯出
+  ...(process.env.NODE_ENV === 'production' && {
+    output: 'export',
+    distDir: 'out',
+  }),
+  
+  // 🔥 關鍵: 確保產生直接 .txt 檔案而非目錄結構
+  trailingSlash: false, // tickets.txt ✅ (不是 tickets/index.txt ❌)
+  
+  // SPA 必要設定
+  images: { unoptimized: true },
+  
+  // GitHub Pages basePath 支援
+  ...(process.env.NODE_ENV === 'production' && {
+    basePath: CONFIG.deployment.basePath,
+    assetPrefix: CONFIG.deployment.basePath,
+  }),
+}
+```
+
+#### 2. Layout 中的 Metadata 限制
+```typescript
+// ❌ 會阻止靜態匯出
+export const metadata: Metadata = { ... }
+
+// ✅ 靜態匯出相容 (僅根 layout 可以有 metadata)
+// export const metadata: Metadata = { ... }
+```
+
+#### 3. 頁面元件要求
+```typescript
+// ✅ 所有頁面必須標記為客戶端元件
+'use client'
+
+export default function PageComponent() {
+  // 頁面內容
+}
+```
+
+---
+
+### 🔧 故障排除檢查清單
+
+#### RSC (React Server Components) 404 問題
+當瀏覽器請求如 `tickets.txt?_rsc=1uhk4` 出現 404 時：
+
+1. **檢查 `trailingSlash` 設定**
+   ```javascript
+   trailingSlash: false // 必須為 false
+   ```
+
+2. **檢查 Layout 的 metadata export**
+   ```typescript
+   // 除了根 layout，其他 layout 不應有 metadata export
+   // export const metadata = { ... } // ❌ 移除或註解
+   ```
+
+3. **確認所有頁面為客戶端元件**
+   ```typescript
+   'use client' // 每個頁面檔案第一行
+   ```
+
+4. **驗證建置輸出**
+   ```bash
+   # 檢查 out/ 目錄是否有直接的 .txt 檔案
+   ls out/
+   # 應該看到: tickets.txt, agenda.txt, speakers.txt 等
+   ```
+
+---
+
+### 📁 靜態匯出檔案結構
+
+#### ✅ 正確的輸出結構
+```
+out/
+├── index.html          # 首頁 HTML
+├── index.txt           # 首頁 RSC
+├── tickets.html        # 購票頁面 HTML
+├── tickets.txt         # 購票頁面 RSC ✅
+├── agenda.html         # 議程頁面 HTML
+├── agenda.txt          # 議程頁面 RSC ✅
+└── ...
+```
+
+#### ❌ 錯誤的輸出結構
+```
+out/
+├── tickets/
+│   └── index.txt       # ❌ 瀏覽器找不到 tickets.txt
+└── agenda/
+    └── index.txt       # ❌ 瀏覽器找不到 agenda.txt
+```
+
+---
+
+### 🎯 GitHub Pages 部署注意事項
+
+1. **basePath 處理**: 使用 `getRoutePath()`, `getAssetPath()`, `getImagePath()` 統一處理
+2. **圖片資源**: 所有圖片必須本地化，避免外部依賴
+3. **路由模式**: SPA 模式下所有路由由客戶端處理
+4. **緩存策略**: 圖片資源加上版本參數 `?v=20250830001`
+
+---
+
 ## 🎖️ 總結
 
 - **檔案命名**: 100% kebab-case
 - **React 慣例**: namespace import + forwardRef 模式
 - **跨平台相容**: 避免大小寫問題
 - **工具整合**: 搭配 shadcn/ui 與 Next.js 最佳實踐
+- **靜態匯出**: trailingSlash: false + 客戶端元件 + metadata 限制 🆕
 
-*更新日期: 2025年08月*
+*更新日期: 2025年8月31日*
+*新增: Next.js 靜態匯出最佳實踐與故障排除指南*

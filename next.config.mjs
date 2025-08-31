@@ -13,7 +13,7 @@ const nextConfig = {
     output: 'export',
     distDir: 'out', // 確保輸出到 out 目錄
   }),
-  trailingSlash: true,
+  trailingSlash: false, // 改為 false 以產生 .txt 檔案而非目錄結構
   
   // SPA 必要配置
   images: {
