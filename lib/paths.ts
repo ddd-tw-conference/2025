@@ -30,7 +30,7 @@ export const getBasePath = (): string => {
     // SPA 建構時的路徑決策
     return process.env.NODE_ENV === 'production' ? basePath : ''
   } catch (error) {
-    console.warn('getBasePath 發生錯誤:', error)
+    // 靜默處理錯誤，回到預設行為
     return process.env.NODE_ENV === 'production' ? basePath : ''
   }
 }

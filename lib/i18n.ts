@@ -8,7 +8,7 @@ export const loadLocale = async (lang: string): Promise<Record<string, string>> 
     const messages = await import(`../locales/${lang}.json`)
     return messages.default
   } catch (error) {
-    console.warn(`Failed to load locale ${lang}, falling back to zh-tw`)
+    // 靜默回退到預設語言
     const fallback = await import('../locales/zh-tw.json')
     return fallback.default
   }

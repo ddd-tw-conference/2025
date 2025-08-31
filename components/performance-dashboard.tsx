@@ -107,8 +107,11 @@ export default function PerformanceDashboard() {
   const [summary, setSummary] = React.useState<any>(null)
   const [isOpen, setIsOpen] = React.useState(false)
   const [rawMetrics, setRawMetrics] = React.useState<any[]>([])
+  const [isMounted, setIsMounted] = React.useState(false)
 
   React.useEffect(() => {
+    setIsMounted(true)
+    
     const updateData = () => {
       setSummary(getPerformanceSummary())
       setRawMetrics(getStoredMetrics())
@@ -120,6 +123,11 @@ export default function PerformanceDashboard() {
     const interval = setInterval(updateData, 5000)
     return () => clearInterval(interval)
   }, [])
+
+  // 在客戶端掛載前不渲染任何內容
+  if (!isMounted) {
+    return null
+  }
 
   const handleClearData = () => {
     if (confirm('確定要清除所有效能資料嗎？')) {

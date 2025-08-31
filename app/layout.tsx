@@ -23,15 +23,8 @@ export default function RootLayout({
         <meta property="og:type" content="website" />
         <meta property="og:locale" content="zh_TW" />
         <meta name="twitter:card" content="summary_large_image" />
-        <style>{`
-html {
-  font-family: ${GeistSans.style.fontFamily};
-  --font-sans: ${GeistSans.variable};
-  --font-mono: ${GeistMono.variable};
-}
-        `}</style>
       </head>
-      <body>
+      <body className={`${GeistSans.variable} ${GeistMono.variable} font-sans`}>
         <WebVitalsReporter />
         <I18nProvider>
           {children}

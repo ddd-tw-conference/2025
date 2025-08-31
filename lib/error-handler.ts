@@ -29,9 +29,9 @@ export class ErrorHandler {
   logError(error: AppError): void {
     this.errorQueue.push(error)
     
-    // 開發環境下輸出到控制台
+    // 開發環境下輸出簡化的錯誤資訊
     if (process.env.NODE_ENV === 'development') {
-      console.error(`[${error.code}] ${error.message}`, error.details)
+      console.error(`[${error.code}] ${error.message}`)
     }
   }
 

@@ -29,8 +29,6 @@ export const I18nProvider = ({ children }: I18nProviderProps) => {
 
   const changeLanguage = (lang: string) => {
     const newMessages = messagesMap[lang] || messagesMap['zh-tw']
-    console.log(`Changing language to: ${lang}`)
-    console.log('Available keys:', Object.keys(newMessages).slice(0, 10))
     setLanguage(lang)
     setMessages(newMessages)
     if (typeof window !== 'undefined') {
@@ -38,19 +36,24 @@ export const I18nProvider = ({ children }: I18nProviderProps) => {
     }
   }
 
-  // 初始化時載入語言
+  // 延遲載入語言設定，避免 hydration 問題
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem('language')
-      if (stored && stored !== language) {
-        changeLanguage(stored)
+    // 使用 requestIdleCallback 或 setTimeout 來延遲執行
+    const loadStoredLanguage = () => {
+      if (typeof window !== 'undefined') {
+        const stored = localStorage.getItem('language')
+        if (stored && stored !== language) {
+          changeLanguage(stored)
+        }
       }
     }
+    
+    // 延遲執行以確保客戶端完全載入
+    setTimeout(loadStoredLanguage, 0)
   }, [])
 
   const t = (key: string, params?: Record<string, any>): string => {
     const result = messages[key] || key
-    console.log(`Translation lookup: "${key}" -> "${result}"`)
     
     // 參數插值
     if (params && typeof result === 'string') {
@@ -69,8 +72,6 @@ export const I18nProvider = ({ children }: I18nProviderProps) => {
     changeLanguage,
     t
   }
-
-  console.log('I18nProvider render - language:', language, 'messages keys count:', Object.keys(messages).length)
 
   return (
     <I18nContext.Provider value={contextValue}>

@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect } from 'react'
 import { onCLS, onINP, onFCP, onLCP, onTTFB } from 'web-vitals'
 import { reportWebVitals as report } from './web-vitals-reporter'
 
@@ -13,12 +14,17 @@ export function reportWebVitals() {
 }
 
 export function WebVitalsReporter() {
-  // 確保只在客戶端執行（SPA 特性）
-  if (typeof window !== 'undefined') {
-    // 延遲執行，確保頁面完全載入
-    setTimeout(() => {
-      reportWebVitals()
-    }, 1000)
-  }
+  // 使用 useEffect 確保只在客戶端執行
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      // 延遲執行，確保頁面完全載入
+      const timer = setTimeout(() => {
+        reportWebVitals()
+      }, 1000)
+      
+      return () => clearTimeout(timer)
+    }
+  }, [])
+  
   return null
 }

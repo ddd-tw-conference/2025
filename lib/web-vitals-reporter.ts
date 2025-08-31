@@ -64,18 +64,11 @@ function sendToGA4(metric: PerformanceData) {
 
 // 發送效能資料到控制台（開發環境）
 function sendToConsole(metric: PerformanceData) {
+  // 在生產環境中不輸出 console logs 以提升效能
   if (process.env.NODE_ENV === 'development') {
     const emoji = metric.rating === 'good' ? '✅' : metric.rating === 'needs-improvement' ? '⚠️' : '❌';
-    console.group(`${emoji} Web Vitals: ${metric.name}`);
-    console.log(`Value: ${metric.value}`);
-    console.log(`Rating: ${metric.rating}`);
-    console.log(`URL: ${metric.url}`);
-    console.log(`Device Info:`, {
-      connectionType: metric.connectionType,
-      deviceMemory: metric.deviceMemory,
-      hardwareConcurrency: metric.hardwareConcurrency
-    });
-    console.groupEnd();
+    // 簡化的 console 輸出
+    console.info(`${emoji} ${metric.name}: ${metric.value} (${metric.rating})`);
   }
 }
 
@@ -94,7 +87,7 @@ function storeMetric(metric: PerformanceData) {
     
     localStorage.setItem(storageKey, JSON.stringify(recentMetrics));
   } catch (error) {
-    console.warn('無法儲存 Web Vitals 資料到 localStorage:', error);
+    // 靜默處理 localStorage 錯誤，避免在生產環境中產生不必要的警告
   }
 }
 
