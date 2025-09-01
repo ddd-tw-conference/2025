@@ -81,6 +81,7 @@
   "tickets.subtitle": "Join us to explore software development methods in the AI era",
   "tickets.earlyBird": "Early Bird",
   "tickets.earlyBirdDescription": "Limited offer pricing, quantities limited",
+  "tickets.limitedOffer": "Limited Offer",
   "tickets.regular": "Regular Ticket",
   "tickets.regularDescription": "Standard conference ticket",
   "tickets.originalPrice": "Original price NT$ 2,500",
@@ -144,6 +145,8 @@
 
   "calendar.addToGoogle": "Add to Google Calendar",
   "calendar.addToApple": "Download Apple Calendar",
+  "calendar.addToCalendar": "Add to Calendar",
+  "calendar.description": "Add the conference time to your calendar and never miss important events",
   "calendar.eventTitle": "DDDTW 2025 Conference",
   "calendar.eventDescription": "Domain Driven Design Taiwan 2025 Conference - Software Development Methods in the AI Era. Explore the latest technology trends with top experts and share practical experience and best practices.",
   "calendar.eventLocation": "Taipei Chamber of Commerce (6F, No.72, Sec.2, Nanjing E. Rd., Zhongshan Dist., Taipei City)",
