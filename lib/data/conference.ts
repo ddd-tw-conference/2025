@@ -108,6 +108,26 @@ export const SPEAKERS_DATA: SpeakerTopic[] = [
           github: "https://github.com/speaker",
           website: "https://speaker-website.com",
         },
+      },
+      {
+        name: { 'zh-tw': "李智樺(Ruddy 老師)", 'en': "Ruddy Lee" },
+        title: { 'zh-tw': "敏捷與DevOps專業講師與顧問", 'en': "Agile & DevOps Professional Instructor and Consultant" },
+        company: { 'zh-tw': "集英信誠顧問", 'en': "Jiying Xincheng Consulting" },
+        topic: { 'zh-tw': "開發者體驗與 AI 未來的運作方式: 從 Henrik Kniberg 五階段預言看 DDD 的演進", 'en': "Developer Experience and AI Future Operations: DDD Evolution from Henrik Kniberg's Five-Stage Prophecy" },
+        content: { 'zh-tw': "在 AI 快速演進的時代，開發者的角色正面臨劇烈轉變。Henrik Kniberg 提出的「AI 五階段」從工具使用到自我創造，描繪了 AI 與人類協作的未來藍圖。本場演講將以領域驅動設計（DDD）為核心，對應五個階段的演進過程，帶領大家思考：當 AI 能生成程式碼、協助建模，甚至提出全新業務概念時，開發者該如何重新定位？我們將探討從戰術層程式碼輔助、共享語言建構、上下文劃分，一路到核心域創新的過程，並回到開發者體驗(DevEx)的本質；人類如何成為概念驅動成為守護者與共創者。這不只是關於 AI 的未來，更是每位工程師在新世代的挑戰與機會。", 'en': "In the era of rapid AI evolution, developers' roles are facing dramatic changes. Henrik Kniberg's 'Five Stages of AI' from tool usage to self-creation depicts the future blueprint of AI-human collaboration. This presentation will center on Domain-Driven Design (DDD), corresponding to the evolution process of five stages, leading everyone to think: when AI can generate code, assist modeling, and even propose new business concepts, how should developers reposition themselves? We will explore the process from tactical code assistance, shared language construction, context division, all the way to core domain innovation, and return to the essence of Developer Experience (DevEx); how humans become concept-driven guardians and co-creators. This is not just about AI's future, but the challenges and opportunities for every engineer in the new era." },
+        bio: { 'zh-tw': "李智樺，又稱為 Ruddy 老師，是一位專注於敏捷、DevOps 技術與團隊協作的專業講師與顧問，擁有多年實踐經驗，致力於推動持續交付、基礎設施自動化以及開發與運維的高效協作。已退休但仍透過 Ruddy's Blog 分享前沿技術觀點與實戰經驗，希望幫助工程師與團隊成長。", 'en': "Li Zhihua, also known as Teacher Ruddy, is a professional instructor and consultant focused on Agile and DevOps technologies and team collaboration. With years of practical experience, he is dedicated to promoting continuous delivery, infrastructure automation, and efficient collaboration between development and operations. Although retired, he continues to share cutting-edge technical insights and practical experience through Ruddy's Blog, hoping to help engineers and teams grow." },
+        image: getImagePath("/images/speakers/ruddy.jpg"),
+        linkedin: "#",
+        twitter: "#",
+        experience: { 'zh-tw': "多年敏捷與DevOps實踐經驗，專注於推動持續交付與基礎設施自動化", 'en': "Years of Agile and DevOps practical experience, focusing on promoting continuous delivery and infrastructure automation" },
+        expertise: { 'zh-tw': ["敏捷開發", "DevOps", "持續交付", "團隊協作"], 'en': ["Agile Development", "DevOps", "Continuous Delivery", "Team Collaboration"] },
+        achievements: { 'zh-tw': ["敏捷與DevOps專業顧問", "技術部落格作者", "多場技術研討會講者"], 'en': ["Professional Agile & DevOps Consultant", "Technical Blog Author", "Multiple Technical Conference Speaker"] },
+        socialLinks: {
+          linkedin: "#",
+          twitter: "#",
+          github: "#",
+          website: "#",
+        },
       }
     ],
   },
@@ -270,7 +290,7 @@ export const AGENDA_DATA: Session[] = [
 // 統計數據
 export const CONFERENCE_STATISTICS = {
   PARTICIPANTS: '100+',
-  SPEAKERS: '13+',
+  SPEAKERS: '7+',
   HOURS: '8',
   SESSIONS: '4'
 } as const
