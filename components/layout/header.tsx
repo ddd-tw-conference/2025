@@ -53,20 +53,20 @@ export default function Header() {
             </div>
             <span
               className={clsx(
-                "font-semibold text-lg",
+                "font-semibold text-base lg:text-lg",
                 isHomePage ? "text-white" : "text-gray-300"
               )}
             >
               {t("footer.brand")}
             </span>
           </Link>
-          <div className="hidden md:flex items-center space-x-8 text-base">
+          <div className="hidden md:flex items-center space-x-4 lg:space-x-8 text-sm lg:text-base">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 className={clsx(
-                  "hover:text-white transition-colors",
+                  "hover:text-white transition-colors whitespace-nowrap",
                   pathname === link.href ? "text-white" : "text-gray-300"
                 )}
               >

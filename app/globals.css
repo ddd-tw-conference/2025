@@ -8,6 +8,109 @@
   }
 }
 
+/* Speaker Cards 專用樣式 */
+@layer components {
+  .speaker-cards-container {
+    @apply flex flex-col gap-6;
+  }
+
+  /* 桌面版 - 懸浮在右側 */
+  @media (min-width: 1024px) {
+    .speaker-cards-container {
+      @apply gap-4;
+      max-height: calc(100vh - 8rem);
+      overflow-y: auto;
+      padding-right: 8px;
+    }
+    
+    /* 自訂滾動條樣式 */
+    .speaker-cards-container::-webkit-scrollbar {
+      width: 4px;
+    }
+    
+    .speaker-cards-container::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 2px;
+    }
+    
+    .speaker-cards-container::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 2px;
+    }
+    
+    .speaker-cards-container::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.5);
+    }
+  }
+
+  /* 手機版 - 在立即報名下方水平滑動 */
+  @media (max-width: 1023px) {
+    .speaker-cards-container {
+      @apply flex-row overflow-x-auto gap-4 px-4 pb-2;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    
+    .speaker-cards-container::-webkit-scrollbar {
+      display: none;
+    }
+    
+    .speaker-cards-container .speaker-card {
+      @apply flex-shrink-0 w-80;
+      scroll-snap-align: start;
+    }
+    
+    /* 滑動提示 */
+    .speaker-cards-container::after {
+      content: '';
+      @apply flex-shrink-0 w-4;
+    }
+  }
+
+  /* 特殊樣式：桌面版懸浮卡片背景透明度調整 */
+  @media (min-width: 1024px) {
+    .floating-speaker-cards .speaker-card {
+      backdrop-filter: blur(20px);
+    }
+  }
+
+  /* 卡片邊框動畫效果 - 更優雅 */
+  @keyframes borderGlow {
+    0% {
+      background-position: 0% 50%;
+      opacity: 0.2;
+    }
+    50% {
+      background-position: 100% 50%;
+      opacity: 0.4;
+    }
+    100% {
+      background-position: 0% 50%;
+      opacity: 0.2;
+    }
+  }
+
+  /* 按鈕光效動畫 - 更微妙 */
+  @keyframes buttonShimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  /* 自訂動畫類別 */
+  .animate-border-glow {
+    animation: borderGlow 3s ease-in-out infinite;
+  }
+
+  .animate-button-shimmer {
+    animation: buttonShimmer 2s ease-in-out infinite;
+  }
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
