@@ -23,8 +23,8 @@ export default function TicketsPage() {
     if (!ticketSaleActive || !earlyBirdAvailable) {
       setIsEarlyBirdDialogOpen(true)
     } else {
-      // TODO: 導向到實際的購票頁面
-      window.open('https://your-ticket-sales-url.com/early-bird', '_blank')
+      // 導向到 Accupass 購票頁面
+      window.open('https://www.accupass.com/event/2508301008076132622520', '_blank')
     }
   }
 
@@ -32,8 +32,8 @@ export default function TicketsPage() {
     if (!ticketSaleActive || !regularTicketAvailable) {
       setIsRegularDialogOpen(true)
     } else {
-      // TODO: 導向到實際的購票頁面
-      window.open('https://your-ticket-sales-url.com/regular', '_blank')
+      // 導向到 Accupass 購票頁面
+      window.open('https://www.accupass.com/event/2508301008076132622520', '_blank')
     }
   }
   

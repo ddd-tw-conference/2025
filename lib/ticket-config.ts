@@ -12,7 +12,7 @@ export interface TicketSaleConfig {
 
 export const TICKET_SALE_CONFIG: TicketSaleConfig = {
   // 🎯 開賣控制開關 - 設為 true 即可開始販售
-  isTicketSaleActive: false,
+  isTicketSaleActive: true,
   
   // 預計開賣日期 (可選，用於顯示)
   earlyBirdSaleStartDate: "2025-09-03",
