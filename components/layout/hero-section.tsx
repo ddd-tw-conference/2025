@@ -97,7 +97,7 @@ export default function HeroSection() {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-white/50 text-white hover:bg-white/10 px-8 py-3 bg-white/5 backdrop-blur-sm"
+                className="border-white/30 bg-white/10 text-white hover:bg-white/20 hover:border-white/50 px-8 py-3 backdrop-blur-sm font-medium"
                 asChild
               >
                 <Link href="/agenda">{t("hero.viewAgenda")}</Link>

@@ -53,14 +53,14 @@ export default function Error({
             <div className="space-y-4">
               <Button
                 onClick={reset}
-                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
+                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold"
               >
                 🔄 {t('button.tryAgain')}
               </Button>
               <Button
                 variant="outline"
                 onClick={() => router.push('/')}
-                className="w-full border-white/50 text-white hover:bg-white/10 hover:text-white bg-transparent"
+                className="w-full border-white/30 bg-white/10 text-white hover:bg-white/20 hover:border-white/50 backdrop-blur-sm font-medium"
               >
                 🏠 {t('button.backHome')}
               </Button>
