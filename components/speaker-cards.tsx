@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useMemo } from 'react'
+import { useRouter } from 'next/navigation'
 import { useI18n } from '@/contexts/i18n-context'
 import { SPEAKERS_DATA, Speaker } from '@/lib/data/conference'
 
@@ -237,6 +238,7 @@ const SpeakerCard = ({ speaker, theme, currentLang, onTicketClick }: SpeakerCard
 
 export default function SpeakerCards() {
   const { language } = useI18n()
+  const router = useRouter()
   
   // 獲取當前應該顯示的講者（單一講者）
   const currentSpeakers = useMemo(() => calculateCurrentSpeakers(), [])
@@ -251,10 +253,10 @@ export default function SpeakerCards() {
   })
 
   const handleTicketClick = (speaker: Speaker) => {
-    // 購票邏輯 - 可以傳遞講者資訊
+    // 購票邏輯 - 直接導向購票頁面
     console.log('購買票券:', getLocalizedText(speaker.name, language))
-    // 導向購票頁面，可以帶上講者參數
-    window.location.href = `/tickets?speaker=${encodeURIComponent(getLocalizedText(speaker.name, 'en'))}`
+    // 使用 Next.js router 導向購票頁面
+    router.push('/tickets')
   }
 
   return (
