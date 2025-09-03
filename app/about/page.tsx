@@ -15,6 +15,9 @@ export default function AboutPage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-700 to-blue-500">
       <Header />
 
+      {/* 為桌面模式固定 Header 添加頂部間距 */}
+      <div className="hidden md:block h-20"></div>
+
       {/* Main Content */}
       <main className="container mx-auto px-4 py-12">
         {/* Community Photo */}

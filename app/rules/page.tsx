@@ -10,6 +10,9 @@ export default function RulesPage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
       <Header />
 
+      {/* 為桌面模式固定 Header 添加頂部間距 */}
+      <div className="hidden md:block h-20"></div>
+
       {/* Main Content */}
       <main className="container mx-auto px-4 py-12">
         <div className="max-w-4xl mx-auto">

@@ -31,6 +31,9 @@ export default function ConferencePage() {
       <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-700 to-blue-500">
         <Header />
 
+        {/* 為桌面模式固定 Header 添加頂部間距 */}
+        <div className="hidden md:block h-20"></div>
+
         {/* 桌面版懸浮 Speaker 卡片 - 固定在右側 */}
         <div className="hidden lg:block fixed right-4 top-32 z-30 w-80">
           <div className="floating-speaker-cards">

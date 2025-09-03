@@ -31,7 +31,7 @@ export default function Header() {
   ];
 
   return (
-    <header className="bg-blue-900/80 backdrop-blur-sm border-blue-700/50 relative z-50" role="banner">
+    <header className="bg-blue-900/80 backdrop-blur-sm border-blue-700/50 relative z-50 md:fixed md:top-0 md:left-0 md:right-0" role="banner">
       {/* Skip to main content link */}
       <a
         href="#main-content"
