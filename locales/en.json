@@ -281,8 +281,12 @@
   "error.somethingWentWrong": "Something Went Wrong",
   "error.tryAgainLater": "An unexpected error occurred. Please try again later.",
   
+  "message.newVersionAvailable": "Site updated!",
+  
   "button.backHome": "Back to Home",
   "button.goBack": "Go Back",
   "button.tryAgain": "Try Again",
-  "button.contactUs": "Contact Us"
+  "button.contactUs": "Contact Us",
+  "button.later": "Later",
+  "button.refresh": "Refresh Now"
 }

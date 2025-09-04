@@ -281,8 +281,12 @@
   "error.somethingWentWrong": "發生錯誤",
   "error.tryAgainLater": "系統發生未預期的錯誤，請稍後再試。",
   
+  "message.newVersionAvailable": "網站已更新！",
+  
   "button.backHome": "返回首頁",
   "button.goBack": "回上一頁",
   "button.tryAgain": "重新嘗試",
-  "button.contactUs": "聯繫我們"
+  "button.contactUs": "聯繫我們",
+  "button.later": "稍後",
+  "button.refresh": "立即更新"
 }

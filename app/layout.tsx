@@ -4,6 +4,8 @@ import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
 import { WebVitalsReporter } from '@/lib/web-vitals'
 import { I18nProvider } from '@/contexts/i18n-context'
+import { VersionProvider } from './providers/version-provider'
+import { VersionNotification } from './components/version-notification'
 import PerformanceDashboard from '@/components/performance-dashboard'
 import './globals.css'
 
@@ -27,7 +29,10 @@ export default function RootLayout({
       <body className={`${GeistSans.variable} ${GeistMono.variable} font-sans`}>
         <WebVitalsReporter />
         <I18nProvider>
-          {children}
+          <VersionProvider>
+            <VersionNotification />
+            {children}
+          </VersionProvider>
         </I18nProvider>
         <PerformanceDashboard />
       </body>

@@ -62,6 +62,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Generate version
+        run: |
+          VERSION=$(date +%s)
+          echo "export const BUILD_VERSION = \"$VERSION\"" > lib/version.ts
+          echo "{\"version\": \"$VERSION\"}" > public/version.json
+          echo "Generated version: $VERSION"
+
       - name: Build with Next.js cache
         run: pnpm run build
         env:
