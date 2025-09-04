@@ -84,9 +84,9 @@ export const SPEAKERS_DATA: SpeakerTopic[] = [
     ],
   },
   {
-    topic: { 'zh-tw': "從警示到行動：打造AI驅動的自動化Incident Response工具", 'en': "From Alert to Action: Building AI-driven Automated Incident Response Tools" },
-    shortTitle: { 'zh-tw': "自動化Incident Response工具", 'en': "Automated Incident Response Tools" },
-    description: { 'zh-tw': "整合Logs、Code、Docs與Insights，重塑On-Call流程與團隊知識管理", 'en': "Integrating Logs, Code, Docs and Insights to reshape On-Call processes and team knowledge management" },
+    topic: { 'zh-tw': "DX with AI", 'en': "DX with AI" },
+    shortTitle: { 'zh-tw': "開發者體驗的AI革命", 'en': "AI Revolution in Developer Experience" },
+    description: { 'zh-tw': "從事件響應自動化到開發流程重塑，探索AI如何改變開發者的工作體驗與協作模式", 'en': "From incident response automation to development process transformation, exploring how AI changes developer experience and collaboration patterns" },
     color: "purple",
     speakers: [
       {
@@ -271,9 +271,9 @@ export const AGENDA_DATA: Session[] = [
   },
   {
     time: "13:00 - 16:00",
-    title: { 'zh-tw': "從警示到行動：打造AI驅動的自動化Incident Response工具", 'en': "From Alert to Action: Building AI-driven Automated Incident Response Tools" },
-    speaker: "劉鳳軒(Fong)",
-    description: { 'zh-tw': "整合Logs、Code、Docs與Insights，重塑On-Call流程與團隊知識管理。", 'en': "Integrating Logs, Code, Docs and Insights to reshape On-Call processes and team knowledge management." },
+    title: { 'zh-tw': "DX with AI", 'en': "DX with AI" },
+    speaker: "劉鳳軒(Fong)，李智樺(Ruddy 老師)",
+    description: { 'zh-tw': "從事件響應自動化到開發流程重塑，探索AI如何改變開發者的工作體驗與協作模式。", 'en': "From incident response automation to development process transformation, exploring how AI changes developer experience and collaboration patterns." },
     track: { 'zh-tw': "主會場 A", 'en': "Main Hall A" },
     type: "workshop",
   },
