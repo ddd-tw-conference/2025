@@ -77,7 +77,7 @@ export default function NotFound() {
                   // 嘗試開啟郵件客戶端
                   try {
                     window.location.href = 'mailto:dddtw2018@gmail.com?subject=DDD Taiwan 2025 - 需要協助&body=您好，我需要協助：%0D%0A%0D%0A';
-                  } catch (error) {
+                  } catch {
                     // 如果郵件客戶端無法開啟，複製郵件地址到剪貼簿
                     navigator.clipboard?.writeText('dddtw2018@gmail.com').then(() => {
                       alert('郵件地址已複製到剪貼簿：dddtw2018@gmail.com');

@@ -1,8 +1,7 @@
 'use client'
 
 import * as React from "react"
-import { getStoredMetrics, getPerformanceSummary, clearStoredMetrics } from "@/lib/web-vitals-reporter"
-import { cn } from "@/lib/utils"
+import { getStoredMetrics, getPerformanceSummary, getPerformanceInsights, clearStoredMetrics } from "@/lib/web-vitals-reporter"
 
 interface MetricCardProps {
   name: string
@@ -104,9 +103,10 @@ function MetricCard({ name, data }: MetricCardProps) {
 }
 
 export default function PerformanceDashboard() {
-  const [summary, setSummary] = React.useState<any>(null)
+  const [summary, setSummary] = React.useState<ReturnType<typeof getPerformanceSummary> | null>(null)
+  const [insights, setInsights] = React.useState<ReturnType<typeof getPerformanceInsights> | null>(null)
   const [isOpen, setIsOpen] = React.useState(false)
-  const [rawMetrics, setRawMetrics] = React.useState<any[]>([])
+  const [rawMetrics, setRawMetrics] = React.useState<ReturnType<typeof getStoredMetrics>>([])
   const [isMounted, setIsMounted] = React.useState(false)
 
   React.useEffect(() => {
@@ -114,6 +114,7 @@ export default function PerformanceDashboard() {
     
     const updateData = () => {
       setSummary(getPerformanceSummary())
+      setInsights(getPerformanceInsights())
       setRawMetrics(getStoredMetrics())
     }
     
@@ -188,10 +189,44 @@ export default function PerformanceDashboard() {
               {summary ? (
                 <div>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                    {Object.entries(summary).map(([name, data]: [string, any]) => (
+                    {Object.entries(summary).map(([name, data]) => (
                       <MetricCard key={name} name={name} data={data} />
                     ))}
                   </div>
+
+                  {/* 性能洞察 */}
+                  {insights && (
+                    <div className="mb-8 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                      <h3 className="text-lg font-semibold text-blue-900 dark:text-blue-100 mb-3">
+                        📊 性能洞察
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                        <div>
+                          <strong>總會話數：</strong> {insights.totalSessions}
+                        </div>
+                        <div>
+                          <strong>設備分布：</strong>
+                          {Object.entries(insights.deviceTypes).map(([type, count]) => (
+                            <span key={type} className="ml-2 px-2 py-1 bg-blue-200 dark:bg-blue-800 rounded text-xs">
+                              {type}: {count}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                      {insights.recommendations.length > 0 && (
+                        <div className="mt-3">
+                          <strong className="text-orange-700 dark:text-orange-300">💡 優化建議：</strong>
+                          <ul className="mt-1 space-y-1">
+                            {insights.recommendations.map((rec, idx) => (
+                              <li key={idx} className="text-orange-600 dark:text-orange-400 text-sm">
+                                • {rec}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  )}
 
                   {rawMetrics.length > 0 && (
                     <div>

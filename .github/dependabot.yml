@@ -18,6 +18,27 @@ updates:
     commit-message:
       prefix: "chore"
       include: "scope"
+    # 忽略特定依賴的更新，避免版本衝突
+    ignore:
+      # 暫時忽略 Next.js 的 patch 更新，只允許 minor 和 major 更新
+      - dependency-name: "next"
+        update-types: ["version-update:semver-patch"]
+      # 確保 Next.js 相關套件版本一致性
+      - dependency-name: "@next/bundle-analyzer"
+        update-types: ["version-update:semver-patch"]
+      - dependency-name: "eslint-config-next" 
+        update-types: ["version-update:semver-patch"]
+    # 分組相關依賴的更新
+    groups:
+      next-ecosystem:
+        patterns:
+          - "next*"
+          - "@next/*"
+          - "eslint-config-next"
+      react-ecosystem:
+        patterns:
+          - "react*"
+          - "@types/react*"
 
   # GitHub Actions
   - package-ecosystem: "github-actions"

@@ -31,17 +31,6 @@ export const LanguageSelector = () => {
     }
   }
 
-  const getLanguageName = (lang: string) => {
-    switch (lang) {
-      case 'zh-tw':
-        return '繁體中文'
-      case 'en':
-        return 'English'
-      default:
-        return 'Language'
-    }
-  }
-
   return (
     <div className="relative inline-block z-[60]" ref={dropdownRef}>
       <button 

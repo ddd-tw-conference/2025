@@ -6,7 +6,7 @@ import * as React from "react"
  */
 
 interface StructuredDataProps {
-  data: Record<string, any> | Record<string, any>[]
+  data: Record<string, unknown> | Record<string, unknown>[]
 }
 
 export default function StructuredData({ data }: StructuredDataProps) {

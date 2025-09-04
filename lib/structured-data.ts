@@ -174,8 +174,10 @@ export function generateWebsiteStructuredData(language: string = 'zh-tw') {
   }
 }
 
+import { Speaker } from './data/conference'
+
 // 講者個人結構化資料生成器
-export function generatePersonStructuredData(speaker: any, language: string = 'zh-tw') {
+export function generatePersonStructuredData(speaker: Speaker, language: string = 'zh-tw') {
   return {
     "@context": "https://schema.org",
     "@type": "Person",
@@ -193,9 +195,9 @@ export function generatePersonStructuredData(speaker: any, language: string = 'z
       speaker.socialLinks?.twitter,
       speaker.socialLinks?.github
     ].filter(Boolean),
-    "knowsAbout": getLocalizedText({ 'zh-tw': speaker.expertise?.['zh-tw'] || [], 'en': speaker.expertise?.['en'] || [] }, language),
+    "knowsAbout": speaker.expertise[language as keyof typeof speaker.expertise] || speaker.expertise['zh-tw'] || [],
     "alumniOf": speaker.education ? getLocalizedText(speaker.education, language) : undefined,
-    "award": speaker.achievements ? getLocalizedText({ 'zh-tw': speaker.achievements?.['zh-tw'] || [], 'en': speaker.achievements?.['en'] || [] }, language) : undefined
+    "award": speaker.achievements ? (speaker.achievements[language as keyof typeof speaker.achievements] || speaker.achievements['zh-tw'] || []) : undefined
   }
 }
 

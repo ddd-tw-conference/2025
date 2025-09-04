@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 import { useI18n } from '@/contexts/i18n-context'
 import { SPEAKERS_DATA, Speaker } from '@/lib/data/conference'
 
@@ -29,11 +30,6 @@ type ThemeKey = keyof typeof cardThemes
 // 輔助函數：獲取本地化文字
 const getLocalizedText = (text: { 'zh-tw': string; 'en': string }, lang: string) => {
   return text[lang as keyof typeof text] || text['zh-tw']
-}
-
-// 輔助函數：獲取本地化陣列
-const getLocalizedArray = (array: { 'zh-tw': string[]; 'en': string[] }, lang: string) => {
-  return array[lang as keyof typeof array] || array['zh-tw']
 }
 
 // 計算當前應該顯示的講者（每3天切換一位）
@@ -150,9 +146,11 @@ const SpeakerCard = ({ speaker, theme, currentLang, onTicketClick }: SpeakerCard
             boxShadow: `0 4px 20px rgba(0, 0, 0, 0.3), 0 0 10px ${currentTheme.glowColor}33`
           }}
         >
-          <img 
+          <Image 
             src={speaker.image}
             alt={getLocalizedText(speaker.name, currentLang)}
+            width={80}
+            height={80}
             className="w-full h-full object-cover"
             loading="lazy"
           />
@@ -246,7 +244,7 @@ export default function SpeakerCards() {
   // 為講者隨機分配色系
   const [speakersWithThemes] = useState(() => {
     const themes = generateRandomThemes(1) // 只需要一個色系
-    return currentSpeakers.map((speaker, index) => ({
+    return currentSpeakers.map((speaker) => ({
       ...speaker,
       theme: themes[0] // 使用第一個色系
     }))

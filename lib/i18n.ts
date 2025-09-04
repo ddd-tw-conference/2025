@@ -7,7 +7,7 @@ export const loadLocale = async (lang: string): Promise<Record<string, string>> 
   try {
     const messages = await import(`../locales/${lang}.json`)
     return messages.default
-  } catch (error) {
+  } catch {
     // 靜默回退到預設語言
     const fallback = await import('../locales/zh-tw.json')
     return fallback.default
@@ -28,16 +28,16 @@ export const detectLanguage = (): string => {
 }
 
 // 翻譯函式
-export const t = (messages: Record<string, string>, key: string, params?: Record<string, any>): string => {
+export const t = (messages: Record<string, string>, key: string, params?: Record<string, string>): string => {
   const keys = key.split('.')
-  let value: any = messages
+  let value: unknown = messages
   
   for (const k of keys) {
-    value = value?.[k]
+    value = (value as Record<string, unknown>)?.[k]
     if (value === undefined) break
   }
   
-  let result = value || key // fallback 到 key
+  let result = typeof value === 'string' ? value : key // fallback 到 key
   
   // 參數插值
   if (params && typeof result === 'string') {

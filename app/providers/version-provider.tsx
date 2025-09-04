@@ -1,6 +1,6 @@
 "use client"
 
-import React, { createContext, useContext, useEffect, useState } from "react"
+import React, { createContext, useContext, useEffect, useState, useCallback } from "react"
 import { usePathname } from "next/navigation"
 import { BUILD_VERSION } from "@/lib/version"
 
@@ -22,7 +22,7 @@ export function VersionProvider({ children }: { children: React.ReactNode }) {
   const [isUserInteracting, setIsUserInteracting] = useState(false)
   const pathname = usePathname()
 
-  const checkVersion = async () => {
+  const checkVersion = useCallback(async () => {
     try {
       const response = await fetch("/version.json", { 
         cache: 'no-cache',
@@ -43,14 +43,14 @@ export function VersionProvider({ children }: { children: React.ReactNode }) {
     } catch (error) {
       console.warn("Version check failed:", error)
     }
-  }
+  }, [isUserInteracting])
 
   // 定時檢查版本
   useEffect(() => {
     checkVersion()
     const interval = setInterval(checkVersion, 3 * 60 * 1000) // 3分鐘
     return () => clearInterval(interval)
-  }, []) // 移除 isUserInteracting 依賴，避免不必要的重新設定
+  }, [checkVersion]) // 加入 checkVersion 依賴
 
   // 監聽路由變化
   useEffect(() => {
@@ -62,7 +62,7 @@ export function VersionProvider({ children }: { children: React.ReactNode }) {
     }, 2000) // 2秒後認為互動結束
     
     return () => clearTimeout(timer)
-  }, [pathname])
+  }, [pathname, checkVersion])
 
   // 監聽使用者互動
   useEffect(() => {
