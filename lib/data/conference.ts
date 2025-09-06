@@ -176,6 +176,21 @@ export const SPEAKERS_DATA: SpeakerTopic[] = [
           github: "https://github.com/speaker",
           website: "https://eandev.com/",
         },
+      },
+      {
+        name: { 'zh-tw': "Stephen Tung", 'en': "Stephen Tung" },
+        title: { 'zh-tw': "開發者推廣大使", 'en': "Developer Advocate" },
+        company: { 'zh-tw': "Kurrent（前身為 Event Store）", 'en': "Kurrent (formerly Event Store)" },
+        topic: { 'zh-tw': "事件溯源：值得信賴且具情境的 AI 現代資料儲存模式", 'en': "Event Sourcing: The Modern Data Storage Pattern for Trustworthy and Contextual AI" },
+        content: { 'zh-tw': "AI 的效能高度依賴其來源資料的品質。然而，傳統資料庫作為真相來源並不理想，因為它們設計用於即時操作，無法保留過去的資料快照，導致 AI 無法完整掌握資料變動的何時、如何及原因。事件溯源透過儲存每個事件為不可變事實，完整保留業務歷程，為 AI 提供豐富的決策脈絡與意圖。與傳統資料庫容易被覆寫和損毀不同，事件溯源以僅追加的方式確保資料完整性。本次分享將展示 KurrentDB 的事件溯源能力及其新 MCP 功能，如何協助打造具情境感知的智慧商業應用，將營運資料轉化為值得信賴的 AI 洞察。可靠 AI 的未來不僅在於更好的演算法與模型，更在於保留完整的業務故事。", 'en': "The effectiveness of AI is largely dependent on the quality of its source data. However, traditional databases as a source of truth is not ideal to achieve this because they are designed for real-time operations that don't preserve past snapshots of the data. This leaves AI with incomplete knowledge of what, when, how, and why changes happened.\n\nEvent sourcing captures the complete business story by storing every event as an immutable fact, maintaining a full historical trail of what happened. This provides AI with rich contextual information about business decisions and their intentions. Unlike traditional databases where data can be corrupted and overwritten, event sourcing ensures integrity through append-only operations.\n\nIn this talk, I'll demonstrate how KurrentDB's event sourcing capabilities and its new MCP feature help create intelligent, context-aware business applications that transform operational data into trustworthy AI insights.\n\nThe future of reliable AI isn't just about better algorithms and models. it's about preserving the full story of your business operations." },
+        bio: { 'zh-tw': "Stephen 是一位專注於簡化並解決複雜商業問題的軟體實踐者與領導者。15 年前接觸 DDD/CQRS/ES 後便一頭栽入至今。他是三個孩子的父親，現居香港，閒暇時喜歡冥想放鬆。", 'en': "Stephen has been a software practitioner and leader focused on simplifying and tackling the heart of complex business problems. He discovered DDD/CQRS/ES 15 years ago and has never looked back since. He's the father of three, living in Hong Kong, and enjoys to zen out when there is a moment." },
+        image: "https://conference.ddd-tw.com/2024/assets/images/speaker-Stephen-Tung.png",
+        experience: { 'zh-tw': "20年以上商業應用開發經驗，曾任軟體工程師、技術主管、顧問、總監，現為 Kurrent 的開發者推廣大使。", 'en': "20+ Year experience in Business Application Development Space participating in roles such software developer, tech lead, consultant, director, and now a developer advocate for Kurrent." },
+        expertise: { 'zh-tw': ["事件溯源", "CQRS", "領域驅動設計", "企業/商業應用開發與架構"], 'en': ["Event Sourcing", "CQRS", "Domain Driven Design", "Enterprise/Business Application Development and Architecture"] },
+        achievements: { 'zh-tw': ["解決方案顧問", "技術年會講者", "DDD實踐者"], 'en': ["Solution Consultant", "Technical Conference Speaker", "DDD Practitioner"] },
+        socialLinks: {
+          linkedin: "https://www.linkedin.com/in/stktung"
+        },
       }
     ],
   },
@@ -264,7 +279,7 @@ export const AGENDA_DATA: Session[] = [
   {
     time: "09:00 - 12:00",
     title: { 'zh-tw': "AI輔助軟體開發", 'en': "AI-Assisted Software Development" },
-    speaker: "Arthur，李民偉(Ean)",
+    speaker: "Arthur，李民偉(Ean)，Stephen",
     description: { 'zh-tw': "在軟體3.0時代，掌握AI驅動的開發語言。", 'en': "Mastering AI-driven development languages in the Software 3.0 era." },
     track: { 'zh-tw': "會議室 B", 'en': "Conference Room B" },
     type: "workshop",
@@ -290,7 +305,7 @@ export const AGENDA_DATA: Session[] = [
 // 統計數據
 export const CONFERENCE_STATISTICS = {
   PARTICIPANTS: '100+',
-  SPEAKERS: '7+',
+  SPEAKERS: '8+',
   HOURS: '8',
   SESSIONS: '4'
 } as const

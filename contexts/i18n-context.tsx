@@ -26,6 +26,7 @@ const messagesMap: Record<string, Record<string, string>> = {
 export const I18nProvider = ({ children }: I18nProviderProps) => {
   const [language, setLanguage] = useState('zh-tw')
   const [messages, setMessages] = useState<Record<string, string>>(zhTwMessages)
+  const [mounted, setMounted] = useState(false)
 
   const changeLanguage = (lang: string) => {
     const newMessages = messagesMap[lang] || messagesMap['zh-tw']
@@ -36,25 +37,32 @@ export const I18nProvider = ({ children }: I18nProviderProps) => {
     }
   }
 
-  // 延遲載入語言設定，避免 hydration 問題
+  // 等待客戶端 hydration 完成後再載入儲存的語言設定
   useEffect(() => {
-    // 使用 requestIdleCallback 或 setTimeout 來延遲執行
+    setMounted(true)
+
     const loadStoredLanguage = () => {
       if (typeof window !== 'undefined') {
         const stored = localStorage.getItem('language')
         if (stored && stored !== language) {
           changeLanguage(stored)
+        } else {
+          // 如果沒有儲存的語言，檢查瀏覽器語言
+          const browserLang = navigator.language.toLowerCase()
+          if (browserLang.includes('en') && language !== 'en') {
+            changeLanguage('en')
+          }
         }
       }
     }
-    
-    // 延遲執行以確保客戶端完全載入
-    setTimeout(loadStoredLanguage, 0)
+
+    // 小延遲確保完全 hydration
+    setTimeout(loadStoredLanguage, 100)
   }, [])
 
   const t = (key: string, params?: Record<string, any>): string => {
     const result = messages[key] || key
-    
+
     // 參數插值
     if (params && typeof result === 'string') {
       return Object.entries(params).reduce(
@@ -62,7 +70,7 @@ export const I18nProvider = ({ children }: I18nProviderProps) => {
         result
       )
     }
-    
+
     return result
   }
 
