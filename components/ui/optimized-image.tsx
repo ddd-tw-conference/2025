@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from "react"
-import { getOptimizedImageUrl, getSupportedImageFormat, PERFORMANCE_CONFIG } from "@/lib/performance-config"
+import { getOptimizedImageUrl, getSupportedImageFormat, PERFORMANCE_CONFIG } from "@/config"
 import { cn } from "@/lib/utils"
 
 interface OptimizedImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {

@@ -1,7 +1,7 @@
 
 # DDD Taiwan Conference 2025
 
-![Next.js](https://img.shields.io/badge/Next.js-15.2.4-blue?logo=nextdotjs)
+![Next.js](https://img.shields.io/badge/Next.js-15.5.2-blue?logo=nextdotjs)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?logo=typescript)
 ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.x-38bdf8?logo=tailwindcss)
 ![GitHub Pages](https://img.shields.io/badge/Deployed%20on-GitHub%20Pages-green?logo=github)
@@ -33,15 +33,19 @@ DDD Taiwan 致力於促進軟體開發者、架構師、團隊領導者等共同
 
 - `app/`：主要頁面（首頁、關於、議程、講者、交通、規則等）
 - `components/`：共用元件（UI、佈局、主題等）
+- `config/`：統一配置管理（應用設定、票務、性能等）
+- `contexts/`：React Context 提供者（i18n 等）
 - `hooks/`：自訂 React hooks
-- `lib/`：工具函式
+- `lib/`：工具函式和資料管理
+- `locales/`：多語系資源檔案
 - `public/`：靜態資源（圖片等）
 - `styles/`：全域樣式
+- `docs/`：技術文檔
 
 ## 技術棧
 
-- **Next.js 15.2.4** - React 框架，配置為 SPA 模式
-- **React 18** - 前端框架
+- **Next.js 15.5.2** - React 框架，配置為 SPA 模式
+- **React 19** - 前端框架
 - **TypeScript** - 型別安全的 JavaScript
 - **Tailwind CSS** - 實用優先的 CSS 框架
 - **Radix UI** - 無樣式的 UI 組件庫
@@ -98,9 +102,12 @@ pnpm deploy:check
 ### 技術特色
 
 - **SPA 架構** - 使用 Next.js 靜態匯出功能
+- **統一配置管理** - 集中式 config/ 目錄管理（詳見 [配置文檔](./docs/config-management.md)）
+- **模組化資料層** - 專門的資料管理和類型定義
 - **型別安全** - 完整的 TypeScript 型別定義
 - **元件化設計** - 可重複使用的 React 組件庫
 - **效能優化** - 程式碼分割和圖片最佳化
+- **多語系支援** - 完整的 i18n 架構
 
 ## 貢獻方式
 

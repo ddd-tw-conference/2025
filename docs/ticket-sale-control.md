@@ -3,7 +3,7 @@
 ## � 快速啟用販售
 
 ### 步驟 1: 啟用販售開關
-編輯 `lib/ticket-config.ts`：
+編輯 `config/tickets.ts`：
 ```typescript
 export const TICKET_SALE_CONFIG: TicketSaleConfig = {
   isTicketSaleActive: true,  // 🎯 改為 true 啟用販售
@@ -12,7 +12,7 @@ export const TICKET_SALE_CONFIG: TicketSaleConfig = {
 ```
 
 ### 步驟 2: 購票連結 (已完成)
-- 已統一配置於：`lib/ticket-config.ts` → `TICKET_SALE_CONFIG.purchaseUrl`
+- 已統一配置於：`config/tickets.ts` → `TICKET_SALE_CONFIG.purchaseUrl`
 - 早鳥票和一般票使用同一購票頁面
 
 ## 🔧 故障排除

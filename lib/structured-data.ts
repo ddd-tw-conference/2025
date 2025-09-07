@@ -12,8 +12,8 @@
     },理解度
  */
 
-import { SPEAKERS_DATA, AGENDA_DATA } from '@/lib/data/conference'
-import { getLocalizedText } from '@/lib/data/conference'
+import { SPEAKERS_DATA, AGENDA_DATA } from '@/lib/data'
+import { getLocalizedText } from '@/lib/data'
 
 // 會議活動結構化資料
 export function generateEventStructuredData(language: string = 'zh-tw') {
@@ -174,7 +174,7 @@ export function generateWebsiteStructuredData(language: string = 'zh-tw') {
   }
 }
 
-import { Speaker } from './data/conference'
+import { Speaker } from './data'
 
 // 講者個人結構化資料生成器
 export function generatePersonStructuredData(speaker: Speaker, language: string = 'zh-tw') {

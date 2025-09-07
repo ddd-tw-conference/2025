@@ -4,7 +4,7 @@
  */
 
 import { useState, useMemo, useCallback } from 'react'
-import { SPEAKERS_DATA, AGENDA_DATA, type Speaker, type SpeakerTopic, getLocalizedText, getLocalizedArray } from '@/lib/data/conference'
+import { SPEAKERS_DATA, AGENDA_DATA, type Speaker, type SpeakerTopic, getLocalizedText, getLocalizedArray } from '@/lib/data'
 import { useI18n } from '@/contexts/i18n-context'
 
 /**

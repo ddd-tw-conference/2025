@@ -1,4 +1,4 @@
-import { CONFIG } from './config'
+import { CONFIG } from '@/config'
 
 // SPA 模式專用路徑工具函數 - 修復 hydration 問題
 export const getBasePath = (): string => {

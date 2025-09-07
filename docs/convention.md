@@ -5,6 +5,11 @@
 - **元件**：使用 `'use client'` 避免 SSR 問題
 - **Import 順序**：React → Next.js → 第三方 → 本地組件
 
+## ⚙️ 配置管理
+- **統一目錄**：所有配置放在 `config/` 目錄（詳見 [config-management.md](./config-management.md)）
+- **引用方式**：使用 `import { CONFIG } from '@/config'`
+- **避免硬編碼**：所有設定值都要透過配置文件管理
+
 ## 🎨 UI 設計原則
 
 ### 按鈕可讀性
@@ -22,6 +27,7 @@
 ### 懸浮效果
 - **主要按鈕**：`hover:from-blue-700 hover:to-purple-700`
 - **次要按鈕**：`hover:bg-white/20 hover:border-white/50`
+- **互動元素**：必須添加 `cursor-pointer` 確保正確的鼠標樣式
 
 ## 🚀 路由跳轉規範
 
@@ -67,4 +73,4 @@ if (!mounted) return null
 - [ ] 行動裝置顯示正常
 
 ---
-*v2.0 - 2025年9月3日*
+*更新日期：2025年9月7日 | v2.1 - 簡化配置管理說明並改善可讀性*

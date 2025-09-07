@@ -4,13 +4,13 @@ You are an expert AI programming assistant for the DDD Taiwan 2025 Conference we
 
 ## Project Context
 - **Purpose**: Conference website for DDD Taiwan 2025
-- **Tech Stack**: Next.js 15 + TypeScript + Tailwind CSS
+- **Tech Stack**: Next.js 15.5.2 + TypeScript + Tailwind CSS
 - **Deployment**: Static export to GitHub Pages
 - **Languages**: Multilingual support (zh-tw/en)
 - **Integration**: Accupass ticketing system
 
 ## Architecture Overview
-- **Framework**: Next.js 15 (App Router) + React 19 + TypeScript
+- **Framework**: Next.js 15.5.2 (App Router) + React 19 + TypeScript
 - **UI Library**: Tailwind CSS + shadcn/ui components
 - **Deployment**: Static export (`output: 'export'`) to GitHub Pages
 - **Internationalization**: Custom i18n system (zh-tw/en)
@@ -34,9 +34,14 @@ contexts/
 └── i18n-context.tsx   # Internationalization context
 
 lib/
-├── ticket-config.ts   # Ticket sale controls & purchase URL
-├── data/conference.ts # Speaker/agenda data (multilingual)
-└── i18n.ts           # Internationalization core
+├── data/               # Speaker/agenda data modules (multilingual)
+├── i18n.ts           # Internationalization core
+└── utils.ts          # Utility functions
+
+config/
+├── tickets.ts        # Ticket sale controls & purchase URL
+├── agenda.ts         # Session patterns & time calculations
+└── app.ts            # Application configuration
 
 locales/
 ├── zh-tw.json        # Traditional Chinese
@@ -45,13 +50,24 @@ locales/
 
 ## Development Guidelines
 
-### Command Operations
-- Prefer command-line operations for cross-platform consistency
-- Use `pnpm` commands for execution, compilation, and debugging (`pnpm dev`, `pnpm build`, `pnpm lint`)
+### Primary Technology Stack
+- **Package Manager**: pnpm (required for all operations)
+- **Runtime Commands**: `pnpm dev`, `pnpm build`, `pnpm lint`
+- **Build Target**: Static export for GitHub Pages deployment
 
-### Next.js 15 Best Practices
+### Auxiliary Tools Usage
+- **Python Environment**: Only use if explicit Python scripts exist in project
+- **Configuration Priority**: Next.js/Node.js solutions preferred over Python alternatives
+- **Tool Selection**: Prefer project-native tools unless specific requirements demand alternatives
+
+### Next.js 15.5.2 Best Practices
 - Image configuration uses `localPatterns` with multiple search patterns (`search: ''` and `search: '?v=*'`)
 - For static exports, set `outputFileTracingRoot` to project root directory
+
+### Tailwind CSS Guidelines
+- **Dynamic Classes**: Avoid string interpolation; use static switch/case definitions
+- **Safelist Protection**: Add frequently-used dynamic classes to safelist if needed
+- **Cursor Styling**: Always explicitly set `cursor-pointer` for interactive elements
 
 ### SSR/CSR Consistency
 - Avoid non-deterministic functions (`Math.random()`, `Date.now()`) in rendering logic
@@ -64,44 +80,11 @@ locales/
 - Categorize errors (build, runtime, display) and prioritize blocking issues
 - Perform root cause analysis and regression testing
 
-### Internationalization Type Safety
+### Internationalization
 - Use type-safe functions like `getLocalizedText` for multilingual data access
 - Ensure default language fallback consistency
-
-### Git Best Practices
-```bash
-# Restore damaged files
-git checkout HEAD -- path/to/file.tsx
-# Check and review changes
-git status && git diff
-```
-
-### UI Design Patterns
 ```tsx
-// Primary buttons with gradient and high contrast
-<Button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold">
-
-// Secondary buttons with transparency and glass effect
-<Button className="bg-white/10 border-white/30 text-white backdrop-blur-sm font-medium hover:bg-white/20">
-
-// Responsive fixed header (desktop fixed, mobile relative)
-<header className="relative z-50 md:fixed md:top-0 md:left-0 md:right-0">
-
-// Spacing to prevent fixed header overlap
-<div className="hidden md:block h-20"></div>
-```
-
-### Navigation Standards
-| Scenario | Method | Example |
-|----------|--------|---------|
-| Internal pages | `<Link>` | `<Link href="/tickets">購票</Link>` |
-| Programmatic navigation | `router.push()` | `router.push('/agenda')` |
-| External links | `<Button asChild>` + `<a>` | `<Button asChild><a href="url" target="_blank">` |
-| Purchase buttons | `window.open()` | `window.open(getTicketPurchaseUrl(), '_blank')` |
-
-### Internationalization Usage
-```tsx
-// Correct approach
+// Correct usage
 const { t } = useI18n()
 <button>{t('button.contactUs')}</button>
 
@@ -111,6 +94,34 @@ interface Speaker {
   bio: { 'zh-tw': string; 'en': string }
 }
 ```
+
+### UI & Navigation Standards
+```tsx
+// Primary button: bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold
+// Secondary button: bg-white/10 border-white/30 text-white backdrop-blur-sm font-medium hover:bg-white/20
+// Fixed header: relative z-50 md:fixed md:top-0 md:left-0 md:right-0
+// Header spacing: <div className="hidden md:block h-20"></div>
+
+// Navigation patterns
+Internal pages: <Link href="/tickets">
+Programmatic: router.push('/agenda')
+External links: <Button asChild><a href="url" target="_blank">
+Purchase: window.open(getTicketPurchaseUrl(), '_blank')
+```
+
+### Git & Debugging
+```bash
+git checkout HEAD -- path/to/file.tsx  # Restore files
+git status && git diff                  # Review changes
+```
+- Categorize errors: build, runtime, display
+- Use deterministic functions (avoid Math.random(), Date.now())
+
+### External Link Management
+- All external links (e.g., Accupass ticket URLs) must be managed in configuration files (such as `config/tickets.ts`)
+- Do not hardcode external URLs in components, pages, or documentation
+- Always use getter functions from configuration for referencing external links in code, documentation, and examples
+- This ensures maintainability, consistency, and easy future updates
 
 ## Ticketing System
 
@@ -140,33 +151,24 @@ const handleTicketClick = () => {
 }
 ```
 
-## Resolved Issues
+## Resolved Issues (Key Patterns)
 
-### 1. Button Readability ✅
-- **Issue**: Transparent button text was unclear
-- **Solution**: Added `bg-white/10` background for better contrast
+1. **Button Readability**: Use `bg-white/10` for transparent button contrast
+2. **SPA Routing**: Use Next.js `<Link>` and `router.push()`, avoid `window.location.href`
+3. **Email Contact**: Add error handling with clipboard fallback for `mailto:`
+4. **External Services**: Use `window.open()` with proper URL parameters
+5. **Fixed Header**: `relative z-50 md:fixed md:top-0` + spacing `h-20`
+6. **File Recovery**: `git checkout HEAD -- filename` to restore corrupted files
+7. **Tailwind Dynamic Classes**: Use static definitions instead of string interpolation
+8. **Documentation**: Focus on final conclusions, remove historical development records
 
-### 2. Routing Issues ✅  
-- **Issue**: `window.location.href` breaks SPA routing
-- **Solution**: Use Next.js `<Link>` and `router.push()` consistently
+## Documentation Standards
 
-### 3. Email Contact ✅
-- **Issue**: `mailto:` shows blank in some environments
-- **Solution**: Error handling with clipboard fallback
-
-### 4. Accupass Integration ✅
-- **Issue**: Ticket button couldn't connect to external service
-- **Solution**: Use `window.open()` with correct URL parameters
-
-### 5. Fixed Navigation Header ✅
-- **Issue**: Long homepage content requires scrolling back to top for navigation
-- **Solution**: Fixed header on desktop, relative on mobile
-- **Implementation**: `relative z-50 md:fixed md:top-0 md:left-0 md:right-0`
-- **Companion**: Add `<div className="hidden md:block h-20"></div>` to prevent overlap
-
-### 6. Git File Recovery ✅
-- **Issue**: Editor accidentally corrupting file content
-- **Solution**: Use `git checkout HEAD -- filename` to restore files
+### Content Organization
+- **Structure**: Overview → Implementation → Results → Future
+- **Clarity**: Remove version history, keep only current final state
+- **Consistency**: Ensure naming consistency across all files (e.g., 基礎知識 not 知識科普)
+- **Readability**: Use logical flow that guides readers from concept to implementation
 
 ## Development Checklist
 
@@ -174,25 +176,23 @@ const handleTicketClick = () => {
 - [ ] `pnpm dev` to start local environment  
 - [ ] Check `isTicketSaleActive` status
 
-### UI Verification
-- [ ] Button contrast ratio ≥ 4.5:1
-- [ ] All text uses i18n (`t()` function)
-- [ ] Responsive design (sm/md/lg)
-- [ ] Header correctly fixed on desktop
-
-### Functionality Testing
-- [ ] Internal routing uses Next.js methods
-- [ ] Ticket links properly open Accupass
-- [ ] Language switching works correctly
-- [ ] Contact features have error handling
+### Verification
+- [ ] Button contrast ≥ 4.5:1, use i18n (`t()` function), responsive design
+- [ ] Internal routing (Next.js methods), external links (Accupass), language switching
+- [ ] `pnpm build` success, static files in `out/`, images in `public/`
 
 ### Pre-Deployment
-- [ ] `pnpm build` completes without errors
-- [ ] Static files generated to `out/` directory
-- [ ] All images located in `public/`
-- [ ] After all modifications (including copilot-instructions.md), confirm with the user before running any git add/commit/push commands
-    - Commit messages should summarize the main goal and key changes of the update
-    - Only proceed with git add/commit/push if the user approves, allowing for review before submission
+- [ ] **Instructions Update Protocol**: After modifications, assess copilot-instructions.md updates:
+    - New patterns/solutions discovered
+    - API/configuration changes  
+    - Technical challenges resolved
+    - Documentation improvements and content organization
+    - **Optimization guidelines**: Balance clarity, conciseness, and completeness
+        - Remove redundant sections and version histories
+        - Focus on final conclusions over development process
+        - Use compact formats for reference information
+        - Prioritize actionable guidance and current best practices
+    - Confirm with user before git operations
 
 ## Contact Information
 - **Technical Support**: dddtw2018@gmail.com
@@ -200,11 +200,4 @@ const handleTicketClick = () => {
 - **Deployment**: GitHub Pages
 
 ---
-*Last Updated: September 7, 2025 | v2.4 - Enhanced external link management and git workflow*
-
-### External Link Management Best Practice
-
-- All external links (e.g., Accupass ticket URLs) must be managed in configuration files (such as `lib/ticket-config.ts`).  
-- Do not hardcode external URLs in components, pages, or documentation.  
-- Always use getter functions from configuration for referencing external links in code, documentation, and examples.  
-- This ensures maintainability, consistency, and easy future updates.
+*Last Updated: September 7, 2025 | v2.6 - Added Tailwind CSS guidelines, documentation standards, and updated version numbers*

@@ -21,7 +21,7 @@ import Image from "next/image"
 import Header from "@/components/layout/header"
 import Footer from "@/components/layout/footer"
 import StructuredData from "@/components/structured-data"
-import { SPEAKERS_DATA, type Speaker, getLocalizedText, getLocalizedArray } from "@/lib/data/conference"
+import { SPEAKERS_DATA, type Speaker, getLocalizedText, getLocalizedArray } from "@/lib/data"
 import { useI18n } from "@/contexts/i18n-context"
 import { TopicTitle } from "@/components/topic-title"
 import { 

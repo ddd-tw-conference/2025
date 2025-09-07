@@ -1,11 +1,13 @@
 'use client'
 
+import React, { useState, useCallback } from "react"
 import { Users, Clock, MapPin, User } from "lucide-react"
 import Header from "@/components/layout/header"
 import Footer from "@/components/layout/footer"
 import StructuredData from "@/components/structured-data"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { AGENDA_DATA, getLocalizedText } from '@/lib/data/conference'
+import { AgendaLightbox } from "@/components/ui/agenda-lightbox"
+import { AGENDA_DATA, getLocalizedText, Session } from '@/lib/data'
 import { useI18n } from "@/contexts/i18n-context"
 import { 
   generateEventStructuredData, 
@@ -16,6 +18,20 @@ export default function AgendaPage() {
   const { t, language } = useI18n()
   // 使用統一資料層
   const sessions = AGENDA_DATA
+
+  // Lightbox 狀態管理
+  const [selectedSession, setSelectedSession] = useState<Session | null>(null)
+  const [lightboxOpen, setLightboxOpen] = useState(false)
+
+  const openLightbox = useCallback((session: Session) => {
+    setSelectedSession(session)
+    setLightboxOpen(true)
+  }, [])
+
+  const closeLightbox = useCallback(() => {
+    setLightboxOpen(false)
+    setSelectedSession(null)
+  }, [])
 
   // 生成結構化資料
   const eventData = generateEventStructuredData(language)
@@ -73,7 +89,8 @@ export default function AgendaPage() {
             {sessions.map((session, index) => (
               <Card
                 key={index}
-                className="bg-slate-100/95 border-slate-200 backdrop-blur-sm hover:bg-slate-50 transition-colors shadow-lg"
+                className="bg-slate-100/95 border-slate-200 backdrop-blur-sm hover:bg-slate-50 transition-colors shadow-lg cursor-pointer group"
+                onClick={() => openLightbox(session)}
               >
                 <CardHeader>
                   <div className="flex items-center mb-2">
@@ -96,7 +113,7 @@ export default function AgendaPage() {
                       </span>
                     </div>
                   </div>
-                  <CardTitle className="text-slate-800 text-lg">{getLocalizedText(session.title, language)}</CardTitle>
+                  <CardTitle className="text-slate-800 text-lg group-hover:text-blue-600 transition-colors">{getLocalizedText(session.title, language)}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
@@ -170,6 +187,13 @@ export default function AgendaPage() {
 
       <Footer />
     </div>
+
+    {/* Agenda Lightbox */}
+    <AgendaLightbox
+      open={lightboxOpen}
+      onClose={closeLightbox}
+      session={selectedSession}
+    />
     </>
   )
 }

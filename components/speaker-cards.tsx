@@ -4,7 +4,7 @@ import { useState, useMemo, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { useI18n } from '@/contexts/i18n-context'
-import { SPEAKERS_DATA, Speaker } from '@/lib/data/conference'
+import { SPEAKERS_DATA, Speaker } from '@/lib/data'
 
 // 卡片色系配置
 const cardThemes = {
