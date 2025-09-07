@@ -6,7 +6,7 @@ import Footer from "@/components/layout/footer"
 import CalendarEvent from "@/components/calendar-event"
 import { useI18n } from "@/contexts/i18n-context"
 import { AlertDialog, AlertDialogAction, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
-import { isTicketAvailable, isEarlyBirdAvailable, isRegularTicketAvailable } from "@/lib/ticket-config"
+import { isTicketAvailable, isEarlyBirdAvailable, isRegularTicketAvailable, getTicketPurchaseUrl } from "@/lib/ticket-config"
 
 export default function TicketsPage() {
   const { t } = useI18n()
@@ -24,7 +24,7 @@ export default function TicketsPage() {
       setIsEarlyBirdDialogOpen(true)
     } else {
       // 導向到 Accupass 購票頁面
-      window.open('https://www.accupass.com/event/2508301008076132622520', '_blank')
+      window.open(getTicketPurchaseUrl(), '_blank')
     }
   }
 
@@ -33,7 +33,7 @@ export default function TicketsPage() {
       setIsRegularDialogOpen(true)
     } else {
       // 導向到 Accupass 購票頁面
-      window.open('https://www.accupass.com/event/2508301008076132622520', '_blank')
+      window.open(getTicketPurchaseUrl(), '_blank')
     }
   }
   

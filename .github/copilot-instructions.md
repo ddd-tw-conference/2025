@@ -23,11 +23,18 @@ app/
 ├── not-found.tsx      # 404 page with smart contact features
 └── error.tsx          # Error handling page
 
-components/layout/
-└── header.tsx         # Responsive fixed navigation
+components/
+├── layout/
+│   ├── header.tsx     # Responsive fixed navigation
+│   ├── footer.tsx     # Site footer
+│   └── hero-section.tsx # Landing page hero
+└── ui/                # shadcn/ui components
+
+contexts/
+└── i18n-context.tsx   # Internationalization context
 
 lib/
-├── ticket-config.ts   # Ticket sale controls (isTicketSaleActive)
+├── ticket-config.ts   # Ticket sale controls & purchase URL
 ├── data/conference.ts # Speaker/agenda data (multilingual)
 └── i18n.ts           # Internationalization core
 
@@ -43,12 +50,12 @@ locales/
 - Use `pnpm` commands for execution, compilation, and debugging (`pnpm dev`, `pnpm build`, `pnpm lint`)
 
 ### Next.js 15 Best Practices
-- Image configuration must support query strings (`localPatterns` with `search: '?*'`)
+- Image configuration uses `localPatterns` with multiple search patterns (`search: ''` and `search: '?v=*'`)
 - For static exports, set `outputFileTracingRoot` to project root directory
 
 ### SSR/CSR Consistency
 - Avoid non-deterministic functions (`Math.random()`, `Date.now()`) in rendering logic
-- Use deterministic seeds (dates, indices) for UI state to ensure server-client consistency
+- Use deterministic seeds for UI state to ensure server-client consistency
 
 ### Responsive Design
 - Choose appropriate breakpoints based on content needs (e.g., `xl` to prevent content hiding on medium screens)
@@ -63,14 +70,10 @@ locales/
 
 ### Git Best Practices
 ```bash
-# Restore damaged files using Git
-git checkout HEAD -- path/to/damaged-file.tsx
-
-# Check file modification status
-git status
-
-# View specific modifications
-git diff path/to/file.tsx
+# Restore damaged files
+git checkout HEAD -- path/to/file.tsx
+# Check and review changes
+git status && git diff
 ```
 
 ### UI Design Patterns
@@ -91,9 +94,10 @@ git diff path/to/file.tsx
 ### Navigation Standards
 | Scenario | Method | Example |
 |----------|--------|---------|
-| Internal pages | `<Link>` + `asChild` | `<Button asChild><Link href="/tickets">` |
+| Internal pages | `<Link>` | `<Link href="/tickets">購票</Link>` |
 | Programmatic navigation | `router.push()` | `router.push('/agenda')` |
-| External links | `window.open()` | `window.open(ticketUrl, '_blank')` |
+| External links | `<Button asChild>` + `<a>` | `<Button asChild><a href="url" target="_blank">` |
+| Purchase buttons | `window.open()` | `window.open(getTicketPurchaseUrl(), '_blank')` |
 
 ### Internationalization Usage
 ```tsx
@@ -112,16 +116,27 @@ interface Speaker {
 
 ### Configuration
 ```typescript
-export const TICKET_SALE_CONFIG = {
+export interface TicketSaleConfig {
+  isTicketSaleActive: boolean
+  earlyBirdSaleStartDate?: string // YYYY-MM-DD format
+  regularSaleStartDate?: string // YYYY-MM-DD format
+  saleEndDate?: string // YYYY-MM-DD format
+  purchaseUrl: string // Accupass 購票連結
+}
+
+export const TICKET_SALE_CONFIG: TicketSaleConfig = {
   isTicketSaleActive: true,
   earlyBirdSaleStartDate: "2025-09-03",
-  regularSaleStartDate: "2025-10-16"
+  regularSaleStartDate: "2025-10-16",
+  saleEndDate: "2025-11-07",
+  purchaseUrl: "https://www.accupass.com/eflow/ticket/2508301008076132622520"
 }
+
+export const getTicketPurchaseUrl = (): string => TICKET_SALE_CONFIG.purchaseUrl
 
 // Ticket purchase implementation
 const handleTicketClick = () => {
-  const ticketUrl = 'https://www.accupass.com/event/2508301008076132622520'
-  window.open(ticketUrl, '_blank', 'noopener,noreferrer')
+  window.open(getTicketPurchaseUrl(), '_blank')
 }
 ```
 
@@ -152,7 +167,6 @@ const handleTicketClick = () => {
 ### 6. Git File Recovery ✅
 - **Issue**: Editor accidentally corrupting file content
 - **Solution**: Use `git checkout HEAD -- filename` to restore files
-- **Prevention**: Avoid deleting and recreating files (loses Git history)
 
 ## Development Checklist
 
@@ -176,6 +190,9 @@ const handleTicketClick = () => {
 - [ ] `pnpm build` completes without errors
 - [ ] Static files generated to `out/` directory
 - [ ] All images located in `public/`
+- [ ] After all modifications (including copilot-instructions.md), confirm with the user before running any git add/commit/push commands
+    - Commit messages should summarize the main goal and key changes of the update
+    - Only proceed with git add/commit/push if the user approves, allowing for review before submission
 
 ## Contact Information
 - **Technical Support**: dddtw2018@gmail.com
@@ -183,4 +200,11 @@ const handleTicketClick = () => {
 - **Deployment**: GitHub Pages
 
 ---
-*Last Updated: September 6, 2025 | v2.3 - Added AI-assisted debugging experience and best practices*
+*Last Updated: September 7, 2025 | v2.4 - Enhanced external link management and git workflow*
+
+### External Link Management Best Practice
+
+- All external links (e.g., Accupass ticket URLs) must be managed in configuration files (such as `lib/ticket-config.ts`).  
+- Do not hardcode external URLs in components, pages, or documentation.  
+- Always use getter functions from configuration for referencing external links in code, documentation, and examples.  
+- This ensures maintainability, consistency, and easy future updates.

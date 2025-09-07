@@ -8,6 +8,7 @@ export interface TicketSaleConfig {
   earlyBirdSaleStartDate?: string // YYYY-MM-DD format
   regularSaleStartDate?: string // YYYY-MM-DD format
   saleEndDate?: string // YYYY-MM-DD format
+  purchaseUrl: string // Accupass 購票連結
 }
 
 export const TICKET_SALE_CONFIG: TicketSaleConfig = {
@@ -17,7 +18,17 @@ export const TICKET_SALE_CONFIG: TicketSaleConfig = {
   // 預計開賣日期 (可選，用於顯示)
   earlyBirdSaleStartDate: "2025-09-03",
   regularSaleStartDate: "2025-10-16", 
-  saleEndDate: "2025-11-07"
+  saleEndDate: "2025-11-07",
+  
+  // 🎫 Accupass 購票連結 - 統一管理購票入口
+  purchaseUrl: "https://www.accupass.com/eflow/ticket/2508301008076132622520"
+}
+
+/**
+ * 取得購票連結
+ */
+export const getTicketPurchaseUrl = (): string => {
+  return TICKET_SALE_CONFIG.purchaseUrl
 }
 
 /**

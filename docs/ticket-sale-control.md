@@ -12,7 +12,7 @@ export const TICKET_SALE_CONFIG: TicketSaleConfig = {
 ```
 
 ### 步驟 2: 購票連結 (已完成)
-- 已連接至：`https://www.accupass.com/event/2508301008076132622520`
+- 已統一配置於：`lib/ticket-config.ts` → `TICKET_SALE_CONFIG.purchaseUrl`
 - 早鳥票和一般票使用同一購票頁面
 
 ## 🔧 故障排除
