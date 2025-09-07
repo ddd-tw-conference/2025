@@ -6,7 +6,7 @@ import Footer from "@/components/layout/footer"
 import CalendarEvent from "@/components/calendar-event"
 import { useI18n } from "@/contexts/i18n-context"
 import { AlertDialog, AlertDialogAction, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
-import { isTicketAvailable, isEarlyBirdAvailable, isRegularTicketAvailable, getTicketPurchaseUrl } from "@/config"
+import { isTicketAvailable, isEarlyBirdAvailable, isRegularTicketAvailable, getTicketPurchaseUrl } from "@/config/tickets"
 
 export default function TicketsPage() {
   const { t } = useI18n()

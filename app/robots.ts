@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next'
-import { CONFIG } from '@/config'
+import { CONFIG } from '@/config/app'
 
 // SPA 模式需要 force-static 配置
 export const dynamic = 'force-static'

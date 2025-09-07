@@ -6,6 +6,7 @@ import { WebVitalsReporter } from '@/lib/web-vitals'
 import { I18nProvider } from '@/contexts/i18n-context'
 import { VersionProvider } from './providers/version-provider'
 import { VersionNotification } from './components/version-notification'
+import { VersionMonitor } from '@/components/version-monitor'
 import PerformanceDashboard from '@/components/performance-dashboard'
 import './globals.css'
 
@@ -35,6 +36,7 @@ export default function RootLayout({
           </VersionProvider>
         </I18nProvider>
         <PerformanceDashboard />
+        <VersionMonitor />
       </body>
     </html>
   )

@@ -21,39 +21,53 @@ You are an expert AI programming assistant for the DDD Taiwan 2025 Conference we
 app/
 ├── tickets/page.tsx    # Ticketing page with Accupass integration
 ├── not-found.tsx      # 404 page with smart contact features
-└── error.tsx          # Error handling page
+├── error.tsx          # Error handling page
+└── providers/
+    └── version-provider.tsx # Optimized version checking system
 
 components/
 ├── layout/
 │   ├── header.tsx     # Responsive fixed navigation
 │   ├── footer.tsx     # Site footer
 │   └── hero-section.tsx # Landing page hero
-└── ui/                # shadcn/ui components
+├── ui/                # shadcn/ui components
+└── version-monitor.tsx # Version request monitoring tool (Ctrl+Shift+V)
 
 contexts/
 └── i18n-context.tsx   # Internationalization context
 
 lib/
-├── data/               # Speaker/agenda data modules (multilingual)
+├── data/              # Speaker/agenda data modules (multilingual)
 ├── i18n.ts           # Internationalization core
+├── paths.ts          # basePath-aware URL utilities
 └── utils.ts          # Utility functions
 
 config/
 ├── tickets.ts        # Ticket sale controls & purchase URL
 ├── agenda.ts         # Session patterns & time calculations
-└── app.ts            # Application configuration
+├── app.ts           # Application configuration
+├── performance.ts   # Performance optimization settings
+└── index.ts         # Unified configuration exports
 
 locales/
 ├── zh-tw.json        # Traditional Chinese
 └── en.json           # English
 ```
 
-## Development Guidelines
+### Development Guidelines
 
 ### Primary Technology Stack
 - **Package Manager**: pnpm (required for all operations)
 - **Runtime Commands**: `pnpm dev`, `pnpm build`, `pnpm lint`
 - **Build Target**: Static export for GitHub Pages deployment
+
+### Configuration Architecture
+- **Unified Imports**: All configurations import from `@/config` (centralized in `config/index.ts`)
+- **Module Structure**: 
+  - `config/app.ts` - Core application settings
+  - `config/tickets.ts` - Ticket sales management
+  - `config/performance.ts` - Performance optimization
+- **Path Handling**: Use `@/lib/paths.ts` for basePath-aware URLs
 
 ### Auxiliary Tools Usage
 - **Python Environment**: Only use if explicit Python scripts exist in project
@@ -161,6 +175,44 @@ const handleTicketClick = () => {
 6. **File Recovery**: `git checkout HEAD -- filename` to restore corrupted files
 7. **Tailwind Dynamic Classes**: Use static definitions instead of string interpolation
 8. **Documentation**: Focus on final conclusions, remove historical development records
+9. **Version Check Optimization**: Prevent excessive version.json requests with proper frequency control and basePath handling
+
+## Version Check System
+
+### Problem Solved
+- **Issue**: Excessive requests to `version.json` causing performance problems
+- **Root Cause**: useEffect dependency loops, excessive event listeners, missing basePath handling
+- **Solution**: Implemented optimized version checking with proper frequency controls
+
+### Implementation (`app/providers/version-provider.tsx`)
+```typescript
+// Key optimizations applied:
+- Frequency control: minimum 60-second intervals between checks
+- Request cancellation: AbortController to prevent duplicate requests  
+- Delayed initialization: 3-second delay to avoid impact on page load
+- Extended intervals: 10-minute periodic checks (reduced from 3 minutes)
+- Route-based checks: 5-second delay after route changes
+- Removed excessive event listeners: no more click/scroll monitoring
+
+// basePath-aware URL generation
+import { getVersionUrl } from "@/lib/paths"
+const versionUrl = getVersionUrl() // Handles /2025 prefix in production
+```
+
+### URL Path Handling (`lib/paths.ts`)
+```typescript
+export const getVersionUrl = (): string => {
+  const basePath = getBasePath()
+  return `${basePath}/version.json`
+}
+// Development: /version.json
+// Production: /2025/version.json
+```
+
+### Monitoring Tool (`components/version-monitor.tsx`)
+- **Access**: `Ctrl+Shift+V` to toggle monitoring panel
+- **Features**: Request frequency tracking, success/error statistics, visual timeline
+- **Usage**: Development debugging and performance verification
 
 ## Documentation Standards
 
@@ -194,10 +246,23 @@ const handleTicketClick = () => {
         - Prioritize actionable guidance and current best practices
     - Confirm with user before git operations
 
+## Performance Optimization
+
+### Version Check System
+- **Monitoring**: Use `Ctrl+Shift+V` to access version request monitoring
+- **Frequency**: Maximum 1 request per 60 seconds, 10-minute intervals
+- **Path Handling**: Automatic basePath detection for production `/2025` prefix
+- **Error Handling**: Request cancellation and retry logic with AbortController
+
+### Build Optimization
+- **Static Export**: Optimized for GitHub Pages deployment
+- **Asset Management**: Centralized configuration in `config/performance.ts`
+- **Path Resolution**: basePath-aware utilities in `lib/paths.ts`
+
 ## Contact Information
 - **Technical Support**: dddtw2018@gmail.com
 - **Repository**: ddd-tw-conference/2025
 - **Deployment**: GitHub Pages
 
 ---
-*Last Updated: September 7, 2025 | v2.6 - Added Tailwind CSS guidelines, documentation standards, and updated version numbers*
+*Last Updated: September 7, 2025 | v2.7 - Added version check optimization system, configuration architecture, and performance monitoring tools*

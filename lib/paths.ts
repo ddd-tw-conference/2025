@@ -1,4 +1,4 @@
-import { CONFIG } from '@/config'
+import { CONFIG } from '@/config/app'
 
 // SPA 模式專用路徑工具函數 - 修復 hydration 問題
 export const getBasePath = (): string => {
@@ -37,6 +37,12 @@ export const getRoutePath = (route: string): string => {
   const basePath = getBasePath()
   const cleanRoute = route.startsWith('/') ? route : `/${route}`
   return `${basePath}${cleanRoute}`
+}
+
+// 版本檢查 URL（考慮 basePath）
+export const getVersionUrl = (): string => {
+  const basePath = getBasePath()
+  return `${basePath}/version.json`
 }
 
 // 客戶端路徑檢測（僅在客戶端執行）
