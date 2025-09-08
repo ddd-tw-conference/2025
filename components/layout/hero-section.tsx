@@ -5,7 +5,7 @@ import { Calendar, MapPin, Users, Clock } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { useI18n } from "@/contexts/i18n-context";
-import { getImagePath } from "@/lib/paths";
+import { getOptimizedImagePath } from "@/lib/image-optimization";
 
 export default function HeroSection() {
   const { t } = useI18n();
@@ -14,7 +14,7 @@ export default function HeroSection() {
       {/* Full-width Banner Background */}
       <div className="absolute inset-0 w-full h-full">
         <Image
-          src={getImagePath("/images/banners/banner-main.webp")}
+          src={getOptimizedImagePath("/images/banners/banner-main.webp")}
           alt={t("hero.bannerAlt")}
           className="w-full h-full object-cover"
           priority

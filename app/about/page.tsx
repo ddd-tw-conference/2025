@@ -6,7 +6,7 @@ import Image from "next/image"
 import Header from "@/components/layout/header"
 import Footer from "@/components/layout/footer"
 import { useI18n } from "@/contexts/i18n-context"
-import { getImagePath } from "@/lib/paths"
+import { getOptimizedImagePath } from "@/lib/image-optimization"
 
 export default function AboutPage() {
   const { t } = useI18n()
@@ -24,7 +24,7 @@ export default function AboutPage() {
         <div className="mb-12">
           <div className="relative w-full h-96 lg:h-[500px] rounded-lg overflow-hidden">
             <Image
-              src={getImagePath("/images/banners/banner-about.webp")}
+              src={getOptimizedImagePath("/images/banners/banner-about.webp")}
               alt="DDD Taiwan Community"
               className="object-cover"
               fill

@@ -6,7 +6,7 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
 import { Menu, X } from "lucide-react";
-import { getImagePath } from "@/lib/paths";
+import { getOptimizedImagePath } from "@/lib/image-optimization";
 import { useI18n } from "@/contexts/i18n-context";
 import { LanguageSelector } from "@/components/language-selector";
 
@@ -44,7 +44,7 @@ export default function Header() {
           <Link href="/" className="flex items-center space-x-2">
             <div className="w-8 h-8 rounded-lg overflow-hidden relative">
               <Image
-                src={getImagePath("/images/logos/dddtw-logo.png")}
+                src={getOptimizedImagePath("/images/logos/dddtw-logo.webp")}
                 alt="DDD Taiwan Logo"
                 className="object-cover"
                 fill

@@ -1,19 +1,11 @@
 /**
  * 結構化資料 (JSON-LD) 生成工具
- * 提升 SE    ],
-    "image": [
-      "https://ddd-tw-conference.github.io/2025/images/logos/dddtw-logo.png"
-    ],
-    "organizer": {
-      "@type": "Organization",
-      "name": "DDDesign TW",
-      "url": "https://ddd-tw-conference.github.io/2025",
-      "logo": "https://ddd-tw-conference.github.io/2025/images/logos/dddtw-logo.png"
-    },理解度
+ * 提升 SEO 理解度
  */
 
 import { SPEAKERS_DATA, AGENDA_DATA } from '@/lib/data'
 import { getLocalizedText } from '@/lib/data'
+import { getFullImageUrl } from '@/lib/image-optimization'
 
 // 會議活動結構化資料
 export function generateEventStructuredData(language: string = 'zh-tw') {
@@ -47,13 +39,13 @@ export function generateEventStructuredData(language: string = 'zh-tw') {
       }
     },
     "image": [
-      "https://ddd-tw-conference.github.io/2025/images/logos/dddtw-logo.png"
+      getFullImageUrl("/images/logos/dddtw-logo.webp")
     ],
     "organizer": {
       "@type": "Organization",
       "name": "DDDesign TW",
       "url": "https://ddd-tw-conference.github.io/2025",
-      "logo": "https://ddd-tw-conference.github.io/2025/images/logos/dddtw-logo.png"
+      "logo": getFullImageUrl("/images/logos/dddtw-logo.webp")
     },
     "offers": [
       {
@@ -130,7 +122,7 @@ export function generateOrganizationStructuredData(language: string = 'zh-tw') {
       ? "推廣領域驅動設計在台灣的發展，建立專業技術社群"
       : "Promoting the development of Domain-Driven Design in Taiwan and building professional technical communities",
     "url": "https://ddd-tw-conference.github.io/2025",
-    "logo": "https://ddd-tw-conference.github.io/2025/images/logos/dddtw-logo.png",
+    "logo": getFullImageUrl("/images/logos/dddtw-logo.webp"),
     "contactPoint": {
       "@type": "ContactPoint",
       "contactType": "customer service",
@@ -169,7 +161,7 @@ export function generateWebsiteStructuredData(language: string = 'zh-tw') {
     "publisher": {
       "@type": "Organization",
       "name": "DDDesign TW",
-      "logo": "https://ddd-tw-conference.github.io/2025/images/logos/dddtw-logo.png"
+      "logo": getFullImageUrl("/images/logos/dddtw-logo.webp")
     }
   }
 }

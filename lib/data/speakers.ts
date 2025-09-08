@@ -3,7 +3,7 @@
  * 包含所有講者的詳細資訊、主題分類和社群連結
  */
 
-import { getImagePath } from '../paths'
+import { getOptimizedImagePath } from '../image-optimization'
 import type { SpeakerTopic } from './types'
 
 export const SPEAKERS_DATA: SpeakerTopic[] = [
@@ -20,7 +20,7 @@ export const SPEAKERS_DATA: SpeakerTopic[] = [
         topic: { 'zh-tw': "從敘事到塑模", 'en': "From Storytelling to Modeling" },
         content: { 'zh-tw': "用Domain Storytelling建立跨職能對齊的語意基礎", 'en': "Building Cross-functional Semantic Foundation with Domain Storytelling" },
         bio: { 'zh-tw': "專注於領域驅動設計與Domain Storytelling應用於軟體工程流程中，促進人跡協作與語意對齊，讓AI工具能真正參與需求建模與架構設計，實現貼近業務語境且可持續演進的軟體工程實踐。", 'en': "Focuses on Domain-Driven Design and Domain Storytelling applications in software engineering processes, promoting human-AI collaboration and semantic alignment, enabling AI tools to truly participate in requirements modeling and architecture design, achieving business-context-oriented and continuously evolving software engineering practices." },
-        image: getImagePath("/images/speakers/michael.jpg"),
+        image: getOptimizedImagePath("/images/speakers/michael.webp"),
         linkedin: "#",
         twitter: "#",
         experience: { 'zh-tw': "長期於矩陣型組織中擔任技術領導、人事主管與敏捷教練等多重腳色", 'en': "Long-term experience serving multiple roles as technical leader, personnel manager, and agile coach in matrix organizations" },
@@ -48,7 +48,7 @@ export const SPEAKERS_DATA: SpeakerTopic[] = [
         topic: { 'zh-tw': "從警示到行動：打造AI驅動的自動化Incident Response工具", 'en': "From Alert to Action: Building AI-driven Automated Incident Response Tools" },
         content: { 'zh-tw': "整合Logs、Code、Docs與Insights，重塑On-Call流程與團隊知識管理", 'en': "Integrating Logs, Code, Docs and Insights to reshape On-Call processes and team knowledge management" },
         bio: { 'zh-tw': "喜歡團隊一同開發勝過一人默默獨自寫程式。", 'en': "Prefers collaborative team development over solitary programming." },
-        image: getImagePath("/images/speakers/fong.jpg"),
+        image: getOptimizedImagePath("/images/speakers/fong.webp"),
         linkedin: "#",
         twitter: "#",
         experience: { 'zh-tw': "擔任過多個年會的講者/工作坊講者(JSDC、DDDTW、Agile Summit)", 'en': "Experienced speaker/workshop facilitator at multiple conferences (JSDC, DDDTW, Agile Summit)" },
@@ -68,7 +68,7 @@ export const SPEAKERS_DATA: SpeakerTopic[] = [
         topic: { 'zh-tw': "開發者體驗與 AI 未來的運作方式: 從 Henrik Kniberg 五階段預言看 DDD 的演進", 'en': "Developer Experience and AI Future Operations: DDD Evolution from Henrik Kniberg's Five-Stage Prophecy" },
         content: { 'zh-tw': "在 AI 快速演進的時代，開發者的角色正面臨劇烈轉變。Henrik Kniberg 提出的「AI 五階段」從工具使用到自我創造，描繪了 AI 與人類協作的未來藍圖。本場演講將以領域驅動設計（DDD）為核心，對應五個階段的演進過程，帶領大家思考：當 AI 能生成程式碼、協助建模，甚至提出全新業務概念時，開發者該如何重新定位？我們將探討從戰術層程式碼輔助、共享語言建構、上下文劃分，一路到核心域創新的過程，並回到開發者體驗(DevEx)的本質；人類如何成為概念驅動成為守護者與共創者。這不只是關於 AI 的未來，更是每位工程師在新世代的挑戰與機會。", 'en': "In the era of rapid AI evolution, developers' roles are facing dramatic changes. Henrik Kniberg's 'Five Stages of AI' from tool usage to self-creation depicts the future blueprint of AI-human collaboration. This presentation will center on Domain-Driven Design (DDD), corresponding to the evolution process of five stages, leading everyone to think: when AI can generate code, assist modeling, and even propose new business concepts, how should developers reposition themselves? We will explore the process from tactical code assistance, shared language construction, context division, all the way to core domain innovation, and return to the essence of Developer Experience (DevEx); how humans become concept-driven guardians and co-creators. This is not just about AI's future, but the challenges and opportunities for every engineer in the new era." },
         bio: { 'zh-tw': "李智樺，又稱為 Ruddy 老師，是一位專注於敏捷、DevOps 技術與團隊協作的專業講師與顧問，擁有多年實踐經驗，致力於推動持續交付、基礎設施自動化以及開發與運維的高效協作。已退休但仍透過 Ruddy's Blog 分享前沿技術觀點與實戰經驗，希望幫助工程師與團隊成長。", 'en': "Li Zhihua, also known as Teacher Ruddy, is a professional instructor and consultant focused on Agile and DevOps technologies and team collaboration. With years of practical experience, he is dedicated to promoting continuous delivery, infrastructure automation, and efficient collaboration between development and operations. Although retired, he continues to share cutting-edge technical insights and practical experience through Ruddy's Blog, hoping to help engineers and teams grow." },
-        image: getImagePath("/images/speakers/ruddy.jpg"),
+        image: getOptimizedImagePath("/images/speakers/ruddy.webp"),
         linkedin: "#",
         twitter: "#",
         experience: { 'zh-tw': "多年敏捷與DevOps實踐經驗，專注於推動持續交付與基礎設施自動化", 'en': "Years of Agile and DevOps practical experience, focusing on promoting continuous delivery and infrastructure automation" },
@@ -96,7 +96,7 @@ export const SPEAKERS_DATA: SpeakerTopic[] = [
         topic: { 'zh-tw': "AI輔助軟體開發", 'en': "AI-Assisted Software Development" },
         bio: { 'zh-tw': "致力於軟體開發實務，並推廣領域驅動開發方法。", 'en': "Dedicated to software development practices and promoting domain-driven development methods." },
         content: { 'zh-tw': "軟體3.0, AI時代下的開發方法", 'en': "Software 3.0: Development Methods in the AI Era" },
-        image: getImagePath("/images/speakers/arthur.jpg"),
+        image: getOptimizedImagePath("/images/speakers/arthur.webp"),
         linkedin: "#",
         twitter: "#",
         experience: { 'zh-tw': "多年軟體開發經驗，曾任職於多家知名科技公司", 'en': "Years of software development experience, worked at multiple renowned tech companies" },
@@ -116,7 +116,7 @@ export const SPEAKERS_DATA: SpeakerTopic[] = [
         topic: { 'zh-tw': "AI輔助軟體開發", 'en': "AI-Assisted Software Development" },
         content: { 'zh-tw': "AI開發工作坊", 'en': "AI Development Workshop" },
         bio: { 'zh-tw': "目前專注於探討雲端資源、容器化與監控的統整，在支撐業務價值的同時，有效降低建置/營運成本、並系統的可靠性。。", 'en': "Currently focused on exploring the integration of cloud resources, containerization, and monitoring to effectively reduce deployment/operational costs while maintaining system reliability and supporting business value." },
-        image: getImagePath("/images/speakers/ean.jpg"),
+        image: getOptimizedImagePath("/images/speakers/ean.webp"),
         linkedin: "#",
         twitter: "#",
         experience: { 'zh-tw': "多年軟體開發經驗，曾任職於多家知名科技公司", 'en': "Years of software development experience, worked at multiple renowned tech companies" },
@@ -159,7 +159,7 @@ export const SPEAKERS_DATA: SpeakerTopic[] = [
         topic: { 'zh-tw': "文件即程式碼", 'en': "Documentation as Code" },
         content: { 'zh-tw': "文件即程式碼，串接版本控制與自動化", 'en': "Documentation as Code: Integrating Version Control and Automation" },
         bio: { 'zh-tw': "開發過多個電子商務平台，並在帶領團隊與規劃軟體架構方面具有豐富經驗。對領域驅動設計（DDD）充滿熱情，並且在DDD社群中積極貢獻。經常在團隊中引進新的技術工具和開發流程，並且鼓勵團隊學習與進步。", 'en': "Developed multiple e-commerce platforms and has extensive experience in leading teams and planning software architecture. Passionate about Domain-Driven Design (DDD) and actively contributes to the DDD community. Frequently introduces new technical tools and development processes to teams and encourages team learning and improvement." },
-        image: getImagePath("/images/speakers/river.jpg"),
+        image: getOptimizedImagePath("/images/speakers/river.webp"),
         linkedin: "#",
         twitter: "#",
         experience: { 'zh-tw': "多年軟體開發經驗，曾任職於多家知名科技公司", 'en': "Years of software development experience, worked at multiple renowned tech companies" },
@@ -179,7 +179,7 @@ export const SPEAKERS_DATA: SpeakerTopic[] = [
         topic: { 'zh-tw': "文件即程式碼", 'en': "Documentation as Code" },
         content: { 'zh-tw': "DaC自動化工作坊", 'en': "DaC Automation Workshop" },
         bio: { 'zh-tw': "將DDD視為人生哲學，並將其應用於生活各個面向。", 'en': "Views DDD as a life philosophy and applies it to various aspects of life." },
-        image: getImagePath("/images/speakers/tung.jpg"),
+        image: getOptimizedImagePath("/images/speakers/tung.webp"),
         linkedin: "#",
         twitter: "#",
         experience: { 'zh-tw': "多年軟體開發經驗，曾任職於多家知名科技公司", 'en': "Years of software development experience, worked at multiple renowned tech companies" },
@@ -199,7 +199,7 @@ export const SPEAKERS_DATA: SpeakerTopic[] = [
         topic: { 'zh-tw': "靠 BDD + DDD 做到 AI 100% 全自動化後端開發", 'en': "Achieving 100% AI-Automated Backend Development with BDD + DDD" },
         content: { 'zh-tw': "我只講一件事，要做到 100% 後端 AI 全自動化開發，該做哪些事？\n\n我講的是 100% 全自動化，不是 80% 也不是 90% 也不是 99.9%，也不是 99.99999%。\n\n我說的是 100%。\n\n所謂的 100% 的意思就是你只要提交完規格之後，就可以完全不 code review，可以去玩遊戲的那種 100%。\n\n從 70% 一路到 100% 全自動化，你知道最重要的是什麼嗎？\n\n是 Prompt?\n\n不，怎麼可能是 Prompt，Prompt 根本無關緊要。其實答案是 BDD 和 DDD 這兩大重要實踐的極致落地。\n\n你各位對 DDD 有關注的人全部都賭對了！\n\n要做到 100% 全自動化開發，如果只會寫規格，寫可執行規格，寫各種 Given When Then，但是卻沒有 DDD 的本事的話，是不可能做到的！\n\n如果有 DDD 的思維卻沒有 BDD 的可執行性的話，那也是無法做到全自動化開發的。\n\n一切都要做好做滿，雖然成本很大，但就能得到 100% AI 全自動化開發的甜美果實。", 'en': "I'll talk about one thing: what needs to be done to achieve 100% backend AI automation development?\n\nI'm talking about 100% automation, not 80%, not 90%, not 99.9%, not 99.99999%.\n\nI mean 100%.\n\nBy 100%, I mean you can submit specifications and then completely skip code review and go play games - that kind of 100%.\n\nFrom 70% all the way to 100% automation, do you know what's most important?\n\nIs it Prompt?\n\nNo, how could it be Prompt? Prompt is irrelevant. The answer is actually the ultimate implementation of two major practices: BDD and DDD.\n\nAll of you who pay attention to DDD have bet correctly!\n\nTo achieve 100% automated development, if you only know how to write specifications, executable specifications, various Given When Then, but lack DDD skills, it's impossible!\n\nIf you have DDD thinking but lack BDD executability, you can't achieve fully automated development either.\n\nEverything must be done thoroughly. Although the cost is high, you can get the sweet fruit of 100% AI automated development." },
         bio: { 'zh-tw': "把架構設計變成可以自動化的 SOP，每天都全職把自己取代的軟工熱血老師。", 'en': "A passionate software engineering teacher who turns architectural design into automatable SOPs and dedicates himself full-time to replacing himself." },
-        image: getImagePath("/images/speakers/waterball.jpg"),
+        image: getOptimizedImagePath("/images/speakers/waterball.webp"),
         linkedin: "#",
         twitter: "#",
         github: "#",

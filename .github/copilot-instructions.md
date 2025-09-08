@@ -58,12 +58,16 @@ interface Speaker {
 ## Performance Optimization
 
 ### Image Optimization
-- **Strategy**: PNG/JPG → WebP (25-50% smaller, 200KB max)
+- **Strategy**: Pure WebP approach - only WebP format for maximum efficiency
 - **Tools**: `pnpm add -D sharp` + custom scripts
 ```bash
-node scripts/check-image-sizes.js    # Analysis
-node scripts/optimize-images.js      # WebP conversion
+node scripts/generate-all-webp.js     # Convert all images to WebP
+node scripts/check-image-sizes.js     # Analysis
+node scripts/test-image-optimization.js # Verify optimization
 ```
+- **Implementation**: Use `getOptimizedImagePath()` for automatic format handling
+- **File Management**: Keep only WebP files, remove PNG/JPG originals
+- **Benefits**: 92%+ size reduction, faster loading, simplified maintenance
 
 ### Version Check System
 - **Access**: `Ctrl+Shift+V` (hidden when inactive)
@@ -87,6 +91,7 @@ const handleTicketClick = () => window.open(getTicketPurchaseUrl(), '_blank')
 4. **File recovery**: `git checkout HEAD -- filename`
 5. **Documentation**: Focus on final state, remove development history
 6. **SEO sitemap/robots**: Use `CONFIG.deployment.baseUrl` directly for sitemap URLs, avoid `getRoutePath()` to prevent path duplication; remove `public/robots.txt` when using `app/robots.ts`
+7. **Pure WebP strategy**: Delete original formats after WebP conversion, use direct `.webp` paths in code, implement backward compatibility via `getOptimizedImagePath()`
 
 ## Development Checklist
 ### Pre-Development
@@ -100,6 +105,16 @@ const handleTicketClick = () => window.open(getTicketPurchaseUrl(), '_blank')
 ### Pre-Deployment
 - [ ] Assess copilot-instructions.md updates for new patterns/solutions
 - [ ] Confirm with user before git operations
+- [ ] Verify WebP images load correctly, check file sizes optimization
+
+## WebP Optimization Workflow
+When implementing image optimization:
+1. **Convert**: Use `scripts/generate-all-webp.js` for all image formats
+2. **Verify**: Check 90%+ size reduction with `scripts/check-image-sizes.js`
+3. **Update Code**: Replace paths to use `.webp` extensions directly
+4. **Clean**: Remove original PNG/JPG files after verification
+5. **Test**: Ensure `getOptimizedImagePath()` handles backward compatibility
+6. **Document**: Record optimization results (typical: 3.8MB → 296KB)
 
 ---
-*Last Updated: September 8, 2025 | v3.0 - Streamlined for optimal GitHub Copilot performance*
+*Last Updated: December 8, 2025 | v3.1 - Added Pure WebP Strategy & Optimization Workflow*
