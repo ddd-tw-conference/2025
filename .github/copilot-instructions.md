@@ -210,9 +210,10 @@ export const getVersionUrl = (): string => {
 ```
 
 ### Monitoring Tool (`components/version-monitor.tsx`)
-- **Access**: `Ctrl+Shift+V` to toggle monitoring panel
+- **Access**: `Ctrl+Shift+V` to toggle monitoring panel (no visual hint in UI)
 - **Features**: Request frequency tracking, success/error statistics, visual timeline
-- **Usage**: Development debugging and performance verification
+- **UI Optimization**: Completely hidden when inactive (return null), no right-corner hint
+- **Usage**: Development debugging and performance verification without user experience interference
 
 ## Documentation Standards
 
@@ -249,7 +250,8 @@ export const getVersionUrl = (): string => {
 ## Performance Optimization
 
 ### Version Check System
-- **Monitoring**: Use `Ctrl+Shift+V` to access version request monitoring
+- **Monitoring**: Use `Ctrl+Shift+V` to access version request monitoring (hidden when inactive)
+- **UI Optimization**: No visual hints or prompts in user interface
 - **Frequency**: Maximum 1 request per 60 seconds, 10-minute intervals
 - **Path Handling**: Automatic basePath detection for production `/2025` prefix
 - **Error Handling**: Request cancellation and retry logic with AbortController
@@ -265,4 +267,4 @@ export const getVersionUrl = (): string => {
 - **Deployment**: GitHub Pages
 
 ---
-*Last Updated: September 7, 2025 | v2.7 - Added version check optimization system, configuration architecture, and performance monitoring tools*
+*Last Updated: September 8, 2025 | v2.8 - Optimized VersionMonitor UI by removing right-corner hints for better user experience*
