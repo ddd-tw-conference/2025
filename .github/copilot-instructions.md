@@ -86,6 +86,7 @@ const handleTicketClick = () => window.open(getTicketPurchaseUrl(), '_blank')
 3. **Error handling**: Categorize (build/runtime/display), root cause analysis
 4. **File recovery**: `git checkout HEAD -- filename`
 5. **Documentation**: Focus on final state, remove development history
+6. **SEO sitemap/robots**: Use `CONFIG.deployment.baseUrl` directly for sitemap URLs, avoid `getRoutePath()` to prevent path duplication; remove `public/robots.txt` when using `app/robots.ts`
 
 ## Development Checklist
 ### Pre-Development
