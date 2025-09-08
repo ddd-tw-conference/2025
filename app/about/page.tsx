@@ -24,7 +24,7 @@ export default function AboutPage() {
         <div className="mb-12">
           <div className="relative w-full h-96 lg:h-[500px] rounded-lg overflow-hidden">
             <Image
-              src={getImagePath("/images/banners/banner-about.png")}
+              src={getImagePath("/images/banners/banner-about.webp")}
               alt="DDD Taiwan Community"
               className="object-cover"
               fill

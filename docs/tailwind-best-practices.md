@@ -24,6 +24,40 @@ const gradient = "from-purple-500 to-pink-500"
 
 ---
 
+## 🖼️ 圖片效能最佳實踐
+
+### Next.js Image 元件使用
+```tsx
+// ✅ 推薦：使用 Next.js Image 元件
+import Image from 'next/image'
+
+<Image
+  src={getImagePath("/images/banners/banner-main.webp")}
+  alt="Banner"
+  className="w-full h-full object-cover"
+  priority // 首屏大圖
+  fill
+  sizes="100vw"
+/>
+```
+
+### 圖片格式與壓縮
+- **格式選擇**：優先使用 WebP 格式（比 PNG/JPG 小 25-50%）
+- **檔案大小**：目標 200KB 以下
+- **工具**：使用 sharp 套件自動化壓縮
+- **靜態導出**：專案使用 `unoptimized: true`，依賴預處理優化
+
+### Tailwind 圖片樣式
+```tsx
+// ✅ 推薦的圖片樣式類別
+className="w-full h-auto object-cover"        // 響應式圖片
+className="w-full h-full object-cover"        // 填滿容器
+className="object-cover rounded-lg"           // 圓角圖片
+className="cursor-pointer"                    // 可點擊圖片
+```
+
+---
+
 ## ✅ 解決方案
 
 ### 1. 使用靜態類別定義

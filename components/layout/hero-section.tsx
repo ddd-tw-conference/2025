@@ -14,7 +14,7 @@ export default function HeroSection() {
       {/* Full-width Banner Background */}
       <div className="absolute inset-0 w-full h-full">
         <Image
-          src={getImagePath("/images/banners/banner-main.png")}
+          src={getImagePath("/images/banners/banner-main.webp")}
           alt={t("hero.bannerAlt")}
           className="w-full h-full object-cover"
           priority
