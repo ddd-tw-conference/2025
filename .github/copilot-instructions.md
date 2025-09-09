@@ -22,99 +22,88 @@ locales/               # zh-tw.json, en.json
 
 ## Development Standards
 
-### Package Management
-- **Required**: `pnpm` for all operations
-- **Commands**: `pnpm dev`, `pnpm build`, `pnpm lint`
-- **Dependencies**: Production vs Dev (`pnpm add` vs `pnpm add -D`)
-
-### Configuration Architecture
-- **Unified imports**: All config from `@/config`
-- **Path handling**: Use `@/lib/paths.ts` for basePath-aware URLs
-- **External links**: Manage in `config/tickets.ts`, use getter functions
-
-### Next.js 15.5.2 Specifics
-- **Static export**: `outputFileTracingRoot` to project root
-- **Images**: `unoptimized: true`, `localPatterns` with multiple search patterns
+### Core Requirements
+- **Package Manager**: `pnpm` only (`pnpm dev`, `pnpm build`, `pnpm lint`)
+- **Configuration**: All config from `@/config`, use getter functions for external links
 - **Routing**: Use `<Link>` and `router.push()`, avoid `window.location.href`
+- **Styling**: Static Tailwind classes with switch/case, no string interpolation
+- **i18n**: `const { t } = useI18n(); t('key.subkey')` pattern
 
-### Tailwind CSS Best Practices
-- **Dynamic classes**: Use static switch/case, avoid string interpolation
-- **Image styling**: `object-cover`, `w-full h-auto` for responsive images
-- **Interactive elements**: Always add `cursor-pointer`
+### UI/UX Patterns
 - **Buttons**: Primary `bg-gradient-to-r from-blue-600 to-purple-600`, Secondary `bg-white/10`
+- **Interactive**: Always add `cursor-pointer` + `hover:scale-105`
+- **Responsive**: `md:grid-cols-2` for desktop, stack on mobile
+- **Images**: WebP only, use `getOptimizedImagePath()`
 
-### Internationalization
-```tsx
-const { t } = useI18n()
-<button>{t('button.contactUs')}</button>
+## Ticket Marketing Architecture
 
-// Data structure
-interface Speaker {
-  name: { 'zh-tw': string; 'en': string }
-  bio: { 'zh-tw': string; 'en': string }
-}
-```
-
-## Performance Optimization
-
-### Image Optimization
-- **Strategy**: Pure WebP approach - only WebP format for maximum efficiency
-- **Tools**: `pnpm add -D sharp` + custom scripts
-```bash
-node scripts/generate-all-webp.js     # Convert all images to WebP
-node scripts/check-image-sizes.js     # Analysis
-node scripts/test-image-optimization.js # Verify optimization
-```
-- **Implementation**: Use `getOptimizedImagePath()` for automatic format handling
-- **File Management**: Keep only WebP files, remove PNG/JPG originals
-- **Benefits**: 92%+ size reduction, faster loading, simplified maintenance
-
-### Version Check System
-- **Access**: `Ctrl+Shift+V` (hidden when inactive)
-- **Frequency**: 60s minimum, 10min intervals
-- **Implementation**: AbortController, basePath-aware URLs
-
-## Ticketing System
+### Configuration-Driven Design
 ```typescript
+// config/tickets.ts
 export const TICKET_SALE_CONFIG: TicketSaleConfig = {
-  isTicketSaleActive: true,
-  purchaseUrl: "https://www.accupass.com/eflow/ticket/..."
+  isTicketSaleActive: boolean,
+  isEarlyBirdSoldOut?: boolean,
+  purchaseUrl: string,
+  promoCode?: { isVisible: boolean, code?: string }
 }
+```
 
-const handleTicketClick = () => window.open(getTicketPurchaseUrl(), '_blank')
+### Component Strategy
+- **Marketing Section**: `TicketMarketingSection` for promotional content
+- **Layout Optimization**: Regular ticket (left, prominent) + Early bird (right, muted)
+- **State Management**: Use config flags for conditional rendering
+- **Visual Hierarchy**: Gradient effects for active, grayscale for sold-out
+
+### Implementation Patterns
+```tsx
+// Conditional rendering based on config
+{TICKET_SALE_CONFIG.promoCode?.isVisible && <PromoCode />}
+
+// Visual hierarchy: active vs sold-out
+const ticketStyle = isAvailable 
+  ? "bg-gradient-to-br from-blue-900/60 via-blue-800/50 to-purple-900/60"
+  : "bg-slate-800/30 opacity-60"
+
+// Multi-language support
+<h2>{t('tickets.regularTitle')}</h2>
 ```
 
 ## Key Patterns & Solutions
-1. **Button contrast**: `bg-white/10` for transparent backgrounds
-2. **Fixed header**: `relative z-50 md:fixed` + `h-20` spacing
-3. **Error handling**: Categorize (build/runtime/display), root cause analysis
-4. **File recovery**: `git checkout HEAD -- filename`
-5. **Documentation**: Focus on final state, remove development history
-6. **SEO sitemap/robots**: Use `CONFIG.deployment.baseUrl` directly for sitemap URLs, avoid `getRoutePath()` to prevent path duplication; remove `public/robots.txt` when using `app/robots.ts`
-7. **Pure WebP strategy**: Delete original formats after WebP conversion, use direct `.webp` paths in code, implement backward compatibility via `getOptimizedImagePath()`
+1. **Config-driven features**: Use config flags instead of hardcoded states
+2. **Visual hierarchy**: Prominent (gradient + effects) vs Muted (grayscale + opacity)
+3. **Component separation**: Marketing content separate from main ticket blocks
+4. **Button states**: Active (gradient) vs Disabled (gray + cursor-not-allowed)
+5. **Layout optimization**: Main content left, secondary right for better UX flow
+6. **Conditional marketing**: Hide/show promotional elements via config
+7. **Multi-language**: All user-facing text through `t()` function with `tickets.*` namespace
 
-## Development Checklist
+## Performance Optimization
+- **Images**: Pure WebP strategy, 90%+ size reduction
+- **Static Export**: `outputFileTracingRoot` to project root
+- **Code Splitting**: Lazy load non-critical components
+- **Bundle Analysis**: Monitor route sizes in build output
+
+## Development Workflow
 ### Pre-Development
-- [ ] `pnpm dev` environment ready
-- [ ] Check `isTicketSaleActive` status
+- [ ] `pnpm dev` ready + check `isTicketSaleActive` status
 
-### Verification  
-- [ ] i18n (`t()` function), responsive design, contrast ≥ 4.5:1
-- [ ] `pnpm build` success, static files in `out/`
+### Implementation
+- [ ] Config-driven features (avoid hardcoding)
+- [ ] i18n for all text (`t()` function)
+- [ ] Responsive design (`md:` prefixes)
+- [ ] Visual hierarchy (prominent vs muted)
 
-### Pre-Deployment
-- [ ] Assess copilot-instructions.md updates for new patterns/solutions
-- [ ] Confirm with user before git operations
-- [ ] Verify WebP images load correctly, check file sizes optimization
+### Verification
+- [ ] `pnpm build` success
+- [ ] Multi-language switching works
+- [ ] Button states reflect config
+- [ ] Layout adapts mobile/desktop
 
-## WebP Optimization Workflow
-When implementing image optimization:
-1. **Convert**: Use `scripts/generate-all-webp.js` for all image formats
-2. **Verify**: Check 90%+ size reduction with `scripts/check-image-sizes.js`
-3. **Update Code**: Replace paths to use `.webp` extensions directly
-4. **Clean**: Remove original PNG/JPG files after verification
-5. **Test**: Ensure `getOptimizedImagePath()` handles backward compatibility
-6. **Document**: Record optimization results (typical: 3.8MB → 296KB)
+## Documentation Standards
+- **Focus**: Final implementation state, remove development history
+- **Structure**: Problem → Solution → Implementation → Maintenance
+- **Examples**: Complete code blocks with proper imports
+- **Maintenance**: Clear operational guides for content updates
 
 ---
-*Last Updated: December 8, 2025 | v3.1 - Added Pure WebP Strategy & Optimization Workflow*
+*Last Updated: January 9, 2025 | v4.0 - Streamlined for LLM efficiency & ticket marketing patterns*

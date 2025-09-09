@@ -9,6 +9,11 @@ export interface TicketSaleConfig {
   regularSaleStartDate?: string // YYYY-MM-DD format
   saleEndDate?: string // YYYY-MM-DD format
   purchaseUrl: string // Accupass 購票連結
+  isEarlyBirdSoldOut?: boolean // 早鳥票是否售罄
+  promoCode?: {
+    isVisible: boolean // 優惠碼是否顯示
+    code?: string // 優惠碼內容（由 Accupass 管理兌換次數）
+  }
 }
 
 export const TICKET_SALE_CONFIG: TicketSaleConfig = {
@@ -21,7 +26,16 @@ export const TICKET_SALE_CONFIG: TicketSaleConfig = {
   saleEndDate: "2025-11-07",
   
   // 🎫 Accupass 購票連結 - 統一管理購票入口
-  purchaseUrl: "https://www.accupass.com/eflow/ticket/2508301008076132622520"
+  purchaseUrl: "https://www.accupass.com/eflow/ticket/2508301008076132622520",
+  
+  // 🎯 早鳥票售罄狀態
+  isEarlyBirdSoldOut: true,
+  
+  // 🎟️ 優惠碼設定（預留，初期不顯示）
+  promoCode: {
+    isVisible: false,
+    code: "DDDTW2025"
+  }
 }
 
 /**
@@ -43,6 +57,7 @@ export const isTicketAvailable = (): boolean => {
  */
 export const isEarlyBirdAvailable = (): boolean => {
   if (!TICKET_SALE_CONFIG.isTicketSaleActive) return false
+  if (TICKET_SALE_CONFIG.isEarlyBirdSoldOut) return false
   
   const today = new Date()
   const earlyBirdEnd = new Date(TICKET_SALE_CONFIG.regularSaleStartDate || "2025-10-16")
