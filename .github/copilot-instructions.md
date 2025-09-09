@@ -34,6 +34,9 @@ locales/               # zh-tw.json, en.json
 - **Interactive**: Always add `cursor-pointer` + `hover:scale-105`
 - **Responsive**: `md:grid-cols-2` for desktop, stack on mobile
 - **Images**: WebP only, use `getOptimizedImagePath()`
+- **Copy Actions**: Yellow theme (`bg-yellow-400/20`, `text-yellow-100`) with state icons
+- **Feedback States**: Success (green) vs Manual (yellow) vs Error (red)
+- **Animations**: `animate-fade-in` for state transitions, `transition-all duration-200` for interactions
 
 ## Ticket Marketing Architecture
 
@@ -44,7 +47,10 @@ export const TICKET_SALE_CONFIG: TicketSaleConfig = {
   isTicketSaleActive: boolean,
   isEarlyBirdSoldOut?: boolean,
   purchaseUrl: string,
-  promoCode?: { isVisible: boolean, code?: string }
+  promoCode?: { 
+    isVisible: boolean, 
+    code?: string 
+  }
 }
 ```
 
@@ -53,6 +59,7 @@ export const TICKET_SALE_CONFIG: TicketSaleConfig = {
 - **Layout Optimization**: Regular ticket (left, prominent) + Early bird (right, muted)
 - **State Management**: Use config flags for conditional rendering
 - **Visual Hierarchy**: Gradient effects for active, grayscale for sold-out
+- **Interactive Features**: Click-to-copy promo codes with fallback mechanisms
 
 ### Implementation Patterns
 ```tsx
@@ -70,12 +77,56 @@ const ticketStyle = isAvailable
 
 ## Key Patterns & Solutions
 1. **Config-driven features**: Use config flags instead of hardcoded states
-2. **Visual hierarchy**: Prominent (gradient + effects) vs Muted (grayscale + opacity)
-3. **Component separation**: Marketing content separate from main ticket blocks
-4. **Button states**: Active (gradient) vs Disabled (gray + cursor-not-allowed)
-5. **Layout optimization**: Main content left, secondary right for better UX flow
-6. **Conditional marketing**: Hide/show promotional elements via config
-7. **Multi-language**: All user-facing text through `t()` function with `tickets.*` namespace
+2. **Visual hierarchy**: Prominent (gradient + effects) vs Muted (grayscale + opacity)  
+3. **Interactive elements**: `cursor-pointer` + `hover:scale-105` + visual state changes
+4. **Layout optimization**: Main content left, secondary right for better UX flow
+5. **Multi-language**: All user-facing text through `t()` function with `tickets.*` namespace
+6. **Clipboard compatibility**: Three-layer fallback (Clipboard API → execCommand → manual)
+7. **State feedback**: Visual confirmation with timeout-based state reset
+
+## Browser Compatibility Patterns
+
+### Clipboard API Strategy
+```typescript
+// Three-layer fallback approach
+const copyWithFallback = async (text: string) => {
+  try {
+    // Layer 1: Modern Clipboard API (secure contexts)
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text)
+      return 'success'
+    }
+    
+    // Layer 2: Legacy execCommand (broader support)
+    const textArea = document.createElement('textarea')
+    textArea.value = text
+    textArea.style.position = 'fixed'
+    textArea.style.left = '-999999px'
+    document.body.appendChild(textArea)
+    textArea.select()
+    const result = document.execCommand('copy')
+    document.body.removeChild(textArea)
+    
+    return result ? 'success' : 'manual'
+  } catch {
+    return 'manual' // Fallback to manual copy UI
+  }
+}
+```
+
+### State Management for UX
+```typescript
+const [copyState, setCopyState] = useState<'idle' | 'success' | 'manual'>('idle')
+
+// Auto-reset with different timeouts for different states
+useEffect(() => {
+  if (copyState !== 'idle') {
+    const timeout = copyState === 'manual' ? 4000 : 2000
+    const timer = setTimeout(() => setCopyState('idle'), timeout)
+    return () => clearTimeout(timer)
+  }
+}, [copyState])
+```
 
 ## Performance Optimization
 - **Images**: Pure WebP strategy, 90%+ size reduction
@@ -106,4 +157,4 @@ const ticketStyle = isAvailable
 - **Maintenance**: Clear operational guides for content updates
 
 ---
-*Last Updated: January 9, 2025 | v4.0 - Streamlined for LLM efficiency & ticket marketing patterns*
+*Last Updated: January 9, 2025 | v4.1 - Added clipboard compatibility & promo code functionality*

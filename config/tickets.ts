@@ -31,9 +31,9 @@ export const TICKET_SALE_CONFIG: TicketSaleConfig = {
   // 🎯 早鳥票售罄狀態
   isEarlyBirdSoldOut: true,
   
-  // 🎟️ 優惠碼設定（預留，初期不顯示）
+  // 🎟️ 優惠碼設定 - 已啟動！
   promoCode: {
-    isVisible: false,
+    isVisible: true,
     code: "DDDTW2025"
   }
 }

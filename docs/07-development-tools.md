@@ -380,439 +380,51 @@ const ConfigPanel = () => (
 
 ---
 
-## 🔄 熱重載與自動更新
+## � 開發工作流程
 
-### 🚀 熱重載機制
-
-#### 開發環境熱重載
-Next.js 15.5.2 內建快速重載功能，但我們針對版本檢查實作了自動更新提示：
-
-```typescript
-// lib/version-check.ts
-export class VersionChecker {
-  private checkInterval: NodeJS.Timeout | null = null
-  private lastKnownVersion: string | null = null
-
-  constructor(private intervalMs: number = 60000) {} // 預設 1 分鐘檢查一次
-
-  async start() {
-    // 立即執行一次檢查
-    await this.checkVersion()
-    
-    // 設定定期檢查
-    this.checkInterval = setInterval(() => {
-      this.checkVersion()
-    }, this.intervalMs)
-  }
-
-  stop() {
-    if (this.checkInterval) {
-      clearInterval(this.checkInterval)
-      this.checkInterval = null
-    }
-  }
-
-  private async checkVersion() {
-    try {
-      const response = await fetch(`/version.json?t=${Date.now()}`, {
-        cache: 'no-store'
-      })
-      const versionData = await response.json()
-      
-      if (this.lastKnownVersion && this.lastKnownVersion !== versionData.version) {
-        this.notifyUpdate(versionData.version)
-      }
-      
-      this.lastKnownVersion = versionData.version
-    } catch (error) {
-      console.warn('Version check failed:', error)
-    }
-  }
-
-  private notifyUpdate(newVersion: string) {
-    // 顯示更新通知
-    if ('Notification' in window && Notification.permission === 'granted') {
-      new Notification('DDDTW 2025 有新版本', {
-        body: `版本 ${newVersion} 已發布，點擊重新載入`,
-        icon: '/favicon.ico'
-      })
-    }
-    
-    // 或使用自定義 Toast 通知
-    this.showUpdateToast(newVersion)
-  }
-
-  private showUpdateToast(newVersion: string) {
-    // 實作自定義更新提示
-    const toast = document.createElement('div')
-    toast.className = 'fixed top-4 right-4 bg-blue-600 text-white p-4 rounded-lg shadow-lg z-50'
-    toast.innerHTML = `
-      <div class="flex items-center justify-between">
-        <div>
-          <div class="font-semibold">新版本可用 (${newVersion})</div>
-          <div class="text-sm opacity-90">點擊重新載入頁面</div>
-        </div>
-        <button onclick="window.location.reload()" class="ml-4 bg-white/20 px-3 py-1 rounded text-sm">
-          更新
-        </button>
-      </div>
-    `
-    
-    document.body.appendChild(toast)
-    
-    // 5 秒後自動移除
-    setTimeout(() => {
-      toast.remove()
-    }, 5000)
-  }
-}
-```
-
-#### 使用版本檢查器
-```tsx
-// app/layout.tsx
-'use client'
-
-import { useEffect } from 'react'
-import { VersionChecker } from '@/lib/version-check'
-
-export default function RootLayout({ children }) {
-  useEffect(() => {
-    const versionChecker = new VersionChecker(60000) // 1 分鐘檢查
-    versionChecker.start()
-    
-    return () => versionChecker.stop()
-  }, [])
-  
-  return (
-    <html>
-      <body>{children}</body>
-    </html>
-  )
-}
-```
-
----
-
-## 🐛 AI 輔助除錯系統
-
-### 🤖 智慧錯誤分析
-
-#### 錯誤分類與處理
-```typescript
-// lib/error-handler.ts
-export interface ErrorContext {
-  component: string
-  action: string
-  timestamp: number
-  userAgent: string
-  url: string
-  userId?: string
-}
-
-export class AIAssistedErrorHandler {
-  private errors: Array<Error & { context: ErrorContext }> = []
-  
-  captureError(error: Error, context: Partial<ErrorContext>) {
-    const fullContext: ErrorContext = {
-      component: 'Unknown',
-      action: 'Unknown',
-      timestamp: Date.now(),
-      userAgent: navigator.userAgent,
-      url: window.location.href,
-      ...context
-    }
-    
-    const enrichedError = Object.assign(error, { context: fullContext })
-    this.errors.push(enrichedError)
-    
-    // AI 輔助分析
-    this.analyzeError(enrichedError)
-  }
-  
-  private analyzeError(error: Error & { context: ErrorContext }) {
-    const suggestions = this.generateSuggestions(error)
-    
-    if (process.env.NODE_ENV === 'development') {
-      console.group('🤖 AI 錯誤分析')
-      console.error('錯誤詳情:', error)
-      console.info('發生情境:', error.context)
-      console.warn('建議解決方案:', suggestions)
-      console.groupEnd()
-    }
-    
-    // 發送到監控服務（生產環境）
-    if (process.env.NODE_ENV === 'production') {
-      this.sendToMonitoring(error, suggestions)
-    }
-  }
-  
-  private generateSuggestions(error: Error & { context: ErrorContext }): string[] {
-    const suggestions: string[] = []
-    
-    // 網路錯誤
-    if (error.message.includes('fetch') || error.message.includes('network')) {
-      suggestions.push('檢查網路連線狀態')
-      suggestions.push('確認 API 端點是否正常運作')
-      suggestions.push('檢查 CORS 設定')
-    }
-    
-    // React 渲染錯誤
-    if (error.message.includes('Cannot read') || error.message.includes('undefined')) {
-      suggestions.push('檢查資料是否正確載入')
-      suggestions.push('確認元件 props 型別正確')
-      suggestions.push('增加 null 檢查或預設值')
-    }
-    
-    // 版本相關錯誤
-    if (error.context.component.includes('version') || error.message.includes('version')) {
-      suggestions.push('清除瀏覽器快取')
-      suggestions.push('檢查 version.json 檔案')
-      suggestions.push('確認 CDN 快取更新')
-    }
-    
-    // i18n 錯誤
-    if (error.message.includes('translation') || error.context.component.includes('i18n')) {
-      suggestions.push('檢查語言檔案完整性')
-      suggestions.push('確認翻譯鍵值存在')
-      suggestions.push('驗證 I18nProvider 包裝正確')
-    }
-    
-    return suggestions
-  }
-  
-  private sendToMonitoring(error: Error, suggestions: string[]) {
-    // 發送到外部監控服務（如 Sentry）
-    // 這裡可以整合各種監控平台
-  }
-  
-  // 取得錯誤統計
-  getErrorStats() {
-    return {
-      total: this.errors.length,
-      byComponent: this.groupBy(this.errors, 'context.component'),
-      byAction: this.groupBy(this.errors, 'context.action'),
-      recent: this.errors.filter(e => 
-        Date.now() - e.context.timestamp < 5 * 60 * 1000 // 最近 5 分鐘
-      )
-    }
-  }
-  
-  private groupBy(arr: any[], key: string) {
-    return arr.reduce((groups, item) => {
-      const group = key.split('.').reduce((obj, k) => obj[k], item)
-      groups[group] = groups[group] || []
-      groups[group].push(item)
-      return groups
-    }, {})
-  }
-}
-
-// 全域錯誤處理器實例
-export const errorHandler = new AIAssistedErrorHandler()
-```
-
-#### React 錯誤邊界
-```tsx
-// components/error-boundary.tsx
-'use client'
-
-import { Component, ReactNode } from 'react'
-import { errorHandler } from '@/lib/error-handler'
-
-interface Props {
-  children: ReactNode
-  fallback?: ReactNode
-  componentName?: string
-}
-
-interface State {
-  hasError: boolean
-  error?: Error
-}
-
-export class ErrorBoundary extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props)
-    this.state = { hasError: false }
-  }
-
-  static getDerivedStateFromError(error: Error): State {
-    return { hasError: true, error }
-  }
-
-  componentDidCatch(error: Error, errorInfo: any) {
-    errorHandler.captureError(error, {
-      component: this.props.componentName || 'ErrorBoundary',
-      action: 'render',
-      extraInfo: errorInfo
-    })
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return this.props.fallback || (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6 m-4">
-          <h3 className="text-red-800 font-semibold mb-2">發生錯誤</h3>
-          <p className="text-red-600 text-sm mb-4">
-            {this.state.error?.message || '未知錯誤'}
-          </p>
-          <button
-            onClick={() => this.setState({ hasError: false })}
-            className="bg-red-600 text-white px-4 py-2 rounded text-sm hover:bg-red-700"
-          >
-            重試
-          </button>
-        </div>
-      )
-    }
-
-    return this.props.children
-  }
-}
-```
-
----
-
-## 🔧 開發工具腳本
-
-### 📋 程式碼品質檢查
-
-#### scripts/dev-check.sh
+### 🚀 開發前準備
 ```bash
-#!/bin/bash
-# 完整的開發檢查腳本
+# 1. 環境檢查
+pnpm dev  # 確認開發伺服器正常啟動
 
-echo "🔍 執行開發環境檢查..."
+# 2. 配置檢查
+# 檢查 config/tickets.ts 中的 isTicketSaleActive 狀態
+# 驗證 locales/ 目錄下的語言檔案完整性
 
-# 1. TypeScript 檢查
-echo "📝 TypeScript 型別檢查..."
-npx tsc --noEmit
-if [ $? -ne 0 ]; then
-  echo "❌ TypeScript 檢查失敗"
-  exit 1
-fi
-
-# 2. ESLint 檢查
-echo "🔧 ESLint 程式碼檢查..."
-npx eslint . --ext .ts,.tsx --max-warnings 0
-if [ $? -ne 0 ]; then
-  echo "❌ ESLint 檢查失敗"
-  exit 1
-fi
-
-# 3. 建置測試
-echo "📦 建置測試..."
-npm run build
-if [ $? -ne 0 ]; then
-  echo "❌ 建置失敗"
-  exit 1
-fi
-
-# 4. 圖片優化檢查
-echo "📸 圖片優化檢查..."
-node scripts/check-image-sizes.js
-
-# 5. 翻譯完整性檢查
-echo "🌍 翻譯檢查..."
-node scripts/check-translations.js
-
-echo "✅ 所有檢查通過！"
+# 3. 依賴更新
+pnpm install  # 確保所有依賴最新
 ```
 
-#### scripts/performance-audit.js
-```javascript
-// 效能稽核腳本
-const puppeteer = require('puppeteer')
-const lighthouse = require('lighthouse')
+### � 開發實作流程
+```typescript
+// 遵循配置驅動開發模式
+// 1. 配置優先 - 從 @/config 取得設定，避免硬編碼
+// 2. i18n 支援 - 所有文字透過 t() 函數處理
+// 3. 響應式設計 - 使用 md: 前綴處理桌面版
 
-async function performanceAudit() {
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: ['--no-sandbox', '--disable-dev-shm-usage']
-  })
-  
-  const page = await browser.newPage()
-  
-  try {
-    // 設定視窗大小
-    await page.setViewport({ width: 1200, height: 800 })
-    
-    console.log('🚀 開始效能稽核...')
-    
-    // 測試首頁載入
-    const startTime = Date.now()
-    await page.goto('http://localhost:3000', { 
-      waitUntil: 'networkidle0',
-      timeout: 30000
-    })
-    const loadTime = Date.now() - startTime
-    
-    console.log(`⏱️ 首頁載入時間: ${loadTime}ms`)
-    
-    // 檢查核心元素
-    const coreElements = [
-      'header',
-      'main',
-      'footer'
-    ]
-    
-    for (const element of coreElements) {
-      const exists = await page.$(element)
-      console.log(`${exists ? '✅' : '❌'} ${element} 元素`)
-    }
-    
-    // 檢查 JavaScript 錯誤
-    const jsErrors = []
-    page.on('pageerror', error => {
-      jsErrors.push(error.message)
-    })
-    
-    // 模擬使用者互動
-    await page.click('button') // 假設有按鈕
-    await page.waitForTimeout(1000)
-    
-    if (jsErrors.length > 0) {
-      console.log('❌ JavaScript 錯誤:')
-      jsErrors.forEach(error => console.log(`  - ${error}`))
-    } else {
-      console.log('✅ 無 JavaScript 錯誤')
-    }
-    
-    // Lighthouse 效能評估
-    const { port } = new URL(browser.wsEndpoint())
-    const result = await lighthouse('http://localhost:3000', {
-      port,
-      output: 'json',
-      logLevel: 'error'
-    })
-    
-    const scores = result.lhr.categories
-    console.log('📊 Lighthouse 分數:')
-    console.log(`  效能: ${Math.round(scores.performance.score * 100)}`)
-    console.log(`  可及性: ${Math.round(scores.accessibility.score * 100)}`)
-    console.log(`  最佳實踐: ${Math.round(scores['best-practices'].score * 100)}`)
-    console.log(`  SEO: ${Math.round(scores.seo.score * 100)}`)
-    
-  } catch (error) {
-    console.error('❌ 稽核過程發生錯誤:', error)
-  } finally {
-    await browser.close()
-  }
-}
+// 範例：新功能實作
+const { t } = useI18n()
+const config = TICKET_SALE_CONFIG
 
-performanceAudit().catch(console.error)
+// 配置驅動的條件渲染
+{config.isTicketSaleActive && (
+  <TicketSection title={t('tickets.title')} />
+)}
 ```
 
----
+### 🔍 開發驗證檢查點
+- [ ] `pnpm build` 建置成功
+- [ ] 多語言切換功能正常
+- [ ] 按鈕狀態反映配置設定
+- [ ] 版面在行動/桌面裝置正常顯示
+- [ ] 無 TypeScript 型別錯誤
+- [ ] 符合設計系統規範
 
-## 🚀 建置與部署工具
-
-### 📦 自動化建置腳本
+### � 建置與部署腳本
 
 #### scripts/deploy-check.js
 ```javascript
-// 部署前檢查腳本
+// 部署前完整檢查腳本
 const fs = require('fs')
 const path = require('path')
 
@@ -868,25 +480,6 @@ function checkVersionFile() {
       message: '版本檔案不存在或格式錯誤' 
     }
   }
-}
-
-function checkStaticFiles() {
-  const requiredFiles = [
-    'public/favicon.ico',
-    'public/robots.txt'
-  ]
-  
-  for (const file of requiredFiles) {
-    if (!fs.existsSync(path.join(__dirname, '..', file))) {
-      return { 
-        passed: false, 
-        name: 'Static Files', 
-        message: `缺少必要檔案: ${file}` 
-      }
-    }
-  }
-  
-  return { passed: true, name: 'Static Files' }
 }
 
 function checkConfigFiles() {

@@ -47,7 +47,607 @@ SEO 最佳化系統
 ```typescript
 import { CONFIG } from '@/config'
 
-export interface SEOConfig {
+## 📦 靜態匯出最佳化
+
+### 🔧 Next.js 靜態匯出配置
+
+#### next.config.mjs
+```javascript
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  output: 'export',
+  trailingSlash: true,
+  images: {
+    unoptimized: true // 靜態匯出時必須啟用
+  },
+  outputFileTracingRoot: __dirname, // 確保正確的檔案追蹤
+  
+  // 建置最佳化
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production'
+  },
+  
+  // 實驗性功能
+  experimental: {
+    optimizeCss: true,
+    turbo: {
+      rules: {
+        '*.svg': {
+          loaders: ['@svgr/webpack'],
+          as: '*.js'
+        }
+      }
+    }
+  },
+  
+  // 重寫規則（GitHub Pages 相容）
+  async rewrites() {
+    return []
+  },
+  
+  // 標頭設定
+  async headers() {
+    return [
+      {
+        source: '/:all*(svg|jpg|png|webp)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable'
+          }
+        ]
+      }
+    ]
+  }
+}
+
+export default nextConfig
+```
+
+### 📊 建置大小監控
+
+#### scripts/bundle-analyzer.js
+```javascript
+// 套件大小分析腳本
+const { execSync } = require('child_process')
+const fs = require('fs')
+const path = require('path')
+
+function analyzeBundleSize() {
+  console.log('📊 分析套件大小...')
+  
+  // 執行建置
+  execSync('pnpm build', { stdio: 'inherit' })
+  
+  // 分析 .next 目錄
+  const buildDir = path.join(__dirname, '../.next')
+  const staticDir = path.join(buildDir, 'static')
+  
+  if (!fs.existsSync(staticDir)) {
+    console.error('❌ 建置目錄不存在')
+    return
+  }
+  
+  const sizes = {}
+  
+  // 分析 JavaScript 檔案
+  const jsDir = path.join(staticDir, 'chunks')
+  if (fs.existsSync(jsDir)) {
+    const jsFiles = fs.readdirSync(jsDir, { recursive: true })
+      .filter(file => file.endsWith('.js'))
+    
+    jsFiles.forEach(file => {
+      const filePath = path.join(jsDir, file)
+      const stats = fs.statSync(filePath)
+      sizes[`js/${file}`] = {
+        size: stats.size,
+        sizeKB: Math.round(stats.size / 1024 * 100) / 100
+      }
+    })
+  }
+  
+  // 分析 CSS 檔案
+  const cssDir = path.join(staticDir, 'css')
+  if (fs.existsSync(cssDir)) {
+    const cssFiles = fs.readdirSync(cssDir)
+      .filter(file => file.endsWith('.css'))
+    
+    cssFiles.forEach(file => {
+      const filePath = path.join(cssDir, file)
+      const stats = fs.statSync(filePath)
+      sizes[`css/${file}`] = {
+        size: stats.size,
+        sizeKB: Math.round(stats.size / 1024 * 100) / 100
+      }
+    })
+  }
+  
+  // 產生報告
+  console.log('\n📋 套件大小報告:')
+  console.log('=' .repeat(60))
+  
+  const sorted = Object.entries(sizes)
+    .sort(([,a], [,b]) => b.size - a.size)
+  
+  let totalSize = 0
+  sorted.forEach(([file, data]) => {
+    console.log(`${file.padEnd(40)} ${data.sizeKB.toString().padStart(8)} KB`)
+    totalSize += data.size
+  })
+  
+  console.log('=' .repeat(60))
+  console.log(`總計: ${Math.round(totalSize / 1024 * 100) / 100} KB`)
+  
+  // 大小警告
+  const totalKB = totalSize / 1024
+  if (totalKB > 500) {
+    console.log('⚠️  警告: 套件大小超過 500KB，考慮程式碼分割')
+  } else if (totalKB > 300) {
+    console.log('💡 建議: 套件大小接近 300KB，注意效能')
+  } else {
+    console.log('✅ 套件大小在合理範圍內')
+  }
+  
+  // 儲存報告
+  const report = {
+    timestamp: new Date().toISOString(),
+    totalSizeKB: Math.round(totalKB * 100) / 100,
+    files: sorted.map(([file, data]) => ({
+      file,
+      sizeKB: data.sizeKB
+    }))
+  }
+  
+  fs.writeFileSync(
+    path.join(__dirname, '../.next/bundle-analysis.json'),
+    JSON.stringify(report, null, 2)
+  )
+  
+  console.log('\n📁 報告已儲存至 .next/bundle-analysis.json')
+}
+
+// 效能閾值檢查
+function checkPerformanceThresholds() {
+  const analysisPath = path.join(__dirname, '../.next/bundle-analysis.json')
+  
+  if (!fs.existsSync(analysisPath)) {
+    console.log('⚠️  找不到套件分析報告，請先執行分析')
+    return
+  }
+  
+  const analysis = JSON.parse(fs.readFileSync(analysisPath, 'utf8'))
+  
+  console.log('\n🎯 效能閾值檢查:')
+  
+  // JavaScript 大小檢查
+  const jsFiles = analysis.files.filter(f => f.file.startsWith('js/'))
+  const totalJSSize = jsFiles.reduce((sum, f) => sum + f.sizeKB, 0)
+  
+  console.log(`JavaScript 總大小: ${totalJSSize} KB`)
+  if (totalJSSize > 300) {
+    console.log('❌ JavaScript 過大 (>300KB)')
+  } else {
+    console.log('✅ JavaScript 大小正常')
+  }
+  
+  // CSS 大小檢查
+  const cssFiles = analysis.files.filter(f => f.file.startsWith('css/'))
+  const totalCSSSize = cssFiles.reduce((sum, f) => sum + f.sizeKB, 0)
+  
+  console.log(`CSS 總大小: ${totalCSSSize} KB`)
+  if (totalCSSSize > 50) {
+    console.log('❌ CSS 過大 (>50KB)')
+  } else {
+    console.log('✅ CSS 大小正常')
+  }
+  
+  // 單一檔案大小檢查
+  const largeFiles = analysis.files.filter(f => f.sizeKB > 100)
+  if (largeFiles.length > 0) {
+    console.log('\n⚠️  發現大型檔案:')
+    largeFiles.forEach(f => {
+      console.log(`  ${f.file}: ${f.sizeKB} KB`)
+    })
+  }
+}
+
+// 主要執行
+if (require.main === module) {
+  analyzeBundleSize()
+  checkPerformanceThresholds()
+}
+
+module.exports = { analyzeBundleSize, checkPerformanceThresholds }
+```
+
+### 🚀 GitHub Pages 部署自動化
+
+#### .github/workflows/deploy.yml
+```yaml
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+          
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        
+      - name: Generate version file
+        run: |
+          echo "{
+            \"version\": \"${{ github.sha }}\",
+            \"buildTime\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",
+            \"branch\": \"${{ github.ref_name }}\"
+          }" > public/version.json
+          
+      - name: Run build checks
+        run: |
+          pnpm lint
+          pnpm type-check
+          node scripts/check-translations.js
+          
+      - name: Build application
+        run: pnpm build
+        
+      - name: Bundle size analysis
+        run: node scripts/bundle-analyzer.js
+        
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-output
+          path: out/
+          
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+        
+      - name: Upload to GitHub Pages
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: ./out
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v3
+```
+
+### 📈 部署後驗證腳本
+
+#### scripts/post-deploy-check.js
+```javascript
+// 部署後健康檢查
+const https = require('https')
+const http = require('http')
+
+const SITE_URL = 'https://dddtaiwan.github.io/2025'
+
+async function checkSiteHealth() {
+  console.log('🔍 執行部署後健康檢查...')
+  
+  const checks = [
+    checkHomePage,
+    checkCriticalPages,
+    checkAssets,
+    checkSEO,
+    checkPerformance
+  ]
+  
+  const results = []
+  
+  for (const check of checks) {
+    try {
+      const result = await check()
+      results.push(result)
+      console.log(`${result.passed ? '✅' : '❌'} ${result.name}`)
+      if (result.details) {
+        console.log(`   ${result.details}`)
+      }
+    } catch (error) {
+      results.push({
+        name: check.name,
+        passed: false,
+        error: error.message
+      })
+      console.log(`❌ ${check.name}: ${error.message}`)
+    }
+  }
+  
+  const passed = results.filter(r => r.passed).length
+  const total = results.length
+  
+  console.log(`\n📊 檢查結果: ${passed}/${total} 通過`)
+  
+  if (passed === total) {
+    console.log('🎉 部署成功，所有檢查通過！')
+  } else {
+    console.log('⚠️  部分檢查失敗，請檢查問題')
+    process.exit(1)
+  }
+}
+
+async function checkHomePage() {
+  return new Promise((resolve, reject) => {
+    const req = https.get(SITE_URL, (res) => {
+      if (res.statusCode === 200) {
+        resolve({
+          name: 'Homepage Accessibility',
+          passed: true,
+          details: `Status: ${res.statusCode}`
+        })
+      } else {
+        resolve({
+          name: 'Homepage Accessibility',
+          passed: false,
+          details: `Status: ${res.statusCode}`
+        })
+      }
+    })
+    
+    req.on('error', (err) => {
+      resolve({
+        name: 'Homepage Accessibility',
+        passed: false,
+        error: err.message
+      })
+    })
+    
+    req.setTimeout(10000, () => {
+      req.destroy()
+      resolve({
+        name: 'Homepage Accessibility',
+        passed: false,
+        error: 'Timeout'
+      })
+    })
+  })
+}
+
+async function checkCriticalPages() {
+  const criticalPages = [
+    '/speakers/',
+    '/agenda/',
+    '/tickets/',
+    '/about/'
+  ]
+  
+  let allPassed = true
+  const details = []
+  
+  for (const page of criticalPages) {
+    try {
+      const url = `${SITE_URL}${page}`
+      const result = await checkPageAvailability(url)
+      if (!result) allPassed = false
+      details.push(`${page}: ${result ? '✅' : '❌'}`)
+    } catch (error) {
+      allPassed = false
+      details.push(`${page}: ❌ ${error.message}`)
+    }
+  }
+  
+  return {
+    name: 'Critical Pages',
+    passed: allPassed,
+    details: details.join(', ')
+  }
+}
+
+async function checkPageAvailability(url) {
+  return new Promise((resolve) => {
+    const req = https.get(url, (res) => {
+      resolve(res.statusCode === 200)
+    })
+    
+    req.on('error', () => resolve(false))
+    req.setTimeout(5000, () => {
+      req.destroy()
+      resolve(false)
+    })
+  })
+}
+
+async function checkAssets() {
+  const assetUrls = [
+    `${SITE_URL}/version.json`,
+    `${SITE_URL}/favicon.ico`,
+    `${SITE_URL}/robots.txt`
+  ]
+  
+  let allPassed = true
+  const details = []
+  
+  for (const url of assetUrls) {
+    try {
+      const available = await checkPageAvailability(url)
+      if (!available) allPassed = false
+      const fileName = url.split('/').pop()
+      details.push(`${fileName}: ${available ? '✅' : '❌'}`)
+    } catch (error) {
+      allPassed = false
+    }
+  }
+  
+  return {
+    name: 'Static Assets',
+    passed: allPassed,
+    details: details.join(', ')
+  }
+}
+
+async function checkSEO() {
+  return new Promise((resolve) => {
+    https.get(SITE_URL, (res) => {
+      let html = ''
+      
+      res.on('data', (chunk) => {
+        html += chunk
+      })
+      
+      res.on('end', () => {
+        const checks = [
+          html.includes('<title>'),
+          html.includes('meta name="description"'),
+          html.includes('meta property="og:title"'),
+          html.includes('application/ld+json')
+        ]
+        
+        const passed = checks.every(Boolean)
+        
+        resolve({
+          name: 'SEO Elements',
+          passed,
+          details: `${checks.filter(Boolean).length}/${checks.length} elements found`
+        })
+      })
+    }).on('error', () => {
+      resolve({
+        name: 'SEO Elements',
+        passed: false,
+        error: 'Failed to fetch HTML'
+      })
+    })
+  })
+}
+
+async function checkPerformance() {
+  const startTime = Date.now()
+  
+  return new Promise((resolve) => {
+    https.get(SITE_URL, (res) => {
+      const endTime = Date.now()
+      const loadTime = endTime - startTime
+      
+      resolve({
+        name: 'Performance',
+        passed: loadTime < 3000,
+        details: `Load time: ${loadTime}ms`
+      })
+    }).on('error', () => {
+      resolve({
+        name: 'Performance',
+        passed: false,
+        error: 'Failed to measure performance'
+      })
+    })
+  })
+}
+
+checkSiteHealth().catch(console.error)
+```
+
+### 🔄 版本管理與快取控制
+
+#### scripts/generate-version.js
+```javascript
+// 版本檔案生成腳本
+const fs = require('fs')
+const path = require('path')
+const crypto = require('crypto')
+
+function generateVersionFile() {
+  console.log('📝 生成版本檔案...')
+  
+  const buildTime = new Date().toISOString()
+  const gitHash = process.env.GITHUB_SHA || 'dev-build'
+  const branch = process.env.GITHUB_REF_NAME || 'local'
+  
+  // 計算內容雜湊
+  const buildDir = path.join(__dirname, '../out')
+  let contentHash = 'unknown'
+  
+  if (fs.existsSync(buildDir)) {
+    const files = getAllFiles(buildDir)
+    const hasher = crypto.createHash('sha256')
+    
+    files.forEach(file => {
+      const content = fs.readFileSync(file)
+      hasher.update(content)
+    })
+    
+    contentHash = hasher.digest('hex').substring(0, 8)
+  }
+  
+  const version = {
+    version: gitHash.substring(0, 8),
+    buildTime,
+    branch,
+    contentHash,
+    environment: process.env.NODE_ENV || 'development',
+    generator: 'DDD Taiwan 2025 Build System'
+  }
+  
+  // 寫入版本檔案
+  const versionPath = path.join(__dirname, '../public/version.json')
+  fs.writeFileSync(versionPath, JSON.stringify(version, null, 2))
+  
+  console.log('✅ 版本檔案已生成')
+  console.log(`   版本: ${version.version}`)
+  console.log(`   建置時間: ${version.buildTime}`)
+  console.log(`   內容雜湊: ${version.contentHash}`)
+  
+  return version
+}
+
+function getAllFiles(dir) {
+  const files = []
+  const items = fs.readdirSync(dir, { withFileTypes: true })
+  
+  for (const item of items) {
+    const fullPath = path.join(dir, item.name)
+    if (item.isDirectory()) {
+      files.push(...getAllFiles(fullPath))
+    } else {
+      files.push(fullPath)
+    }
+  }
+  
+  return files
+}
+
+if (require.main === module) {
+  generateVersionFile()
+}
+
+module.exports = { generateVersionFile }
+```
   title: string
   description: string
   keywords?: string[]

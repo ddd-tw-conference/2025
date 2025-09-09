@@ -499,6 +499,195 @@ export default function TicketsPage() {
 
 ## 🚀 維護與更新指南
 
+### 📋 優惠碼功能管理
+
+#### 🔄 啟動/停用優惠碼
+```typescript
+// config/tickets.ts - 調整優惠碼顯示
+export const TICKET_SALE_CONFIG: TicketSaleConfig = {
+  // 其他配置...
+  promoCode: {
+    isVisible: true,  // 設為 true 啟動優惠碼顯示
+    code: "DDDTW2025" // 實際優惠碼內容
+  }
+}
+```
+
+#### 📋 Clipboard API 兼容性實現
+
+**問題背景**：
+Clipboard API 在某些環境下會被瀏覽器安全策略阻擋，特別是：
+- 非 HTTPS 環境
+- 開發環境的安全限制
+- 某些瀏覽器的權限政策
+
+**解決方案：三層 Fallback 策略**
+
+```typescript
+// 優惠碼複製功能 - 完整實現
+import { useState, useEffect } from 'react'
+
+export const PromoCodeCopy = ({ code }: { code: string }) => {
+  const { t } = useI18n()
+  const [copyState, setCopyState] = useState<'idle' | 'success' | 'manual'>('idle')
+
+  // 複製優惠碼到剪貼簿 - 支援多種方法確保兼容性
+  const copyPromoCode = async () => {
+    try {
+      // 方法 1: 現代 Clipboard API (首選)
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(code)
+        setCopyState('success')
+        return
+      }
+      
+      // 方法 2: 傳統 execCommand 方法 (fallback)
+      const textArea = document.createElement('textarea')
+      textArea.value = code
+      textArea.style.position = 'fixed'
+      textArea.style.left = '-999999px'
+      textArea.style.top = '-999999px'
+      document.body.appendChild(textArea)
+      textArea.focus()
+      textArea.select()
+      
+      const successful = document.execCommand('copy')
+      document.body.removeChild(textArea)
+      
+      if (successful) {
+        setCopyState('success')
+      } else {
+        throw new Error('execCommand failed')
+      }
+      
+    } catch (err) {
+      console.error('Failed to copy promo code:', err)
+      // 方法 3: 手動複製提示 (最後手段)
+      setCopyState('manual')
+    }
+  }
+
+  // 自動重置狀態
+  useEffect(() => {
+    if (copyState !== 'idle') {
+      const timeout = copyState === 'manual' ? 4000 : 2000
+      const timer = setTimeout(() => setCopyState('idle'), timeout)
+      return () => clearTimeout(timer)
+    }
+  }, [copyState])
+
+  return (
+    <div className="mt-6 p-4 bg-yellow-400/10 border border-yellow-400/30 rounded-lg">
+      <p className="text-yellow-200 text-sm mb-2">
+        {t('tickets.promoCodeHint')}
+      </p>
+      <div 
+        onClick={copyPromoCode}
+        className="inline-flex items-center gap-3 bg-yellow-400/20 hover:bg-yellow-400/30 text-yellow-100 px-4 py-2 rounded font-mono text-sm cursor-pointer transition-all duration-200 hover:scale-105 group"
+        title={t('tickets.promoCodeClick')}
+      >
+        <code className="select-none">{code}</code>
+        {copyState === 'success' ? (
+          <svg 
+            className="w-4 h-4 text-green-400" 
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+        ) : (
+          <svg 
+            className="w-4 h-4 text-yellow-300 group-hover:text-yellow-100 transition-colors" 
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+          </svg>
+        )}
+      </div>
+      
+      {/* 狀態反饋 */}
+      {copyState !== 'idle' && (
+        <div className="mt-2 animate-fade-in">
+          {copyState === 'success' ? (
+            <p className="text-green-400 text-xs">
+              {t('tickets.promoCodeCopied')}
+            </p>
+          ) : copyState === 'manual' ? (
+            <div className="text-yellow-300 text-xs">
+              <p className="font-semibold mb-1">{t('tickets.promoCodeManual')}</p>
+              <p className="font-mono bg-yellow-400/20 px-2 py-1 rounded inline-block select-all">
+                {code}
+              </p>
+            </div>
+          ) : null}
+        </div>
+      )}
+    </div>
+  )
+}
+```
+
+#### 🎨 視覺反饋設計模式
+
+**成功狀態** (綠色主題):
+```css
+.copy-success {
+  color: #10b981; /* text-green-400 */
+  /* 顯示打勾圖示 */
+}
+```
+
+**手動複製狀態** (黃色主題):
+```css
+.copy-manual {
+  color: #fcd34d; /* text-yellow-300 */
+  background: rgba(251, 191, 36, 0.2); /* bg-yellow-400/20 */
+  /* 顯示可選取的優惠碼區塊 */
+}
+```
+
+**互動效果**:
+```css
+.copy-button {
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.copy-button:hover {
+  transform: scale(1.05);
+  background: rgba(251, 191, 36, 0.3); /* hover:bg-yellow-400/30 */
+}
+```
+
+#### 🌍 多語言支援擴展
+
+新增複製功能相關文字：
+
+**locales/zh-tw.json**:
+```json
+{
+  "tickets": {
+    "promoCodeClick": "點擊複製優惠碼",
+    "promoCodeCopied": "優惠碼已複製！",
+    "promoCodeManual": "請手動複製優惠碼："
+  }
+}
+```
+
+**locales/en.json**:
+```json
+{
+  "tickets": {
+    "promoCodeClick": "Click to copy promo code",
+    "promoCodeCopied": "Promo code copied!",
+    "promoCodeManual": "Please manually copy the promo code:"
+  }
+}
+```
+
 ### 📋 常見維護任務
 
 #### 1. 啟用/停用售票

@@ -598,6 +598,351 @@ async function runPerformanceTest() {
   
   console.log('📊 效能指標:')
   console.log(`載入時間: ${performanceData.loadEventEnd - performanceData.fetchStart}ms`)
+  console.log(`DOM 內容載入: ${performanceData.domContentLoadedEventEnd - performanceData.fetchStart}ms`)
+  console.log(`首次繪製: ${performanceData.responseStart - performanceData.fetchStart}ms`)
+  
+  await browser.close()
+}
+
+// 定期執行效能測試
+setInterval(runPerformanceTest, 24 * 60 * 60 * 1000) // 每24小時
+```
+
+### 🎯 靜態導出優化特殊設定
+
+#### Next.js 靜態導出效能配置
+```javascript
+// next.config.mjs - 針對 GitHub Pages 優化
+const nextConfig = {
+  // 靜態導出設定
+  output: 'export',
+  trailingSlash: false,
+  
+  // 資源追蹤優化（針對靜態導出）
+  outputFileTracingRoot: path.join(__dirname, '../../'),
+  
+  // 實驗性效能功能
+  experimental: {
+    optimizeCss: true,
+    optimizePackageImports: ['react-icons'],
+    
+    // 靜態生成優化
+    staticGenerationMaxConcurrency: 8,
+    staticGenerationRetryCount: 3
+  },
+  
+  // 編譯優化
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production'
+  },
+  
+  // 圖片處理（靜態導出）
+  images: {
+    unoptimized: true,
+    formats: ['image/webp', 'image/avif']
+  },
+  
+  // Webpack 優化
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      // 客戶端 bundle 優化
+      config.optimization = {
+        ...config.optimization,
+        splitChunks: {
+          chunks: 'all',
+          cacheGroups: {
+            default: false,
+            vendors: false,
+            framework: {
+              chunks: 'all',
+              name: 'framework',
+              test: /(?<!node_modules.*)[\\/]node_modules[\\/](react|react-dom|scheduler|prop-types|use-subscription)[\\/]/,
+              priority: 40,
+              enforce: true,
+            },
+            lib: {
+              test(module) {
+                return module.size() > 160000 &&
+                  /node_modules[/\\]/.test(module.identifier())
+              },
+              name(module) {
+                const hash = crypto.createHash('sha1')
+                hash.update(module.identifier())
+                return hash.digest('hex').substring(0, 8)
+              },
+              priority: 30,
+              minChunks: 1,
+              reuseExistingChunk: true,
+            },
+            commons: {
+              name: 'commons',
+              minChunks: 2,
+              priority: 20,
+            },
+            shared: {
+              name: false,
+              priority: 10,
+              reuseExistingChunk: true,
+            },
+          },
+        },
+      }
+    }
+    
+    return config
+  }
+}
+```
+
+### 📊 靜態資源優化策略
+
+#### 資源壓縮與快取
+```javascript
+// scripts/optimize-static-assets.js
+const fs = require('fs')
+const path = require('path')
+const { gzipSync } = require('zlib')
+
+function compressStaticFiles(dir) {
+  const files = fs.readdirSync(dir, { withFileTypes: true })
+  
+  for (const file of files) {
+    const fullPath = path.join(dir, file.name)
+    
+    if (file.isDirectory()) {
+      compressStaticFiles(fullPath)
+    } else if (/\.(js|css|html|json|xml|txt)$/.test(file.name)) {
+      // 生成 gzip 版本
+      const content = fs.readFileSync(fullPath)
+      const compressed = gzipSync(content)
+      fs.writeFileSync(`${fullPath}.gz`, compressed)
+      
+      const originalSize = content.length
+      const compressedSize = compressed.length
+      const savings = ((originalSize - compressedSize) / originalSize * 100).toFixed(1)
+      
+      console.log(`✅ ${file.name}: ${originalSize} → ${compressedSize} bytes (${savings}% 節省)`)
+    }
+  }
+}
+
+// 優化 out 目錄
+compressStaticFiles('./out')
+```
+
+### 🔍 效能監控儀表板
+
+#### 開發者效能工具
+```tsx
+// components/performance-dashboard.tsx - 擴展版本
+'use client'
+
+import { useState, useEffect } from 'react'
+
+interface PerformanceMetrics {
+  buildTime?: number
+  bundleSize?: number
+  imageOptimization?: {
+    originalSize: number
+    optimizedSize: number
+    savings: number
+  }
+  webVitals?: {
+    lcp?: number
+    fid?: number
+    cls?: number
+  }
+}
+
+export default function PerformanceDashboard() {
+  const [metrics, setMetrics] = useState<PerformanceMetrics>({})
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.shiftKey && e.key === 'P') {
+        setIsVisible(!isVisible)
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isVisible])
+
+  // 載入效能數據
+  useEffect(() => {
+    if (isVisible) {
+      // 模擬載入效能數據
+      setMetrics({
+        buildTime: 45.2,
+        bundleSize: 234.5,
+        imageOptimization: {
+          originalSize: 3840,
+          optimizedSize: 296,
+          savings: 92.3
+        },
+        webVitals: {
+          lcp: 1.8,
+          fid: 85,
+          cls: 0.05
+        }
+      })
+    }
+  }, [isVisible])
+
+  if (!isVisible) return null
+
+  return (
+    <div className="fixed top-4 right-4 w-80 bg-slate-900/95 backdrop-blur-sm border border-slate-600 rounded-lg p-4 text-sm z-50">
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="font-bold text-white">效能監控面板</h3>
+        <button
+          onClick={() => setIsVisible(false)}
+          className="text-gray-400 hover:text-white"
+        >
+          ✕
+        </button>
+      </div>
+
+      <div className="space-y-4">
+        {/* 建置效能 */}
+        <div>
+          <h4 className="font-semibold text-gray-200 mb-2">建置效能</h4>
+          <div className="space-y-1 text-xs">
+            <div className="flex justify-between">
+              <span>建置時間:</span>
+              <span className="font-mono text-green-400">{metrics.buildTime}s</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Bundle 大小:</span>
+              <span className="font-mono text-blue-400">{metrics.bundleSize}KB</span>
+            </div>
+          </div>
+        </div>
+
+        {/* 圖片優化 */}
+        {metrics.imageOptimization && (
+          <div>
+            <h4 className="font-semibold text-gray-200 mb-2">圖片優化</h4>
+            <div className="space-y-1 text-xs">
+              <div className="flex justify-between">
+                <span>原始大小:</span>
+                <span className="font-mono text-red-400">{metrics.imageOptimization.originalSize}KB</span>
+              </div>
+              <div className="flex justify-between">
+                <span>優化後:</span>
+                <span className="font-mono text-green-400">{metrics.imageOptimization.optimizedSize}KB</span>
+              </div>
+              <div className="flex justify-between">
+                <span>節省:</span>
+                <span className="font-mono text-yellow-400">{metrics.imageOptimization.savings}%</span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Web Vitals */}
+        {metrics.webVitals && (
+          <div>
+            <h4 className="font-semibold text-gray-200 mb-2">Web Vitals</h4>
+            <div className="space-y-1 text-xs">
+              <div className="flex justify-between">
+                <span>LCP:</span>
+                <span className={`font-mono ${
+                  (metrics.webVitals.lcp || 0) <= 2.5 ? 'text-green-400' : 
+                  (metrics.webVitals.lcp || 0) <= 4.0 ? 'text-yellow-400' : 'text-red-400'
+                }`}>
+                  {metrics.webVitals.lcp}s
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span>FID:</span>
+                <span className={`font-mono ${
+                  (metrics.webVitals.fid || 0) <= 100 ? 'text-green-400' : 
+                  (metrics.webVitals.fid || 0) <= 300 ? 'text-yellow-400' : 'text-red-400'
+                }`}>
+                  {metrics.webVitals.fid}ms
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span>CLS:</span>
+                <span className={`font-mono ${
+                  (metrics.webVitals.cls || 0) <= 0.1 ? 'text-green-400' : 
+                  (metrics.webVitals.cls || 0) <= 0.25 ? 'text-yellow-400' : 'text-red-400'
+                }`}>
+                  {metrics.webVitals.cls}
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* 操作按鈕 */}
+        <div className="pt-2 border-t border-slate-600">
+          <div className="flex gap-2">
+            <button 
+              className="px-2 py-1 bg-blue-600 hover:bg-blue-700 rounded text-xs"
+              onClick={() => window.location.reload()}
+            >
+              重載頁面
+            </button>
+            <button 
+              className="px-2 py-1 bg-green-600 hover:bg-green-700 rounded text-xs"
+              onClick={() => {
+                if ('performance' in window) {
+                  performance.mark('manual-performance-check')
+                }
+              }}
+            >
+              效能標記
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-4 pt-2 border-t border-slate-600 text-xs text-gray-400">
+        按 Ctrl+Shift+P 關閉面板
+      </div>
+    </div>
+  )
+}
+```
+
+### 🎯 效能優化最佳實踐總結
+
+#### 圖片優化核心原則
+1. **純 WebP 策略**: 統一使用 WebP 格式，平均減少 90%+ 檔案大小
+2. **自動化轉換**: 使用 Sharp 進行批量轉換
+3. **回退機制**: 提供向後相容性
+4. **延遲載入**: 非關鍵圖片使用 lazy loading
+
+#### 程式碼優化策略
+1. **動態匯入**: 分割大型元件和路由
+2. **樹搖優化**: 移除未使用的程式碼
+3. **Bundle 分析**: 定期檢查 bundle 大小
+4. **快取策略**: 合理設定靜態資源快取
+
+#### 監控與測量
+1. **Web Vitals**: 持續監控核心效能指標
+2. **自動化測試**: 建立效能測試流程
+3. **開發者工具**: 提供即時效能監控面板
+4. **基準測試**: 定期效能比較和分析
+
+---
+
+## 📋 維護檢查清單
+
+### 🔄 定期效能檢查
+- [ ] 每週執行圖片大小分析
+- [ ] 每月檢查 Bundle 大小變化
+- [ ] 季度進行完整效能基準測試
+- [ ] 監控 Web Vitals 趨勢變化
+- [ ] 檢查新增圖片是否已轉換為 WebP
+- [ ] 驗證 CDN 快取策略有效性
+
+---
+
+*最後更新：2025年1月9日 - v2.1 加強靜態導出優化與監控功能*
   console.log(`首屏渲染: ${performanceData.responseEnd - performanceData.fetchStart}ms`)
   
   await browser.close()

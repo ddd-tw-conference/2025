@@ -648,6 +648,320 @@ const Button = ({ variant, isActive, className, ...props }) => {
 
 ## 📊 設計系統維護
 
+### 🎨 複製功能 UI 模式
+
+#### 複製操作設計標準
+```tsx
+// 複製功能的統一設計語言
+export const CopyActionStyles = {
+  // 黃色主題色系
+  container: "bg-yellow-400/10 border border-yellow-400/30 rounded-lg",
+  button: "bg-yellow-400/20 hover:bg-yellow-400/30 text-yellow-100",
+  text: "text-yellow-200",
+  
+  // 狀態反饋色系
+  success: "text-green-400",
+  manual: "text-yellow-300",
+  error: "text-red-400",
+  
+  // 互動效果
+  interactive: "cursor-pointer transition-all duration-200 hover:scale-105",
+  
+  // 圖示樣式
+  icon: "w-4 h-4 transition-colors",
+  iconSuccess: "text-green-400",
+  iconDefault: "text-yellow-300 group-hover:text-yellow-100"
+}
+```
+
+#### 複製按鈕元件
+```tsx
+interface CopyButtonProps {
+  text: string
+  variant?: 'default' | 'compact' | 'inline'
+  onCopySuccess?: () => void
+  onCopyError?: () => void
+}
+
+export const CopyButton = ({ 
+  text, 
+  variant = 'default', 
+  onCopySuccess, 
+  onCopyError 
+}: CopyButtonProps) => {
+  const [copyState, setCopyState] = useState<'idle' | 'success' | 'manual'>('idle')
+  const { t } = useI18n()
+
+  const handleCopy = async () => {
+    try {
+      // Layer 1: Modern Clipboard API
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text)
+        setCopyState('success')
+        onCopySuccess?.()
+        return
+      }
+      
+      // Layer 2: Legacy execCommand
+      const textArea = document.createElement('textarea')
+      textArea.value = text
+      textArea.style.position = 'fixed'
+      textArea.style.left = '-999999px'
+      document.body.appendChild(textArea)
+      textArea.select()
+      const result = document.execCommand('copy')
+      document.body.removeChild(textArea)
+      
+      if (result) {
+        setCopyState('success')
+        onCopySuccess?.()
+      } else {
+        throw new Error('Copy failed')
+      }
+    } catch (err) {
+      setCopyState('manual')
+      onCopyError?.(err)
+    }
+  }
+
+  // Auto-reset state
+  useEffect(() => {
+    if (copyState !== 'idle') {
+      const timeout = copyState === 'manual' ? 4000 : 2000
+      const timer = setTimeout(() => setCopyState('idle'), timeout)
+      return () => clearTimeout(timer)
+    }
+  }, [copyState])
+
+  const variantStyles = {
+    default: "inline-flex items-center gap-3 px-4 py-2 rounded",
+    compact: "inline-flex items-center gap-2 px-3 py-1 rounded-sm",
+    inline: "inline-flex items-center gap-1"
+  }
+
+  return (
+    <div className="relative">
+      <button
+        onClick={handleCopy}
+        className={cn(
+          CopyActionStyles.button,
+          CopyActionStyles.interactive,
+          "group",
+          variantStyles[variant]
+        )}
+        title={t('common.copyToClipboard')}
+      >
+        <code className="select-none font-mono text-sm">{text}</code>
+        {copyState === 'success' ? (
+          <CheckIcon className={cn(CopyActionStyles.icon, CopyActionStyles.iconSuccess)} />
+        ) : (
+          <CopyIcon className={cn(CopyActionStyles.icon, CopyActionStyles.iconDefault)} />
+        )}
+      </button>
+      
+      {/* 狀態反饋 */}
+      {copyState !== 'idle' && (
+        <div className="absolute top-full left-0 mt-1 animate-fade-in">
+          {copyState === 'success' ? (
+            <span className={cn("text-xs", CopyActionStyles.success)}>
+              {t('common.copied')}
+            </span>
+          ) : (
+            <div className={cn("text-xs", CopyActionStyles.manual)}>
+              <p className="font-semibold">{t('common.manualCopy')}</p>
+              <p className="font-mono bg-yellow-400/20 px-2 py-1 rounded mt-1 select-all">
+                {text}
+              </p>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+```
+
+#### 狀態反饋設計
+
+**成功狀態視覺語言**:
+```tsx
+const SuccessState = () => (
+  <div className="flex items-center gap-2 text-green-400 text-sm">
+    <CheckCircleIcon className="w-4 h-4" />
+    <span>已複製到剪貼簿</span>
+  </div>
+)
+```
+
+**手動複製狀態視覺語言**:
+```tsx
+const ManualState = ({ text }) => (
+  <div className="bg-yellow-400/10 border border-yellow-400/30 rounded-lg p-3">
+    <p className="text-yellow-300 text-sm font-semibold mb-2">
+      請手動複製以下內容：
+    </p>
+    <div className="bg-yellow-400/20 rounded p-2">
+      <code className="text-yellow-100 font-mono text-sm select-all">
+        {text}
+      </code>
+    </div>
+  </div>
+)
+```
+
+**錯誤狀態視覺語言**:
+```tsx
+const ErrorState = () => (
+  <div className="flex items-center gap-2 text-red-400 text-sm">
+    <ExclamationCircleIcon className="w-4 h-4" />
+    <span>複製失敗，請手動複製</span>
+  </div>
+)
+```
+
+### 🎭 動畫系統
+
+#### 自訂 CSS 動畫
+```css
+/* globals.css - 新增動畫 */
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 0.3s ease-out;
+  }
+  
+  .animate-bounce-in {
+    animation: bounceIn 0.5s ease-out;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-5px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes bounceIn {
+    0% {
+      opacity: 0;
+      transform: scale(0.3);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+    70% {
+      transform: scale(0.9);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+}
+```
+
+#### 動畫使用規範
+```tsx
+// 狀態轉換動畫
+const stateTransitionClass = "transition-all duration-200"
+
+// 互動動畫
+const interactionClass = "transform hover:scale-105 transition-transform duration-200"
+
+// 內容出現動畫
+const contentAppearClass = "animate-fade-in"
+
+// 成功反饋動畫
+const successFeedbackClass = "animate-bounce-in"
+```
+
+### 🎨 色彩語義系統
+
+#### 功能性色彩定義
+```tsx
+export const FunctionalColors = {
+  // 成功狀態
+  success: {
+    primary: "text-green-400",
+    background: "bg-green-400/10",
+    border: "border-green-400/30"
+  },
+  
+  // 警告狀態
+  warning: {
+    primary: "text-yellow-400",
+    background: "bg-yellow-400/10", 
+    border: "border-yellow-400/30"
+  },
+  
+  // 錯誤狀態
+  error: {
+    primary: "text-red-400",
+    background: "bg-red-400/10",
+    border: "border-red-400/30"
+  },
+  
+  // 資訊狀態
+  info: {
+    primary: "text-blue-400",
+    background: "bg-blue-400/10",
+    border: "border-blue-400/30"
+  },
+  
+  // 手動操作狀態
+  manual: {
+    primary: "text-yellow-300",
+    background: "bg-yellow-400/20",
+    border: "border-yellow-400/30",
+    highlight: "bg-yellow-400/30"
+  }
+}
+```
+
+#### 狀態色彩應用範例
+```tsx
+const StatusMessage = ({ type, children }) => {
+  const colorScheme = FunctionalColors[type]
+  
+  return (
+    <div className={cn(
+      "p-4 rounded-lg border",
+      colorScheme.background,
+      colorScheme.border
+    )}>
+      <p className={colorScheme.primary}>
+        {children}
+      </p>
+    </div>
+  )
+}
+
+// 使用範例
+<StatusMessage type="success">操作成功！</StatusMessage>
+<StatusMessage type="warning">請注意檢查設定</StatusMessage>
+<StatusMessage type="error">發生錯誤，請重試</StatusMessage>
+<StatusMessage type="manual">請手動完成此步驟</StatusMessage>
+```
+
 ### 🎨 設計 Tokens 管理
 
 #### tailwind.config.ts 自定義
