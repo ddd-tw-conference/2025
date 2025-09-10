@@ -34,7 +34,7 @@ export const TICKET_SALE_CONFIG: TicketSaleConfig = {
   // 🎟️ 優惠碼設定 - 已啟動！
   promoCode: {
     isVisible: true,
-    code: "DDDTW2025"
+    code: "PS3ETZ"
   }
 }
 

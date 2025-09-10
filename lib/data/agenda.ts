@@ -33,7 +33,7 @@ export const AGENDA_DATA: Session[] = [
   {
     time: "13:00 - 16:00",
     title: { 'zh-tw': "文件即程式碼", 'en': "Documentation as Code" },
-    speaker: "River，Tung",
+    speaker: "River，Tung，水球潘",
     description: { 'zh-tw': "文件即程式碼，串接版本控制與自動化。", 'en': "Documentation as Code: Integrating Version Control and Automation." },
     track: { 'zh-tw': "會議室 B", 'en': "Conference Room B" },
     type: "workshop",
