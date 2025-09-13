@@ -38,7 +38,24 @@ export const SPEAKERS_DATA: SpeakerTopic[] = [
           github: "https://github.com/michael-chen",
           website: "https://michael-chen.dev/",
         },
-      }
+      },
+      {
+          name: { 'zh-tw': "Sunny Cheng", 'en': "Sunny Cheng" },
+          title: { 'zh-tw': "薩泰爾娛樂共同創辦人", 'en': "Co-founder of Satire Entertainment" },
+          company: { 'zh-tw': "薩泰爾娛樂", 'en': "Satire Entertainment" },
+          topic: { 'zh-tw': "一間喜劇公司怎麼用 DDD？", 'en': "How does a comedy company use DDD?" },
+          content: { 'zh-tw': "DDD導入歷程", 'en': "DDD Implementation Journey" },
+          bio: { 'zh-tw': "薩泰爾娛樂共同創辦人，致力推動公司和娛樂藝文產業的數位轉型，專注後勤營運，包含但不限於知識管理、財務和各項系統效率。撰寫電子報《無用之用 Master of None》在 AI 浪潮下持續探索組織、科技與人性交會的各種可能。", 'en': "Co-founder of Satire Entertainment, dedicated to promoting digital transformation in the company and the entertainment industry, focusing on back-office operations including but not limited to knowledge management, finance, and system efficiency. Author of the newsletter 'Master of None', continuously exploring the intersection of organization, technology, and humanity in the AI wave." },
+          image: getOptimizedImagePath("/images/speakers/sunny-cheng.webp"), 
+          expertise: { 'zh-tw': ["領域驅動設計", "AI開發", "行銷"], 'en': ["Domain-Driven Design", "AI Development", "Marketing"] },
+          achievements: {
+            'zh-tw': ["2024~2025 AI年會講者", "公司共同創辦人", "行銷專家"],
+            'en': ["2024~2025 AI Conference Speaker", "Company Co-founder", "Marketing Expert"]
+          },
+          socialLinks: {
+            instagram: "https://www.instagram.com/ms.eatingtpe/"
+          },
+        }
     ],
   },
   {

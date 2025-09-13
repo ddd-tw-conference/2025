@@ -9,7 +9,7 @@ export const AGENDA_DATA: Session[] = [
   {
     time: "09:00 - 12:00",
     title: { 'zh-tw': "從敘事到塑模", 'en': "From Storytelling to Modeling" },
-    speaker: "陳勉修(Michael)",
+  speaker: "陳勉修(Michael)，Sunny Cheng",
     description: { 'zh-tw': "用Domain Storytelling建立跨職能對齊的語意基礎。", 'en': "Building Cross-functional Semantic Foundation with Domain Storytelling." },
     track: { 'zh-tw': "主會場 A", 'en': "Main Hall A" },
     type: "workshop",
