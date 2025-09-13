@@ -27,7 +27,10 @@ export default function RootLayout({
         <meta property="og:locale" content="zh_TW" />
         <meta name="twitter:card" content="summary_large_image" />
       </head>
-      <body className={`${GeistSans.variable} ${GeistMono.variable} font-sans`}>
+      <body 
+        className={`${GeistSans.variable} ${GeistMono.variable} font-sans`}
+        suppressHydrationWarning={true}
+      >
         <WebVitalsReporter />
         <I18nProvider>
           <VersionProvider>

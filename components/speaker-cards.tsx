@@ -70,9 +70,10 @@ interface SpeakerCardProps {
   theme: ThemeKey
   currentLang: string
   onTicketClick: (speaker: Speaker) => void
+  onCardClick: (speaker: Speaker) => void // 新增卡片點擊處理
 }
 
-const SpeakerCard = ({ speaker, theme, currentLang, onTicketClick }: SpeakerCardProps) => {
+const SpeakerCard = ({ speaker, theme, currentLang, onTicketClick, onCardClick }: SpeakerCardProps) => {
   const currentTheme = cardThemes[theme]
 
   const texts = {
@@ -88,9 +89,19 @@ const SpeakerCard = ({ speaker, theme, currentLang, onTicketClick }: SpeakerCard
 
   const currentTexts = texts[currentLang as keyof typeof texts] || texts['zh-tw']
 
+  const handleCardClick = () => {
+    onCardClick(speaker)
+  }
+
+  const handleTicketClick = (e: React.MouseEvent) => {
+    e.stopPropagation() // 防止觸發卡片點擊
+    onTicketClick(speaker)
+  }
+
   return (
     <div
-      className="speaker-card relative overflow-hidden transition-all duration-300 ease-out hover:-translate-y-2 hover:scale-105"
+      className="speaker-card relative overflow-hidden transition-all duration-300 ease-out hover:-translate-y-2 hover:scale-105 cursor-pointer"
+      onClick={handleCardClick} // 新增卡片點擊
       style={{
         background: currentTheme.gradient,
         boxShadow: `0 8px 32px ${currentTheme.shadow}, 0 0 24px ${currentTheme.glowColor}33`,
@@ -223,7 +234,7 @@ const SpeakerCard = ({ speaker, theme, currentLang, onTicketClick }: SpeakerCard
             backdropFilter: 'blur(10px)',
             border: `1px solid ${currentTheme.glowColor}66`
           }}
-          onClick={() => onTicketClick(speaker)}
+          onClick={handleTicketClick} // 修改為使用新的處理函式
         >
           {/* 按鈕內部光效 - 更微妙 */}
           <div
@@ -277,6 +288,12 @@ export default function SpeakerCards() {
     router.push('/tickets')
   }
 
+  const handleCardClick = (speaker: Speaker) => {
+    // 使用講者 ID 跳轉到 speakers 頁面並開啟 Lightbox
+    console.log('點擊講者卡片:', speaker.id)
+    router.push(`/speakers?id=${speaker.id}`)
+  }
+
   // 檢查是否有講者資料或尚未 mount
   if (!mounted || !currentSpeakers.length || !speakersWithThemes.length) {
     return (
@@ -304,6 +321,7 @@ export default function SpeakerCards() {
             theme={speaker.theme}
             currentLang={language}
             onTicketClick={handleTicketClick}
+            onCardClick={handleCardClick} // 新增卡片點擊處理
           />
         ))}
       </div>

@@ -12,12 +12,15 @@ Next.js 15.5.2 + React 19 + TypeScript + Tailwind CSS + Static export to GitHub 
 - **Styling**: Static Tailwind classes, no string interpolation
 - **i18n**: `const { t } = useI18n(); t('key.subkey')`
 - **Routing**: `<Link>` and `router.push()`, avoid `window.location.href`
+- **Navigation**: URL params `?id=value` + `useSearchParams()` for state
+- **Smart Navigation**: Context tracking for UX flow
 
 ## UI/UX Patterns
 - **Buttons**: Primary `bg-gradient-to-r from-blue-600 to-purple-600`, Secondary `bg-white/10`
 - **Interactive**: `cursor-pointer` + `hover:scale-105` + `transition-all duration-200`
 - **Copy Actions**: `bg-yellow-500/40 text-yellow-50 border border-yellow-400/50`
-- **Events**: Use `stopPropagation()` for nested interactions
+- **Events**: Use `stopPropagation()` for nested clicks
+- **Navigation**: Context-aware routing with entry source tracking
 - **Accessibility**: ARIA labels, keyboard navigation, screen reader support
 
 ## Ticket Marketing Architecture
@@ -41,9 +44,13 @@ export const TICKET_SALE_CONFIG = {
 4. Auto-reset state timeouts (success: 2s, manual: 4s)
 5. Multi-language through `t()` function
 6. Reusable components for cross-page usage
+7. Smart navigation with context tracking (`isFromHomepage`)
 
 ## Browser Compatibility
 ```typescript
+// React 19 Hydration Fix
+<body suppressHydrationWarning={true}>
+
 // Clipboard fallback
 const copyWithFallback = async (text: string) => {
   try {
@@ -73,6 +80,16 @@ const handleClick = (event: React.MouseEvent) => {
   event.stopPropagation()
   // logic
 }
+
+// Smart navigation
+const [isFromHomepage, setIsFromHomepage] = useState(false)
+useEffect(() => {
+  const speaker = searchParams.get('id')
+  if (speaker) {
+    setIsFromHomepage(searchParams.get('from') === 'homepage')
+    openLightbox(speaker, isFromHomepage)
+  }
+}, [searchParams])
 ```
 
 ## Development Workflow
@@ -82,4 +99,4 @@ const handleClick = (event: React.MouseEvent) => {
 - `pnpm build` validation
 
 ---
-*v4.2 - Enhanced clipboard compatibility, event handling, file naming*
+*v5.0 - Smart navigation, React 19 hydration fixes, context tracking*

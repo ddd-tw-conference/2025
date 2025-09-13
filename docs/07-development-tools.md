@@ -634,4 +634,164 @@ export const MonitoringDashboard = () => {
 
 ---
 
+## 🔧 常見問題與解決方案
+
+### 🚨 Hydration 錯誤修正
+
+#### 問題描述
+Next.js 15 應用中可能遇到 React hydration 錯誤，通常由瀏覽器擴充功能（如 Grammarly）動態添加屬性造成：
+
+```
+A tree hydrated but some attributes of the server rendered HTML 
+didn't match the client properties.
+```
+
+**常見觸發原因：**
+- Grammarly 擴充功能添加 `data-new-gr-c-s-check-loaded` 屬性
+- 廣告攔截器修改 DOM 結構
+- 其他瀏覽器擴充功能的 DOM 操作
+
+#### 解決方案
+在 `app/layout.tsx` 中添加 `suppressHydrationWarning` 屬性：
+
+```tsx
+// app/layout.tsx
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <html lang="zh-TW">
+      <head>
+        {/* meta tags */}
+      </head>
+      <body 
+        className={`${GeistSans.variable} ${GeistMono.variable} font-sans`}
+        suppressHydrationWarning={true}  // 新增此行
+      >
+        {children}
+      </body>
+    </html>
+  )
+}
+```
+
+**注意事項：**
+- `suppressHydrationWarning` 僅用於 `body` 標籤
+- 專門處理瀏覽器擴充功能造成的 hydration 不匹配
+- 這是 React 官方推薦的解決方案
+- 不會影響應用程式的功能性
+
+### 🎯 事件處理最佳實踐
+
+#### 事件冒泡控制
+在實作複合互動元件時（如可點擊卡片內的按鈕），需要正確處理事件冒泡：
+
+```tsx
+// components/speaker-cards.tsx
+const SpeakerCard = ({ speaker, onCardClick, onTicketClick }) => {
+  const handleCardClick = () => {
+    onCardClick(speaker)
+  }
+
+  const handleTicketClick = (e: React.MouseEvent) => {
+    e.stopPropagation() // 防止觸發卡片點擊
+    onTicketClick(speaker)
+  }
+
+  return (
+    <div 
+      onClick={handleCardClick} 
+      className="cursor-pointer"
+    >
+      {/* 卡片內容 */}
+      <button 
+        onClick={handleTicketClick}  // 使用事件隔離的處理器
+        className="..."
+      >
+        購票
+      </button>
+    </div>
+  )
+}
+```
+
+**關鍵點：**
+- 使用 `e.stopPropagation()` 防止事件冒泡
+- 為卡片元素添加 `cursor-pointer` 提供視覺回饋
+- 確保按鈕和卡片的點擊行為獨立
+
+### 🧪 功能測試指南
+
+#### 講者導航系統測試項目
+
+**基本功能測試：**
+1. **卡片點擊跳轉**：首頁精選講師卡片點擊能正常跳轉
+2. **購票按鈕隔離**：購票按鈕點擊不觸發卡片跳轉
+3. **Lightbox 自動開啟**：跳轉後 Lightbox 自動顯示對應講者
+4. **分享連結**：直接訪問 `/speakers?id=speaker-id` 能開啟 Lightbox
+
+**智慧導航測試：**
+1. **從首頁進入**：關閉 Lightbox 後返回首頁
+2. **直接訪問**：關閉 Lightbox 後停留在講者頁面
+3. **多語系**：切換語系功能正常
+4. **響應式**：手機、平板、桌面版本正常運作
+
+**測試連結範例：**
+```
+- Michael: /speakers?id=michael-chen
+- Sunny Cheng: /speakers?id=sunny-cheng
+- Fong: /speakers?id=fong-liu
+- Arthur: /speakers?id=arthur
+```
+
+#### 自動化測試建議
+
+```typescript
+// 範例：講者導航功能測試
+describe('Speaker Navigation System', () => {
+  test('應該從首頁跳轉到講者頁面並開啟 Lightbox', async () => {
+    // 1. 訪問首頁
+    await page.goto('/')
+    
+    // 2. 點擊精選講師卡片
+    await page.click('[data-testid="speaker-card-michael-chen"]')
+    
+    // 3. 驗證 URL 變更
+    expect(page.url()).toContain('/speakers?id=michael-chen')
+    
+    // 4. 驗證 Lightbox 開啟
+    await expect(page.locator('[data-testid="speaker-lightbox"]')).toBeVisible()
+  })
+
+  test('關閉 Lightbox 應該返回首頁', async () => {
+    // 1. 從首頁進入講者頁面
+    await page.goto('/speakers?id=michael-chen')
+    
+    // 2. 關閉 Lightbox
+    await page.click('[data-testid="lightbox-close"]')
+    
+    // 3. 驗證返回首頁
+    expect(page.url()).toBe('/')
+  })
+})
+```
+
+### 🔍 除錯技巧
+
+#### 使用版本監控工具
+利用內建的版本監控系統（按 `Ctrl+Shift+V`）來檢查：
+- 當前版本資訊
+- 效能指標
+- 配置狀態
+
+#### 瀏覽器開發者工具
+- **Console**：檢查 JavaScript 錯誤和警告
+- **Network**：監控 API 請求和資源載入
+- **Performance**：分析頁面效能瓶頸
+- **Application**：檢查 Local Storage 和 Session Storage
+
+---
+
 **下一章：** [第8章：SEO 與部署](./08-seo-deployment.md) - 深入了解搜尋引擎優化與 GitHub Pages 部署策略

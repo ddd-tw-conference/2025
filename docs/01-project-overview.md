@@ -12,6 +12,7 @@ DDD Taiwan 2025 Conference 官方網站，提供會議資訊、講者介紹、�
 **核心特色：**
 - 🌐 **多語言支援**：繁體中文 / 英文雙語系統
 - 🎫 **智慧售票**：整合 Accupass 的動態票券行銷
+- 🎯 **講者導航**：智慧卡片點擊跳轉與 Lightbox 自動開啟
 - ⚡ **高效能**：靜態網站 + WebP 圖片優化
 - 📱 **響應式**：完美支援手機到桌面裝置
 
@@ -168,6 +169,54 @@ className="cursor-pointer hover:scale-105 transition-transform duration-200"
 ---
 
 ## 🚀 路由與導航
+
+### 🎯 智慧講者導航系統
+
+DDD Taiwan 2025 實作了進階的講者導航系統，提供無縫的用戶體驗：
+
+#### 核心功能
+- **首頁卡片點擊**：點擊精選講師卡片自動跳轉到講者頁面並開啟 Lightbox
+- **事件隔離**：購票按鈕和卡片點擊獨立處理，避免意外觸發
+- **智慧導航**：根據進入方式決定關閉 Lightbox 後的行為
+- **分享支援**：URL 參數保留，支援直接分享講者連結
+
+#### 使用範例
+
+```tsx
+// 1. SpeakerCards 組件：支援卡片點擊導航
+<SpeakerCard
+  speaker={speaker}
+  onCardClick={(speaker) => router.push(`/speakers?id=${speaker.id}`)}
+  onTicketClick={(speaker) => router.push('/tickets')}
+/>
+
+// 2. 講者頁面：URL 參數監聽
+useEffect(() => {
+  const speakerId = searchParams.get('id')
+  if (speakerId) {
+    const targetSpeaker = allSpeakers.find(s => s.id === speakerId)
+    if (targetSpeaker) {
+      openLightbox(targetSpeaker, true) // 標記為從首頁進入
+    }
+  }
+}, [searchParams])
+
+// 3. 智慧關閉邏輯
+const closeLightbox = () => {
+  if (isFromHomepage) {
+    router.push('/') // 從首頁進入，返回首頁
+  }
+  // 否則停留在講者頁面
+}
+```
+
+#### 導航行為模式
+
+| 進入方式 | 關閉行為 | URL 範例 |
+|---------|---------|----------|
+| 首頁卡片點擊 | 返回首頁 | `/speakers?id=michael-chen` |
+| 選單直接進入 | 停留在講者頁面 | `/speakers` |
+| 分享連結 | 依據上下文決定 | `/speakers?id=sunny-cheng` |
 
 ### 內部頁面跳轉
 ```tsx

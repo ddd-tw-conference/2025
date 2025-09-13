@@ -18,6 +18,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useState, useRef, useEffect } from "react"
 import Image from "next/image"
+import { useRouter, useSearchParams } from "next/navigation"
 import Header from "@/components/layout/header"
 import Footer from "@/components/layout/footer"
 import StructuredData from "@/components/structured-data"
@@ -33,9 +34,12 @@ import {
 
 export default function SpeakersPage() {
   const { t, language } = useI18n()
+  const router = useRouter()
+  const searchParams = useSearchParams()
   const [activeTab, setActiveTab] = useState(0)
   const [selectedSpeaker, setSelectedSpeaker] = useState<Speaker | null>(null)
   const [isLightboxOpen, setIsLightboxOpen] = useState(false)
+  const [isFromHomepage, setIsFromHomepage] = useState(false) // 記錄是否從首頁進入
   const scrollContainerRef = useRef<HTMLDivElement>(null)
 
   // 使用統一的數據層，避免重複程式碼
@@ -145,9 +149,10 @@ export default function SpeakersPage() {
 
   const currentTopic = speakersByTopic[activeTab]
 
-  const openLightbox = (speaker: Speaker) => {
+  const openLightbox = (speaker: Speaker, fromHomepage: boolean = false) => {
     setSelectedSpeaker(speaker)
     setIsLightboxOpen(true)
+    setIsFromHomepage(fromHomepage)
     document.body.style.overflow = "hidden" // 防止背景滾動
   }
 
@@ -155,7 +160,33 @@ export default function SpeakersPage() {
     setSelectedSpeaker(null)
     setIsLightboxOpen(false)
     document.body.style.overflow = "unset"
+    
+    // 根據進入方式決定關閉後的行為
+    if (isFromHomepage) {
+      // 從首頁進入，關閉後返回首頁
+      router.push('/')
+    }
+    // 如果是直接在講者頁面點擊的，則不需要跳轉，只關閉 lightbox
+    
+    // 重置狀態
+    setIsFromHomepage(false)
   }
+
+  // 監聽 URL query string 自動開啟 Lightbox
+  useEffect(() => {
+    const speakerId = searchParams.get('id')
+    if (speakerId) {
+      // 在所有講者中尋找匹配的講者（使用 ID 比對）
+      const allSpeakers = SPEAKERS_DATA.flatMap(topic => topic.speakers)
+      const targetSpeaker = allSpeakers.find(speaker => speaker.id === speakerId)
+      
+      if (targetSpeaker) {
+        openLightbox(targetSpeaker, true) // 標記為從首頁進入
+        // 保留 URL 參數以支援分享功能，不清除
+      }
+      // 靜默忽略找不到講者的情況（根據需求）
+    }
+  }, [searchParams])
 
   // 生成講者結構化資料
   const allSpeakers = SPEAKERS_DATA.flatMap(topic => topic.speakers)

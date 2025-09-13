@@ -4,6 +4,7 @@
  */
 
 export interface Speaker {
+  id: string // 講者唯一識別碼，使用 kebab-case 格式
   name: { 'zh-tw': string; 'en': string }
   title: { 'zh-tw': string; 'en': string }
   company: { 'zh-tw': string; 'en': string }

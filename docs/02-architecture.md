@@ -368,4 +368,119 @@ export const useConferenceData = () => {
 
 ---
 
+## 🎯 核心功能架構
+
+### 📱 講者導航系統
+
+DDD Taiwan 2025 實作了智慧講者導航系統，支援多種進入方式和上下文感知的導航邏輯。
+
+#### 系統架構設計
+
+```
+講者導航系統
+├── 講者資料結構
+│   ├── 唯一 ID 系統 (kebab-case)
+│   ├── 多語言支援
+│   └── 結構化資料
+├── 首頁精選卡片
+│   ├── 卡片點擊導航
+│   ├── 購票按鈕隔離
+│   └── 動態主題系統
+├── 講者頁面 Lightbox
+│   ├── URL 參數監聽
+│   ├── 自動開啟機制
+│   └── 智慧關閉邏輯
+└── 導航上下文管理
+    ├── 進入方式追蹤
+    ├── 關閉行為決策
+    └── 分享連結支援
+```
+
+#### 講者 ID 系統設計
+
+**設計原則：**
+- **格式**：kebab-case（如 `michael-chen`, `sunny-cheng`）
+- **唯一性**：每位講者都有獨特的 ID
+- **相容性**：符合 URL 參數使用規範
+- **SEO 友善**：使用語義化的 URL 結構
+
+```typescript
+// lib/data/types.ts
+export interface Speaker {
+  id: string // 講者唯一識別碼
+  name: { 'zh-tw': string; 'en': string }
+  title: { 'zh-tw': string; 'en': string }
+  company: { 'zh-tw': string; 'en': string }
+  // ...其他欄位
+}
+
+// lib/data/speakers.ts 範例
+{
+  id: "michael-chen",
+  name: { 'zh-tw': "陳勉修(Michael)", 'en': "Michael" },
+  title: { 'zh-tw': "產品處副總經理", 'en': "Deputy General Manager" },
+  // ...
+}
+```
+
+#### URL 參數設計
+
+**設計目標：**
+- 支援直接分享講者連結
+- 實現自動 Lightbox 開啟
+- 保持 SEO 友善的 URL 結構
+
+```
+格式：/speakers?id=speaker-id
+範例：
+- Michael: /speakers?id=michael-chen
+- Sunny Cheng: /speakers?id=sunny-cheng
+- Fong: /speakers?id=fong-liu
+```
+
+#### 智慧導航邏輯
+
+系統根據用戶的進入方式，提供不同的關閉行為：
+
+```tsx
+// app/speakers/page.tsx
+const [isFromHomepage, setIsFromHomepage] = useState(false)
+
+// URL 參數監聽：從首頁進入時標記
+useEffect(() => {
+  const speakerId = searchParams.get('id')
+  if (speakerId) {
+    const targetSpeaker = allSpeakers.find(speaker => speaker.id === speakerId)
+    if (targetSpeaker) {
+      openLightbox(targetSpeaker, true) // 標記為從首頁進入
+    }
+  }
+}, [searchParams])
+
+// 智慧關閉邏輯
+const closeLightbox = () => {
+  if (isFromHomepage) {
+    router.push('/') // 從首頁進入，返回首頁
+  }
+  // 否則停留在當前頁面
+  setIsFromHomepage(false)
+}
+```
+
+**行為模式：**
+
+1. **從首頁進入**：
+   - 點擊精選講師卡片 → 跳轉到講者頁面 → 自動開啟 Lightbox
+   - 關閉 Lightbox → 返回首頁
+
+2. **直接訪問講者頁面**：
+   - 從選單進入講者頁面 → 點擊講者卡片 → 開啟 Lightbox
+   - 關閉 Lightbox → 停留在講者頁面
+
+3. **分享連結**：
+   - 直接訪問 `/speakers?id=speaker-id` → 自動開啟對應 Lightbox
+   - 支援社群媒體分享
+
+---
+
 **下一章：** [第3章：國際化系統](./03-i18n-system.md) - 深入了解多語言實作架構
