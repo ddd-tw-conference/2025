@@ -1,6 +1,12 @@
 /**
  * 講者資料管理
- * 包含所有講者的詳細資訊、主題分類和社群連結
+ * 包含所有講者的詳細        socialLinks: {
+          linkedin: "https://linkedin.com/in/michael-chen",
+          twitter: "https://twitter.com/michael-chen",
+          github: "https://github.com/michael-chen",
+          website: "https://michael-chen.dev/",
+        },
+      }社群連結
  */
 
 import { getOptimizedImagePath } from '../image-optimization'

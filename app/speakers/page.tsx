@@ -24,6 +24,8 @@ import StructuredData from "@/components/structured-data"
 import { SPEAKERS_DATA, type Speaker, getLocalizedText, getLocalizedArray } from "@/lib/data"
 import { useI18n } from "@/contexts/i18n-context"
 import { TopicTitle } from "@/components/topic-title"
+import { PromoCodeCopy } from "@/components/promo-code-copy"
+import { TICKET_SALE_CONFIG } from "@/config/tickets"
 import { 
   generatePersonStructuredData, 
   generateBreadcrumbStructuredData 
@@ -344,6 +346,15 @@ export default function SpeakersPage() {
                           <Twitter className="w-4 h-4" />
                         </a>
                       </div>
+                      
+                      {/* Promo Code Section */}
+                      {TICKET_SALE_CONFIG.promoCode?.isVisible && 
+                       TICKET_SALE_CONFIG.promoCode?.code && 
+                       speaker.hasPromoCode && (
+                        <div className="pt-2">
+                          <PromoCodeCopy code={TICKET_SALE_CONFIG.promoCode.code} />
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 ))}

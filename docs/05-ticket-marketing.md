@@ -513,122 +513,103 @@ export const TICKET_SALE_CONFIG: TicketSaleConfig = {
 }
 ```
 
+#### 🎫 優惠碼元件使用指南
+
+**基本整合方式**：
+```tsx
+// 在任何頁面或元件中使用
+import { PromoCodeCopy } from "@/components/promo-code-copy";
+import { TICKET_SALE_CONFIG } from "@/config/tickets";
+
+export function SomeComponent() {
+  return (
+    <div>
+      {/* 條件渲染優惠碼 */}
+      {TICKET_SALE_CONFIG.promoCode?.isVisible && TICKET_SALE_CONFIG.promoCode.code && (
+        <PromoCodeCopy 
+          code={TICKET_SALE_CONFIG.promoCode.code} 
+          theme="yellow"
+          className="mt-4"
+        />
+      )}
+    </div>
+  );
+}
+```
+
+**Speaker 頁面整合範例**：
+```tsx
+// 在講者卡片中添加優惠碼
+export function SpeakerCard({ speaker }: { speaker: Speaker }) {
+  return (
+    <div className="speaker-card">
+      <h3>{speaker.name}</h3>
+      <p>{speaker.bio}</p>
+      
+      {/* 特定講者顯示優惠碼 */}
+      {speaker.hasPromoCode && 
+       TICKET_SALE_CONFIG.promoCode?.isVisible && 
+       TICKET_SALE_CONFIG.promoCode.code && (
+        <PromoCodeCopy 
+          code={TICKET_SALE_CONFIG.promoCode.code}
+          theme="blue"
+          label="專屬優惠碼"
+        />
+      )}
+    </div>
+  );
+}
+```
+
+**主題色彩配置**：
+- `yellow`: 預設黃色主題，適合一般頁面
+- `blue`: 藍色主題，適合講者相關區塊  
+- `purple`: 紫色主題，適合特殊促銷活動
+
+#### 🌐 多語言文案配置
+
+需在以下檔案新增對應的翻譯 key：
+
+**`locales/zh-tw.json`**：
+```json
+{
+  "tickets.promoCodeClick": "點擊複製優惠碼",
+  "tickets.promoCodeCopied": "已複製！",
+  "tickets.promoCodeManual": "請手動複製"
+}
+```
+
+**`locales/en.json`**：
+```json
+{
+  "tickets.promoCodeClick": "Click to copy promo code", 
+  "tickets.promoCodeCopied": "Copied!",
+  "tickets.promoCodeManual": "Please copy manually"
+}
+```
+
 #### 📋 Clipboard API 兼容性實現
 
 **問題背景**：
 Clipboard API 在某些環境下會被瀏覽器安全策略阻擋，特別是：
 - 非 HTTPS 環境
-- 開發環境的安全限制
+- 開發環境的安全限制  
 - 某些瀏覽器的權限政策
 
 **解決方案：三層 Fallback 策略**
 
-```typescript
-// 優惠碼複製功能 - 完整實現
-import { useState, useEffect } from 'react'
+PromoCodeCopy 元件已實現完整的跨瀏覽器相容性：
+1. **現代瀏覽器**：`navigator.clipboard.writeText()` (HTTPS 環境)
+2. **傳統瀏覽器**：`document.execCommand('copy')` 
+3. **失敗情況**：顯示手動複製提示
 
-export const PromoCodeCopy = ({ code }: { code: string }) => {
-  const { t } = useI18n()
-  const [copyState, setCopyState] = useState<'idle' | 'success' | 'manual'>('idle')
+**特殊功能**：
+- **事件防冒泡**：`event.stopPropagation()` 防止觸發父元素事件
+- **無障礙設計**：完整的 ARIA 支援和鍵盤導航
+- **自動狀態重置**：成功狀態 2 秒，手動狀態 4 秒後重置
+- **多主題支援**：配合不同頁面設計需求
 
-  // 複製優惠碼到剪貼簿 - 支援多種方法確保兼容性
-  const copyPromoCode = async () => {
-    try {
-      // 方法 1: 現代 Clipboard API (首選)
-      if (navigator.clipboard && window.isSecureContext) {
-        await navigator.clipboard.writeText(code)
-        setCopyState('success')
-        return
-      }
-      
-      // 方法 2: 傳統 execCommand 方法 (fallback)
-      const textArea = document.createElement('textarea')
-      textArea.value = code
-      textArea.style.position = 'fixed'
-      textArea.style.left = '-999999px'
-      textArea.style.top = '-999999px'
-      document.body.appendChild(textArea)
-      textArea.focus()
-      textArea.select()
-      
-      const successful = document.execCommand('copy')
-      document.body.removeChild(textArea)
-      
-      if (successful) {
-        setCopyState('success')
-      } else {
-        throw new Error('execCommand failed')
-      }
-      
-    } catch (err) {
-      console.error('Failed to copy promo code:', err)
-      // 方法 3: 手動複製提示 (最後手段)
-      setCopyState('manual')
-    }
-  }
-
-  // 自動重置狀態
-  useEffect(() => {
-    if (copyState !== 'idle') {
-      const timeout = copyState === 'manual' ? 4000 : 2000
-      const timer = setTimeout(() => setCopyState('idle'), timeout)
-      return () => clearTimeout(timer)
-    }
-  }, [copyState])
-
-  return (
-    <div className="mt-6 p-4 bg-yellow-400/10 border border-yellow-400/30 rounded-lg">
-      <p className="text-yellow-200 text-sm mb-2">
-        {t('tickets.promoCodeHint')}
-      </p>
-      <div 
-        onClick={copyPromoCode}
-        className="inline-flex items-center gap-3 bg-yellow-400/20 hover:bg-yellow-400/30 text-yellow-100 px-4 py-2 rounded font-mono text-sm cursor-pointer transition-all duration-200 hover:scale-105 group"
-        title={t('tickets.promoCodeClick')}
-      >
-        <code className="select-none">{code}</code>
-        {copyState === 'success' ? (
-          <svg 
-            className="w-4 h-4 text-green-400" 
-            fill="none" 
-            stroke="currentColor" 
-            viewBox="0 0 24 24"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-          </svg>
-        ) : (
-          <svg 
-            className="w-4 h-4 text-yellow-300 group-hover:text-yellow-100 transition-colors" 
-            fill="none" 
-            stroke="currentColor" 
-            viewBox="0 0 24 24"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-          </svg>
-        )}
-      </div>
-      
-      {/* 狀態反饋 */}
-      {copyState !== 'idle' && (
-        <div className="mt-2 animate-fade-in">
-          {copyState === 'success' ? (
-            <p className="text-green-400 text-xs">
-              {t('tickets.promoCodeCopied')}
-            </p>
-          ) : copyState === 'manual' ? (
-            <div className="text-yellow-300 text-xs">
-              <p className="font-semibold mb-1">{t('tickets.promoCodeManual')}</p>
-              <p className="font-mono bg-yellow-400/20 px-2 py-1 rounded inline-block select-all">
-                {code}
-              </p>
-            </div>
-          ) : null}
-        </div>
-      )}
-    </div>
-  )
-}
-```
+詳細技術實作請參考：[第4章：UI/UX 設計系統 - 優惠碼元件設計規範](./04-design-system.md#🎫-優惠碼元件設計規範)
 
 #### 🎨 視覺反饋設計模式
 
@@ -717,6 +698,39 @@ export const TICKET_SALE_CONFIG: TicketSaleConfig = {
   // ...其他設定
 }
 ```
+
+### 🎫 優惠碼維護指南
+
+#### 📋 常見任務
+1. **啟用/停用優惠碼顯示**：調整 `promoCode.isVisible`
+2. **更新優惠碼內容**：修改 `promoCode.code` 
+3. **在特定講者顯示**：在講者資料中設定 `hasPromoCode: true`
+4. **主題色彩調整**：使用 `yellow`、`blue`、`purple` 主題
+
+#### 🧪 測試檢查清單
+- [ ] 優惠碼在不同頁面正確顯示/隱藏
+- [ ] 點擊複製功能在 HTTPS/HTTP 環境都正常
+- [ ] 鍵盤導航 (Tab + Enter) 可正常操作
+- [ ] 多語言切換後文案正確更新  
+- [ ] 不同主題色彩顯示正常
+- [ ] 手動複製 fallback 機制正常
+
+#### 🛠️ 常見問題排解
+
+**Q: 優惠碼不顯示？**
+A: 檢查以下設定：
+- `TICKET_SALE_CONFIG.promoCode.isVisible = true`
+- `TICKET_SALE_CONFIG.promoCode.code` 有值
+- 頁面已正確 import PromoCodeCopy 元件
+
+**Q: 複製功能無效？**
+A: 本地 HTTP 環境下 Clipboard API 受限，元件會自動降級到 execCommand 或手動複製模式
+
+**Q: 講者頁面優惠碼觸發了 lightbox？**
+A: PromoCodeCopy 元件已實現 `stopPropagation()`，確保不會觸發父元素事件
+
+**Q: 多語言文案沒更新？**
+A: 檢查 `locales/zh-tw.json` 和 `locales/en.json` 是否包含正確的翻譯 key
 
 #### 4. 更新購票連結
 ```typescript

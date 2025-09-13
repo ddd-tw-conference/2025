@@ -23,6 +23,7 @@ export interface Speaker {
   expertise: { 'zh-tw': string[]; 'en': string[] }
   education?: { 'zh-tw': string; 'en': string }
   achievements?: { 'zh-tw': string[]; 'en': string[] }
+  hasPromoCode?: boolean  // 新增：標記此講者是否顯示優惠碼
   socialLinks?: {
     linkedin?: string
     twitter?: string

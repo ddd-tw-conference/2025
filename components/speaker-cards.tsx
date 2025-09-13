@@ -34,16 +34,15 @@ const getLocalizedText = (text: { 'zh-tw': string; 'en': string }, lang: string)
 
 // 計算當前應該顯示的講者（每3天切換一位）- 使用固定的種子確保一致性
 const calculateCurrentSpeakers = (): Speaker[] => {
-  const baseDate = new Date('2025-09-02')
-  const today = new Date()
-  const diffTime = Math.abs(today.getTime() - baseDate.getTime())
-  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
-
-  // 將所有講者打平成一個陣列
   const allSpeakers: Speaker[] = []
   SPEAKERS_DATA.forEach(topic => {
     allSpeakers.push(...topic.speakers)
   })
+  
+  const baseDate = new Date('2025-09-02')
+  const today = new Date()
+  const diffTime = Math.abs(today.getTime() - baseDate.getTime())
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
 
   // 每3天輪換一位講者
   const speakerIndex = Math.floor(diffDays / 3) % allSpeakers.length
@@ -235,12 +234,19 @@ const SpeakerCard = ({ speaker, theme, currentLang, onTicketClick }: SpeakerCard
 export default function SpeakerCards() {
   const { language } = useI18n()
   const router = useRouter()
+  const [currentSpeakers, setCurrentSpeakers] = useState<Speaker[]>([])
+  const [mounted, setMounted] = useState(false)
 
-  // 獲取當前應該顯示的講者（單一講者）
-  const currentSpeakers = useMemo(() => calculateCurrentSpeakers(), [])
+  // 使用 useEffect 避免 hydration 問題
+  useEffect(() => {
+    setMounted(true)
+    setCurrentSpeakers(calculateCurrentSpeakers())
+  }, [])
 
   // 為講者分配固定色系（避免 hydration 問題）
   const speakersWithThemes = useMemo(() => {
+    if (!mounted || !currentSpeakers.length) return []
+    
     return currentSpeakers.map((speaker, index) => {
       // 使用講者名稱的字符碼作為種子，確保一致性
       const nameCode = getLocalizedText(speaker.name, 'en').charCodeAt(0) || 0
@@ -250,7 +256,7 @@ export default function SpeakerCards() {
         theme
       }
     })
-  }, [currentSpeakers])
+  }, [currentSpeakers, mounted])
 
   const handleTicketClick = (speaker: Speaker) => {
     // 購票邏輯 - 直接導向購票頁面
@@ -259,13 +265,17 @@ export default function SpeakerCards() {
     router.push('/tickets')
   }
 
-  // 檢查是否有講者資料
-  if (!currentSpeakers.length || !speakersWithThemes.length) {
+  // 檢查是否有講者資料或尚未 mount
+  if (!mounted || !currentSpeakers.length || !speakersWithThemes.length) {
     return (
       <section className="speaker-section py-8">
         <div className="speaker-cards-container flex flex-col items-center gap-6 lg:gap-8">
           <div className="text-white text-center">
-            <p>{language === 'zh-tw' ? '暫無講者資料' : 'No speaker data available'}</p>
+            {!mounted ? (
+              <p>載入中...</p>
+            ) : (
+              <p>{language === 'zh-tw' ? '暫無講者資料' : 'No speaker data available'}</p>
+            )}
           </div>
         </div>
       </section>

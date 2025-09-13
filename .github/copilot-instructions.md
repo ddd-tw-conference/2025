@@ -1,160 +1,85 @@
 # GitHub Copilot Instructions for DDD Taiwan 2025
 
-You are an expert AI programming assistant for the DDD Taiwan 2025 Conference website project.
+Expert AI assistant for DDD Taiwan 2025 Conference website.
 
-## Project Context
-- **Tech Stack**: Next.js 15.5.2 + React 19 + TypeScript + Tailwind CSS
-- **Deployment**: Static export (`output: 'export'`) to GitHub Pages
-- **Languages**: Multilingual (zh-tw/en) with custom i18n system
-- **Integration**: Accupass ticketing system
+## Tech Stack
+Next.js 15.5.2 + React 19 + TypeScript + Tailwind CSS + Static export to GitHub Pages + Multilingual (zh-tw/en)
 
-## Architecture Overview
-```
-app/                    # Next.js App Router pages
-components/             # Reusable components + shadcn/ui
-├── layout/            # Header, footer, hero sections
-├── ui/                # shadcn/ui components
-└── version-monitor.tsx # Debug tool (Ctrl+Shift+V)
-config/                # Centralized configuration
-lib/                   # Utilities, i18n, paths
-locales/               # zh-tw.json, en.json
-```
+## Core Standards
+- **Files**: kebab-case (`promo-code-copy.tsx`)
+- **Package**: `pnpm` only
+- **Config**: Use `@/config`, no hardcoded values
+- **Styling**: Static Tailwind classes, no string interpolation
+- **i18n**: `const { t } = useI18n(); t('key.subkey')`
+- **Routing**: `<Link>` and `router.push()`, avoid `window.location.href`
 
-## Development Standards
-
-### Core Requirements
-- **Package Manager**: `pnpm` only (`pnpm dev`, `pnpm build`, `pnpm lint`)
-- **Configuration**: All config from `@/config`, use getter functions for external links
-- **Routing**: Use `<Link>` and `router.push()`, avoid `window.location.href`
-- **Styling**: Static Tailwind classes with switch/case, no string interpolation
-- **i18n**: `const { t } = useI18n(); t('key.subkey')` pattern
-
-### UI/UX Patterns
+## UI/UX Patterns
 - **Buttons**: Primary `bg-gradient-to-r from-blue-600 to-purple-600`, Secondary `bg-white/10`
-- **Interactive**: Always add `cursor-pointer` + `hover:scale-105`
-- **Responsive**: `md:grid-cols-2` for desktop, stack on mobile
-- **Images**: WebP only, use `getOptimizedImagePath()`
-- **Copy Actions**: Yellow theme (`bg-yellow-400/20`, `text-yellow-100`) with state icons
-- **Feedback States**: Success (green) vs Manual (yellow) vs Error (red)
-- **Animations**: `animate-fade-in` for state transitions, `transition-all duration-200` for interactions
+- **Interactive**: `cursor-pointer` + `hover:scale-105` + `transition-all duration-200`
+- **Copy Actions**: `bg-yellow-500/40 text-yellow-50 border border-yellow-400/50`
+- **Events**: Use `stopPropagation()` for nested interactions
+- **Accessibility**: ARIA labels, keyboard navigation, screen reader support
 
 ## Ticket Marketing Architecture
-
-### Configuration-Driven Design
 ```typescript
 // config/tickets.ts
-export const TICKET_SALE_CONFIG: TicketSaleConfig = {
+export const TICKET_SALE_CONFIG = {
   isTicketSaleActive: boolean,
   isEarlyBirdSoldOut?: boolean,
   purchaseUrl: string,
-  promoCode?: { 
-    isVisible: boolean, 
-    code?: string 
-  }
+  promoCode?: { isVisible: boolean, code?: string }
 }
-```
 
-### Component Strategy
-- **Marketing Section**: `TicketMarketingSection` for promotional content
-- **Layout Optimization**: Regular ticket (left, prominent) + Early bird (right, muted)
-- **State Management**: Use config flags for conditional rendering
-- **Visual Hierarchy**: Gradient effects for active, grayscale for sold-out
-- **Interactive Features**: Click-to-copy promo codes with fallback mechanisms
-
-### Implementation Patterns
-```tsx
-// Conditional rendering based on config
+// Usage
 {TICKET_SALE_CONFIG.promoCode?.isVisible && <PromoCode />}
-
-// Visual hierarchy: active vs sold-out
-const ticketStyle = isAvailable 
-  ? "bg-gradient-to-br from-blue-900/60 via-blue-800/50 to-purple-900/60"
-  : "bg-slate-800/30 opacity-60"
-
-// Multi-language support
-<h2>{t('tickets.regularTitle')}</h2>
 ```
 
-## Key Patterns & Solutions
-1. **Config-driven features**: Use config flags instead of hardcoded states
-2. **Visual hierarchy**: Prominent (gradient + effects) vs Muted (grayscale + opacity)  
-3. **Interactive elements**: `cursor-pointer` + `hover:scale-105` + visual state changes
-4. **Layout optimization**: Main content left, secondary right for better UX flow
-5. **Multi-language**: All user-facing text through `t()` function with `tickets.*` namespace
-6. **Clipboard compatibility**: Three-layer fallback (Clipboard API → execCommand → manual)
-7. **State feedback**: Visual confirmation with timeout-based state reset
+## Key Patterns
+1. Config-driven features over hardcoded states
+2. Three-layer clipboard fallback (Clipboard API → execCommand → manual)
+3. Event isolation with `stopPropagation()`
+4. Auto-reset state timeouts (success: 2s, manual: 4s)
+5. Multi-language through `t()` function
+6. Reusable components for cross-page usage
 
-## Browser Compatibility Patterns
-
-### Clipboard API Strategy
+## Browser Compatibility
 ```typescript
-// Three-layer fallback approach
+// Clipboard fallback
 const copyWithFallback = async (text: string) => {
   try {
-    // Layer 1: Modern Clipboard API (secure contexts)
     if (navigator.clipboard && window.isSecureContext) {
       await navigator.clipboard.writeText(text)
       return 'success'
     }
-    
-    // Layer 2: Legacy execCommand (broader support)
     const textArea = document.createElement('textarea')
     textArea.value = text
     textArea.style.position = 'fixed'
     textArea.style.left = '-999999px'
+    textArea.style.opacity = '0'
     document.body.appendChild(textArea)
+    textArea.focus()
     textArea.select()
     const result = document.execCommand('copy')
     document.body.removeChild(textArea)
-    
     return result ? 'success' : 'manual'
   } catch {
-    return 'manual' // Fallback to manual copy UI
+    return 'manual'
   }
+}
+
+// Event handling
+const handleClick = (event: React.MouseEvent) => {
+  event.preventDefault()
+  event.stopPropagation()
+  // logic
 }
 ```
 
-### State Management for UX
-```typescript
-const [copyState, setCopyState] = useState<'idle' | 'success' | 'manual'>('idle')
-
-// Auto-reset with different timeouts for different states
-useEffect(() => {
-  if (copyState !== 'idle') {
-    const timeout = copyState === 'manual' ? 4000 : 2000
-    const timer = setTimeout(() => setCopyState('idle'), timeout)
-    return () => clearTimeout(timer)
-  }
-}, [copyState])
-```
-
-## Performance Optimization
-- **Images**: Pure WebP strategy, 90%+ size reduction
-- **Static Export**: `outputFileTracingRoot` to project root
-- **Code Splitting**: Lazy load non-critical components
-- **Bundle Analysis**: Monitor route sizes in build output
-
 ## Development Workflow
-### Pre-Development
-- [ ] `pnpm dev` ready + check `isTicketSaleActive` status
-
-### Implementation
-- [ ] Config-driven features (avoid hardcoding)
-- [ ] i18n for all text (`t()` function)
-- [ ] Responsive design (`md:` prefixes)
-- [ ] Visual hierarchy (prominent vs muted)
-
-### Verification
-- [ ] `pnpm build` success
-- [ ] Multi-language switching works
-- [ ] Button states reflect config
-- [ ] Layout adapts mobile/desktop
-
-## Documentation Standards
-- **Focus**: Final implementation state, remove development history
-- **Structure**: Problem → Solution → Implementation → Maintenance
-- **Examples**: Complete code blocks with proper imports
-- **Maintenance**: Clear operational guides for content updates
+- Config-driven features (avoid hardcoding)
+- i18n for all text (`t()` function)
+- Responsive design (`md:` prefixes)
+- `pnpm build` validation
 
 ---
-*Last Updated: January 9, 2025 | v4.1 - Added clipboard compatibility & promo code functionality*
+*v4.2 - Enhanced clipboard compatibility, event handling, file naming*
