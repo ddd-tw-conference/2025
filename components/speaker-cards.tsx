@@ -33,20 +33,30 @@ const getLocalizedText = (text: { 'zh-tw': string; 'en': string }, lang: string)
 }
 
 // 計算當前應該顯示的講者（每3天切換一位）- 使用固定的種子確保一致性
-const calculateCurrentSpeakers = (): Speaker[] => {
+const calculateCurrentSpeakers = (): { speakers: Speaker[], currentIndex: number } => {
   const allSpeakers: Speaker[] = []
   SPEAKERS_DATA.forEach(topic => {
     allSpeakers.push(...topic.speakers)
   })
   
-  const baseDate = new Date('2025-09-02')
+  // 找到Sunny講者的索引（Sunny Cheng是第二位講者，索引為1）
+  const sunnyIndex = allSpeakers.findIndex(speaker => 
+    getLocalizedText(speaker.name, 'zh-tw').includes('Sunny Cheng')
+  )
+  
+  const baseDate = new Date('2025-09-13')
   const today = new Date()
   const diffTime = Math.abs(today.getTime() - baseDate.getTime())
   const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
 
-  // 每3天輪換一位講者
-  const speakerIndex = Math.floor(diffDays / 3) % allSpeakers.length
-  return [allSpeakers[speakerIndex]] // 只顯示一位講者
+  // 每3天輪換一位講者，但以Sunny為起始點
+  const rotationIndex = Math.floor(diffDays / 3) % allSpeakers.length
+  const currentIndex = (sunnyIndex + rotationIndex) % allSpeakers.length
+  
+  return { 
+    speakers: [allSpeakers[currentIndex]], // 只顯示一位講者
+    currentIndex 
+  }
 }
 
 // 固定色系生成（使用講者索引作為種子，確保一致性）
@@ -235,12 +245,15 @@ export default function SpeakerCards() {
   const { language } = useI18n()
   const router = useRouter()
   const [currentSpeakers, setCurrentSpeakers] = useState<Speaker[]>([])
+  const [currentSpeakerIndex, setCurrentSpeakerIndex] = useState<number>(0)
   const [mounted, setMounted] = useState(false)
 
   // 使用 useEffect 避免 hydration 問題
   useEffect(() => {
     setMounted(true)
-    setCurrentSpeakers(calculateCurrentSpeakers())
+    const result = calculateCurrentSpeakers()
+    setCurrentSpeakers(result.speakers)
+    setCurrentSpeakerIndex(result.currentIndex)
   }, [])
 
   // 為講者分配固定色系（避免 hydration 問題）
@@ -248,15 +261,14 @@ export default function SpeakerCards() {
     if (!mounted || !currentSpeakers.length) return []
     
     return currentSpeakers.map((speaker, index) => {
-      // 使用講者名稱的字符碼作為種子，確保一致性
-      const nameCode = getLocalizedText(speaker.name, 'en').charCodeAt(0) || 0
-      const theme = generateDeterministicTheme(nameCode)
+      // 使用當前輪換的講者索引作為主題種子，確保一致性
+      const theme = generateDeterministicTheme(currentSpeakerIndex)
       return {
         ...speaker,
         theme
       }
     })
-  }, [currentSpeakers, mounted])
+  }, [currentSpeakers, currentSpeakerIndex, mounted])
 
   const handleTicketClick = (speaker: Speaker) => {
     // 購票邏輯 - 直接導向購票頁面
