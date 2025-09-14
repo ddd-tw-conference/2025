@@ -20,11 +20,18 @@
 - [ ] 圖片載入速度
 - [ ] SEO 搜尋結果
 
+#### 開發後檢查（每次功能開發完成後）
+- [ ] **Serena 專案索引更新** (`uvx --from git+https://github.com/oraios/serena serena project index`)
+- [ ] 程式碼品質檢查 (`pnpm lint`)
+- [ ] 型別檢查 (`pnpm type-check`)
+- [ ] 建置測試 (`pnpm build`)
+
 #### 重要時期檢查（售票開始/會議前）
 - [ ] 票券狀態配置正確
 - [ ] Accupass 整合正常
 - [ ] 會議資訊更新
 - [ ] 講者資料完整
+- [ ] **Serena 索引包含最新配置** (重新執行索引)
 
 ---
 
@@ -141,6 +148,93 @@ import { getOptimizedImagePath } from '@/lib/image-optimization'
   className="w-full h-auto object-cover"
 />
 ```
+
+---
+
+## 🤖 Serena AI 輔助工具維護
+
+### 📋 Serena 索引管理
+
+#### 🔄 何時需要重新索引
+**強制重新索引情況**：
+- ✅ 新增或修改 React 元件
+- ✅ 更新 `config/*` 配置檔案
+- ✅ 修改 TypeScript 型別定義
+- ✅ 新增或變更頁面路由
+- ✅ 更新專案文件 (`docs/`, `README.md`, `copilot-instructions.md`)
+- ✅ 完成重要功能開發
+
+**可選重新索引情況**：
+- 🔶 樣式調整（僅 CSS/Tailwind 變更）
+- 🔶 文字內容更新（不涉及程式邏輯）
+- 🔶 圖片資源新增/替換
+
+#### 📝 標準索引流程
+```bash
+# 1. 確保在專案根目錄
+cd C:\Users\a8022\Desktop\2025
+
+# 2. 執行 Serena 專案索引
+uvx --from git+https://github.com/oraios/serena serena project index
+
+# 3. 驗證索引完成
+# 看到 "Symbols saved to .serena/cache/..." 即表示成功
+```
+
+#### 🚀 開發工作流程集成
+```bash
+# 開發前：確認索引是最新的
+uvx --from git+https://github.com/oraios/serena serena project index
+
+# 開發中：重大變更後立即索引
+git add .
+uvx --from git+https://github.com/oraios/serena serena project index
+git commit -m "feat: 新功能並更新 Serena 索引"
+
+# 發布前：最終索引確認
+uvx --from git+https://github.com/oraios/serena serena project index
+pnpm build
+```
+
+#### 🔍 索引狀態檢查
+```bash
+# 檢查 Serena 配置
+cat .serena/project.yml
+
+# 檢查索引快取檔案
+ls -la .serena/cache/typescript/
+
+# 檢查最後索引時間
+stat .serena/cache/typescript/document_symbols_cache_*.pkl
+```
+
+#### ⚠️ 索引問題排除
+**問題**：`uvx` 指令找不到
+```bash
+# 解決方案：確認 Python 和 pipx 安裝
+pip install --user pipx
+pipx ensurepath
+```
+
+**問題**：索引失敗或不完整
+```bash
+# 解決方案：清除快取重新索引
+rm -rf .serena/cache/
+uvx --from git+https://github.com/oraios/serena serena project index
+```
+
+**問題**：某些檔案沒有被索引
+```bash
+# 檢查 .serena/project.yml 中的 ignored_paths
+# 確認檔案沒有被意外忽略
+```
+
+### 📊 索引效果驗證
+執行索引後，應該看到：
+- ✅ 處理檔案數量合理（約 100-120 個檔案）
+- ✅ 生成快取檔案 `document_symbols_cache_*.pkl`
+- ✅ 無錯誤訊息
+- ✅ GitHub Copilot 建議更準確
 
 ---
 

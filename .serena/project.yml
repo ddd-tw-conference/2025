@@ -1,0 +1,90 @@
+# DDD Taiwan 2025 Conference Website - Serena Project Configuration
+# Next.js 15.5.2 + React 19 + TypeScript + Tailwind CSS
+
+# Project language (TypeScript for Next.js project)
+language: typescript
+
+# Project identification
+project_name: "DDD Taiwan 2025"
+
+# File handling configuration
+ignore_all_files_in_gitignore: true
+ignored_paths:
+  # Build and dependency directories
+  - "node_modules/**"
+  - ".next/**"
+  - "out/**"
+  - "build/**"
+  - "dist/**"
+  
+  # Cache and temporary files
+  - "*.tsbuildinfo"
+  - ".pnpm-debug.log*"
+  - "npm-debug.log*"
+  - "yarn-debug.log*"
+  - "yarn-error.log*"
+  - "*.tmp"
+  - "*.temp"
+  
+  # IDE and tool files
+  - ".vscode/**"
+  - ".idea/**"
+  - "*.log"
+  - ".DS_Store"
+  - "Thumbs.db"
+  
+  # Generated files that are not business logic
+  - "next-env.d.ts"
+  - "pnpm-lock.yaml"
+  - "package-lock.json"
+  - "yarn.lock"
+  
+  # Environment and config that might contain secrets
+  - ".env*"
+  - ".vercel/**"
+  
+  # Large binary/media files for performance
+  - "public/images/**/*.{jpg,jpeg,png,gif,svg,webp}"
+  - "**/*.{mp4,avi,mov,wmv}"
+  - "**/*.{pdf,zip,rar,7z}"
+
+# Project access mode
+read_only: false
+
+# Tool configuration - exclude tools not needed for this project type
+excluded_tools:
+  # JetBrains specific tools (using VS Code instead)
+  - "jet_brains_find_symbol"
+  - "jet_brains_find_referencing_symbols" 
+  - "jet_brains_get_symbols_overview"
+
+# Initial context for the project
+initial_prompt: |
+  This is the DDD Taiwan Conference 2025 official website built with Next.js 15.5.2, React 19, and TypeScript.
+  
+  **Architecture & Tech Stack:**
+  - SPA mode deployment to GitHub Pages with basePath: /2025
+  - Multi-language support (zh-tw/en) using custom i18n system
+  - Configuration-driven development pattern (config/ directory)
+  - Radix UI + Tailwind CSS for styling
+  - TypeScript strict mode with comprehensive type safety
+  
+  **Key Features:**
+  - Smart ticket marketing system with promo code support
+  - Speaker management with lightbox navigation
+  - Agenda system with session management
+  - WebP image optimization (90%+ size reduction)
+  - Version monitoring and development tools
+  - Complete SEO optimization
+  
+  **Development Patterns:**
+  - Use kebab-case for file naming
+  - Centralized configuration in config/ directory
+  - Static Tailwind classes (no string interpolation)
+  - Event isolation with stopPropagation()
+  - Responsive-first design with md: prefixes
+  
+  **Code Quality:**
+  Focus on maintainable, type-safe code following the established patterns.
+  All text should use i18n system: const { t } = useI18n(); t('key.subkey')
+  Prefer configuration over hardcoded values.

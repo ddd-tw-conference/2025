@@ -20,7 +20,6 @@ Next.js 15.5.2 + React 19 + TypeScript + Tailwind CSS + Static export to GitHub 
 - **Interactive**: `cursor-pointer` + `hover:scale-105` + `transition-all duration-200`
 - **Copy Actions**: `bg-yellow-500/40 text-yellow-50 border border-yellow-400/50`
 - **Events**: Use `stopPropagation()` for nested clicks
-- **Navigation**: Context-aware routing with entry source tracking
 - **Accessibility**: ARIA labels, keyboard navigation, screen reader support
 
 ## Ticket Marketing Architecture
@@ -97,6 +96,37 @@ useEffect(() => {
 - i18n for all text (`t()` function)
 - Responsive design (`md:` prefixes)
 - `pnpm build` validation
+- **Serena AI Integration**: Update project index after significant changes
+
+## Serena AI Assistant Integration
+### When to Update Serena Index
+**Required after**: React components, `config/*` files, TypeScript types, Next.js routes, documentation (`docs/`, `copilot-instructions.md`), Serena configuration (`.serena/project.yml`), feature development
+
+### Update Command
+```bash
+uvx --from git+https://github.com/oraios/serena serena project index
+```
+
+### Development Workflow with Serena
+```bash
+# Before development
+uvx --from git+https://github.com/oraios/serena serena project index
+
+# After major changes
+git add .
+uvx --from git+https://github.com/oraios/serena serena project index
+git commit -m "feat: New feature + Serena index update"
+
+# Before deployment
+uvx --from git+https://github.com/oraios/serena serena project index
+pnpm build
+```
+
+### Integration Benefits
+- Enhanced Context: Complete project understanding
+- Accurate Suggestions: Current codebase awareness
+- Pattern Recognition: Architecture and conventions
+- Business Logic Awareness: Ticket system, i18n, routing
 
 ---
 *v5.0 - Smart navigation, React 19 hydration fixes, context tracking*
