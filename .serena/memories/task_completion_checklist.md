@@ -1,23 +1,28 @@
-# 任務完成後的檢查清單
+# 完成檢查清單
 
-## 程式碼品質檢查
-1. **TypeScript 型別檢查**
-   ```bash
-   npx tsc --noEmit
-   ```
-   
-2. **ESLint 程式碼檢查**
-   ```bash
-   pnpm lint
-   ```
+## 建置檢查
+```bash
+# TypeScript 檢查
+npx tsc --noEmit
 
-3. **建置測試**
-   ```bash
-   pnpm build
-   ```
+# 建置測試
+pnpm build
+
+# 程式碼檢查
+pnpm lint
+```
 
 ## 功能測試
-1. **開發模式測試**
+- 語言切換正常
+- 票券購買流程
+- 響應式設計
+- 圖片載入
+
+## 更新 Serena
+```bash
+# 更新專案索引
+uvx --from git+https://github.com/oraios/serena serena project index
+```
    - 啟動 `pnpm dev`
    - 測試所有頁面功能
    - 檢查響應式設計

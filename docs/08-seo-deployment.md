@@ -1,16 +1,197 @@
-# 第8章：SEO 與部署
+# 第8章：SEO 優化與生產部署
 
-> **本章內容**：搜尋引擎優化策略、GitHub Pages 部署配置、靜態網站最佳實踐
+> **本章內容**：搜尋引擎優化策略、GitHub Pages 部署配置、生產環境管理、監控與分析
 
 ---
 
-## 🔍 SEO 優化策略
+## � 生產部署架構
 
-### 🎯 SEO 目標設定
-- **搜尋可見性**：在「DDD Taiwan」、「領域驅動設計」關鍵字排名前列
-- **結構化資料**：完整的活動、組織、網站資訊標記
-- **效能優化**：Core Web Vitals 全綠達標
-- **多語言支援**：中英文內容完整索引
+# 第8章：SEO 優化與生產部署
+
+> **本章內容**：GitHub Pages 部署配置、SEO 基礎設定、生產環境管理
+
+---
+
+## 🚀 GitHub Pages 部署
+
+### 部署配置
+```javascript
+// next.config.mjs
+export default {
+  output: 'export',           // 靜態匯出模式
+  trailingSlash: true,        // GitHub Pages 路由相容
+  basePath: '',               // 根目錄部署
+  images: {
+    unoptimized: true,        // 靜態圖片處理
+    formats: ['webp']
+  }
+}
+```
+
+### 自動部署流程
+```yaml
+# .github/workflows/deploy.yml
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+      - run: pnpm install
+      - run: pnpm build
+      - uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./out
+```
+
+---
+
+## 📄 SEO 基礎設定
+
+### Meta Tags 管理
+```tsx
+// app/layout.tsx
+export const metadata: Metadata = {
+  title: 'DDDTW 2025 - AI時代軟體開發方法',
+  description: '探索領域驅動設計在人工智慧時代的實踐與創新',
+  keywords: ['DDD', 'Domain-Driven Design', '軟體架構', 'AI'],
+  openGraph: {
+    title: 'DDDTW 2025',
+    description: '領域驅動設計年度技術會議',
+    url: 'https://conf.ddd.tw',
+    siteName: 'DDDTW Conference',
+    images: [{
+      url: '/images/og-image.webp',
+      width: 1200,
+      height: 630
+    }]
+  }
+}
+```
+
+### 結構化資料
+```tsx
+// components/structured-data.tsx
+export const EventStructuredData = () => {
+  const eventData = {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    "name": "DDDTW 2025",
+    "description": "AI時代軟體開發方法",
+    "startDate": "2025-09-15",
+    "location": {
+      "@type": "Place",
+      "name": "台北國際會議中心"
+    },
+    "organizer": {
+      "@type": "Organization",
+      "name": "DDD Taiwan"
+    }
+  }
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(eventData) }}
+    />
+  )
+}
+```
+
+---
+
+## 🔧 生產環境配置
+
+### 部署檢查清單
+```bash
+# 建置前檢查
+pnpm type-check             # TypeScript 檢查
+pnpm lint                   # ESLint 檢查
+pnpm build                  # 建置測試
+
+# 部署後驗證
+# ✅ 檢查網站是否正常載入
+# ✅ 驗證所有頁面路由正常
+# ✅ 確認圖片資源正常顯示
+# ✅ 測試響應式設計
+```
+
+### 環境變數設定
+```bash
+# GitHub Pages 特殊設定
+NEXT_PUBLIC_BASE_PATH=""    # 根目錄部署
+NODE_ENV="production"       # 生產環境
+```
+
+### Sitemap 與 Robots.txt
+```tsx
+// app/sitemap.ts
+export default function sitemap() {
+  return [
+    {
+      url: 'https://conf.ddd.tw',
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 1
+    },
+    {
+      url: 'https://conf.ddd.tw/speakers',
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8
+    },
+    {
+      url: 'https://conf.ddd.tw/tickets',
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.9
+    }
+  ]
+}
+
+// app/robots.ts
+export default function robots() {
+  return {
+    rules: {
+      userAgent: '*',
+      allow: '/',
+      disallow: '/private/'
+    },
+    sitemap: 'https://conf.ddd.tw/sitemap.xml'
+  }
+}
+```
+
+---
+
+## 📊 監控與驗證
+
+### 部署驗證
+```bash
+# 本地預覽建置結果
+pnpm build && pnpm start
+
+# 檢查建置輸出
+ls -la out/                 # 確認靜態檔案生成
+
+# 驗證資源載入
+curl -I https://conf.ddd.tw # 檢查 HTTP 狀態
+```
+
+---
+
+**下一章：[第9章 專案維護](./09-maintenance.md)**
+    ├── 靜態檔案服務
+    ├── CDN 快取機制
+    └── 自動 HTTPS
+```
 
 ### 🏗️ SEO 架構設計
 ```

@@ -1,32 +1,36 @@
-# 開發指令與工作流程
+# 開發指令
 
-## 基本開發指令
-
-### 安裝與啟動
+## 基本指令
 ```bash
 # 安裝依賴
 pnpm install
 
-# 啟動開發服務器
+# 開發模式
 pnpm dev
 
-# 建置生產版本
+# 建置
 pnpm build
 
-# 預覽建置結果
-pnpm preview
+# 建置並分析
+pnpm build:analyze
 ```
 
-### 建置相關指令
+## 圖片優化
 ```bash
-# SPA 建置 (生產模式)
-pnpm build:spa
+# 生成 WebP 圖片
+node scripts/generate-all-webp.js
 
-# 建置並分析包大小
-pnpm build:analyze
+# 檢查圖片大小
+node scripts/check-image-sizes.js
+```
 
+## 部署
+```bash
 # 部署檢查
 pnpm deploy:check
+
+# GitHub Pages 部署
+# (透過 GitHub Actions 自動執行)
 ```
 
 ### 程式碼品質

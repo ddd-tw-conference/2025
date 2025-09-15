@@ -3,67 +3,55 @@
 Expert AI assistant for DDD Taiwan 2025 Conference website.
 
 ## Tech Stack
-Next.js 15.5.2 + React 19 + TypeScript + Tailwind CSS + Static export to GitHub Pages + Multilingual (zh-tw/en)
+Next.js 15.5.2 + React 19 + TypeScript + Tailwind CSS + GitHub Pages + i18n (zh-tw/en)
 
-## Core Standards
+## Core Standards ⚡
 - **Files**: kebab-case (`promo-code-copy.tsx`)
 - **Package**: `pnpm` only
 - **Config**: Use `@/config`, no hardcoded values
+- **i18n**: `const { t } = useI18n(); t('key.subkey')` - MANDATORY
 - **Styling**: Static Tailwind classes, no string interpolation
-- **i18n**: `const { t } = useI18n(); t('key.subkey')`
 - **Routing**: `<Link>` and `router.push()`, avoid `window.location.href`
 - **Navigation**: URL params `?id=value` + `useSearchParams()` for state
-- **Smart Navigation**: Context tracking for UX flow
-
-## UI/UX Patterns
-- **Buttons**: Primary `bg-gradient-to-r from-blue-600 to-purple-600`, Secondary `bg-white/10`
-- **Interactive**: `cursor-pointer` + `hover:scale-105` + `transition-all duration-200`
-- **Copy Actions**: `bg-yellow-500/40 text-yellow-50 border border-yellow-400/50`
 - **Events**: Use `stopPropagation()` for nested clicks
-- **Accessibility**: ARIA labels, keyboard navigation, screen reader support
 
-## Ticket Marketing Architecture
+## Key Patterns
+- Config-driven features over hardcoded states
+- Multi-language through `t()` function (REQUIRED)
+- Event isolation with `stopPropagation()`
+- Responsive design (`md:` prefixes)
+- Three-layer clipboard fallback (API → execCommand → manual)
+
+## Ticket System 🎫
 ```typescript
-// config/tickets.ts
+// config/tickets.ts - Current Status
 export const TICKET_SALE_CONFIG = {
-  isTicketSaleActive: boolean,
-  isEarlyBirdSoldOut?: boolean,
-  purchaseUrl: string,
-  promoCode?: { isVisible: boolean, code?: string }
+  isTicketSaleActive: true,        // ✅ Active
+  isEarlyBirdSoldOut: true,       // ❌ Sold out
+  purchaseUrl: "...",
+  promoCode: { isVisible: true, code: "PS3ETZ" }  // ✅ Active
 }
 
-// Usage
+// Usage Pattern
 {TICKET_SALE_CONFIG.promoCode?.isVisible && <PromoCode />}
 ```
 
-## Key Patterns
-1. Config-driven features over hardcoded states
-2. Three-layer clipboard fallback (Clipboard API → execCommand → manual)
-3. Event isolation with `stopPropagation()`
-4. Auto-reset state timeouts (success: 2s, manual: 4s)
-5. Multi-language through `t()` function
-6. Reusable components for cross-page usage
-7. Smart navigation with context tracking (`isFromHomepage`)
-
-## Browser Compatibility
+## Browser Compatibility & React 19
 ```typescript
-// React 19 Hydration Fix
+// Hydration Fix
 <body suppressHydrationWarning={true}>
 
-// Clipboard fallback
+// Clipboard Fallback (3-layer)
 const copyWithFallback = async (text: string) => {
   try {
     if (navigator.clipboard && window.isSecureContext) {
       await navigator.clipboard.writeText(text)
       return 'success'
     }
+    // fallback to execCommand
     const textArea = document.createElement('textarea')
     textArea.value = text
-    textArea.style.position = 'fixed'
-    textArea.style.left = '-999999px'
-    textArea.style.opacity = '0'
     document.body.appendChild(textArea)
-    textArea.focus()
     textArea.select()
     const result = document.execCommand('copy')
     document.body.removeChild(textArea)
@@ -72,61 +60,25 @@ const copyWithFallback = async (text: string) => {
     return 'manual'
   }
 }
-
-// Event handling
-const handleClick = (event: React.MouseEvent) => {
-  event.preventDefault()
-  event.stopPropagation()
-  // logic
-}
-
-// Smart navigation
-const [isFromHomepage, setIsFromHomepage] = useState(false)
-useEffect(() => {
-  const speaker = searchParams.get('id')
-  if (speaker) {
-    setIsFromHomepage(searchParams.get('from') === 'homepage')
-    openLightbox(speaker, isFromHomepage)
-  }
-}, [searchParams])
 ```
 
 ## Development Workflow
-- Config-driven features (avoid hardcoding)
-- i18n for all text (`t()` function)
-- Responsive design (`md:` prefixes)
-- `pnpm build` validation
-- **Serena AI Integration**: Update project index after significant changes
-
-## Serena AI Assistant Integration
-### When to Update Serena Index
-**Required after**: React components, `config/*` files, TypeScript types, Next.js routes, documentation (`docs/`, `copilot-instructions.md`), Serena configuration (`.serena/project.yml`), feature development
-
-### Update Command
 ```bash
+# Standard Commands
+pnpm dev          # Development mode
+pnpm build        # Production build
+pnpm build:analyze # Bundle analysis
+
+# Serena AI Integration
 uvx --from git+https://github.com/oraios/serena serena project index
 ```
 
-### Development Workflow with Serena
-```bash
-# Before development
-uvx --from git+https://github.com/oraios/serena serena project index
-
-# After major changes
-git add .
-uvx --from git+https://github.com/oraios/serena serena project index
-git commit -m "feat: New feature + Serena index update"
-
-# Before deployment
-uvx --from git+https://github.com/oraios/serena serena project index
-pnpm build
-```
-
-### Integration Benefits
-- Enhanced Context: Complete project understanding
-- Accurate Suggestions: Current codebase awareness
-- Pattern Recognition: Architecture and conventions
-- Business Logic Awareness: Ticket system, i18n, routing
+## Essential Rules 🎯
+1. **ALWAYS use t() for text** - No hardcoded strings
+2. **Import from @/config** - No magic values
+3. **Static Tailwind only** - No className interpolation
+4. **stopPropagation()** - For nested event handling
+5. **Config-driven features** - Use TICKET_SALE_CONFIG pattern
 
 ---
-*v5.0 - Smart navigation, React 19 hydration fixes, context tracking*
+*v6.0 - Refined for clarity and token efficiency*

@@ -1,83 +1,45 @@
 # 第4章：UI/UX 設計系統
 
-> **本章內容**：Tailwind CSS 最佳實踐、元件設計原則、設計系統規範
+> **本章內容**：Tailwind CSS 實用指南、UI 元件設計標準、Smart Navigation
 
 ---
 
-## 🎨 設計系統概覽
+## 🎨 設計系統核心
 
-### 🎯 設計哲學
-- **一致性優先**：統一的視覺語言和互動模式
-- **可讀性第一**：確保對比度、字體大小、視覺層級清晰
-- **響應式設計**：手機優先，桌面增強的設計策略
-- **效能考量**：靜態 CSS 類別，避免動態字串拼接
-
-### 🏗️ 設計架構
-```
-設計系統
-├── 色彩系統
-│   ├── 主色調（藍紫漸層）
-│   ├── 語意色彩（成功、警告、錯誤）
-│   └── 透明度階層
-├── 字型系統
-│   ├── 字型大小階層
-│   ├── 行高比例
-│   └── 字重層級
-├── 間距系統
-│   ├── 元件內邊距
-│   ├── 元件間距
-│   └── 版面邊距
-└── 元件庫
-    ├── 按鈕系統
-    ├── 卡片容器
-    ├── 表單元素
-    └── 互動效果
-```
-
----
-
-## 🎨 色彩系統
-
-### 🌈 主色彩配置
-
-#### 主要色彩
+### 色彩系統
 ```css
-/* 主色調：藍紫漸層 */
---primary-blue: #2563eb    /* blue-600 */
---primary-purple: #9333ea  /* purple-600 */
---primary-blue-dark: #1d4ed8    /* blue-700 */
---primary-purple-dark: #7c3aed   /* purple-700 */
-
-/* 中性色彩 */
---neutral-dark: #1e293b    /* slate-800 */
---neutral-medium: #475569  /* slate-600 */
---neutral-light: #e2e8f0   /* slate-200 */
-
-/* 背景色彩 */
---bg-primary: #0f172a      /* slate-900 */
---bg-secondary: #1e293b    /* slate-800 */
---bg-accent: rgba(59, 130, 246, 0.1)  /* blue-500/10 */
+/* 主要色彩 */
+--primary: #2563eb → #9333ea  /* 藍紫漸層 */
+--secondary: rgba(255,255,255,0.1)  /* 半透明白色 */
+--success: #10b981
+--warning: #f59e0b
+--error: #ef4444
 ```
 
-#### 語意色彩
-```css
-/* 狀態色彩 */
---success: #10b981     /* emerald-500 */
---warning: #f59e0b     /* amber-500 */
---error: #ef4444       /* red-500 */
---info: #3b82f6        /* blue-500 */
-
-/* 透明度變化 */
---white-10: rgba(255, 255, 255, 0.1)
---white-20: rgba(255, 255, 255, 0.2)
---black-10: rgba(0, 0, 0, 0.1)
---black-20: rgba(0, 0, 0, 0.2)
-```
-
-### 🎨 Tailwind 色彩應用
-
-#### 漸層背景設計
+### 按鈕設計標準
 ```tsx
+// 主要按鈕
+<Button className="bg-gradient-to-r from-blue-600 to-purple-600 
+                   text-white font-semibold 
+                   hover:from-blue-700 hover:to-purple-700
+                   transition-all duration-200">
+  立即購票
+</Button>
+
+// 次要按鈕
+<Button className="bg-white/10 text-white border border-white/20
+                   hover:bg-white/20 
+                   transition-all duration-200">
+  了解更多
+</Button>
+
+// 複製操作按鈕
+<Button className="bg-yellow-500/40 text-yellow-50 
+                   border border-yellow-400/50
+                   hover:bg-yellow-500/60">
+  複製優惠碼
+</Button>
+```
 // 主要漸層背景
 const primaryGradient = "bg-gradient-to-r from-blue-600 to-purple-600"
 const primaryGradientHover = "hover:from-blue-700 hover:to-purple-700"
@@ -116,76 +78,82 @@ const h1Style = "text-4xl md:text-5xl font-bold"
 const h2Style = "text-2xl md:text-3xl font-bold"
 
 // 小標題（卡片標題）
-const h3Style = "text-xl font-semibold"
+### 互動效果標準
+```tsx
+// 基本互動
+const interactive = "cursor-pointer hover:scale-105 transition-all duration-200"
 
-// 輔助標題
-const h4Style = "text-lg font-medium"
+// 卡片懸浮效果
+const cardHover = "hover:shadow-xl hover:shadow-blue-500/20 transform hover:-translate-y-1"
+
+// 按鈕點擊效果
+const buttonClick = "active:scale-95 transition-transform duration-100"
 ```
 
-#### 內文系統
+### 響應式設計原則
 ```tsx
-// 主要內文
-const bodyText = "text-base leading-relaxed"
+// 手機優先設計
+<div className="p-4 md:p-8 lg:p-12">
+  <h1 className="text-2xl md:text-3xl lg:text-4xl">
+    {t('page.title')}
+  </h1>
+</div>
 
-// 小字內文
-const smallText = "text-sm leading-normal"
-
-// 微字說明
-const captionText = "text-xs leading-tight"
-
-// 強調文字
-const emphasisText = "text-lg font-medium"
-```
-
-### 🎯 字型應用範例
-
-#### 響應式字型
-```tsx
-export const ResponsiveHeading = ({ children, level = 1 }) => {
-  const headingStyles = {
-    1: "text-3xl md:text-4xl lg:text-5xl font-bold",
-    2: "text-2xl md:text-3xl lg:text-4xl font-bold",
-    3: "text-xl md:text-2xl lg:text-3xl font-semibold",
-    4: "text-lg md:text-xl lg:text-2xl font-medium"
-  }
-  
-  const Tag = `h${level}` as keyof JSX.IntrinsicElements
-  
-  return (
-    <Tag className={headingStyles[level]}>
-      {children}
-    </Tag>
-  )
-}
+// 網格系統
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  {items.map(item => <Card key={item.id} {...item} />)}
+</div>
 ```
 
 ---
 
-## 🔘 按鈕設計系統
+## 🧭 Smart Navigation & Context Tracking
 
-### 🎯 按鈕變體設計
+### Context Tracking 設計原理
+根據使用者來源提供智慧化導航體驗：
 
-#### 主要按鈕（Primary）
 ```tsx
-export const PrimaryButton = ({ children, className = '', ...props }) => {
-  const baseStyles = `
-    bg-gradient-to-r from-blue-600 to-purple-600 
-    hover:from-blue-700 hover:to-purple-700
-    text-white font-semibold
-    px-6 py-3 rounded-lg
-    shadow-lg hover:shadow-xl
-    transform hover:scale-105
-    transition-all duration-200
-    focus:outline-none focus:ring-4 focus:ring-blue-500/50
-  `
-  
-  return (
-    <button className={`${baseStyles} ${className}`} {...props}>
-      {children}
-    </button>
-  )
+// Smart Navigation Hook
+export const useSmartNavigation = () => {
+  const [isFromHomepage, setIsFromHomepage] = useState(false)
+  const searchParams = useSearchParams()
+  const router = useRouter()
+
+  useEffect(() => {
+    const from = searchParams.get('from')
+    setIsFromHomepage(from === 'homepage')
+  }, [searchParams])
+
+  const navigateWithContext = (path: string, context?: string) => {
+    const params = new URLSearchParams()
+    if (context) params.set('from', context)
+    router.push(`${path}?${params.toString()}`)
+  }
+
+  return { isFromHomepage, navigateWithContext }
 }
 ```
+
+### 實際應用範例
+```tsx
+// Lightbox 關閉行為
+const handleCloseLightbox = () => {
+  if (isFromHomepage) {
+    router.push('/?from=speakers')  // 回到首頁並定位到講者區塊
+  } else {
+    router.push('/speakers')       // 回到講者頁面
+  }
+}
+
+// 導航連結
+<Link href="/speakers?from=homepage">
+  查看所有講者
+</Link>
+```
+
+---
+
+**下一章：[第5章 票券行銷系統](./05-ticket-marketing.md)**
 
 #### 次要按鈕（Secondary）
 ```tsx
@@ -1153,3 +1121,56 @@ export function PromoCodeCopy({
 ---
 
 **下一章：** [第7章：開發工具與除錯](./07-development-tools.md) - 深入了解版本監控、熱重載、除錯工具
+---
+
+## 🧭 Smart Navigation 與 Context Tracking
+
+### 設計原則
+- 所有導航行為皆應根據使用者進入來源、URL 參數與上下文狀態動態調整 UX 流程。
+- 透過 `useSearchParams()` 取得 URL 參數，並以 `isFromHomepage` 等狀態追蹤使用者來源。
+- 關閉 Lightbox、返回上一頁等行為皆依據上下文決策。
+
+### URL 參數設計
+```tsx
+// 典型講者頁面 URL
+/speakers?id=michael-chen&from=homepage
+```
+
+### useSearchParams 實作範例
+```tsx
+import { useSearchParams, useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
+
+export const SpeakerLightbox = () => {
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const [isFromHomepage, setIsFromHomepage] = useState(false)
+
+  useEffect(() => {
+    const speakerId = searchParams.get('id')
+    if (speakerId) {
+      setIsFromHomepage(searchParams.get('from') === 'homepage')
+      // 開啟 Lightbox 並標記來源
+      openLightbox(speakerId, isFromHomepage)
+    }
+  }, [searchParams])
+
+  const closeLightbox = () => {
+    if (isFromHomepage) {
+      router.push('/') // 從首頁進入，返回首頁
+    } else {
+      // 停留在講者頁面
+    }
+    setIsFromHomepage(false)
+  }
+
+  // ...元件內容
+}
+```
+
+### UX 流程應用
+- 從首頁進入：關閉 Lightbox 返回首頁
+- 直接訪問：關閉 Lightbox 停留在講者頁面
+- 分享連結：自動開啟對應講者 Lightbox
+
+此設計確保使用者體驗一致且可追蹤來源，提升導航靈活性。

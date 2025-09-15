@@ -1,156 +1,131 @@
-# 第7章：開發工具與除錯
+# 第7章：開發流程與工具鏈
 
-> **本章內容**：版本監控系統、熱重載機制、AI 輔助除錯、開發工具鏈
+> **本章內容**：開發工作流程、Serena AI 整合、版本監控系統
 
 ---
 
-## 🛠️ 開發工具概覽
+## 🛠️ 開發流程
 
-### 🎯 工具系統架構
+### 標準開發工作流程
+```bash
+# 1. 環境準備
+pnpm install
+
+# 2. Serena AI 專案索引更新
+uvx --from git+https://github.com/oraios/serena serena project index
+
+# 3. 啟動開發
+pnpm dev
+
+# 4. 建置檢查
+pnpm build
 ```
-開發工具鏈
-├── 版本監控系統
-│   ├── 快捷鍵觸發 (Ctrl+Shift+V)
-│   ├── 版本檢查與提示
-│   ├── 效能監控面板
-│   └── 配置狀態檢視
-├── 熱重載機制
-│   ├── 檔案變化監控
-│   ├── 自動重新整理
-│   └── 狀態保持
-├── 除錯工具
-│   ├── AI 輔助除錯
-│   ├── 錯誤追蹤系統
-│   └── 效能分析工具
-└── 建置工具
-    ├── 程式碼檢查
-    ├── 型別檢查
-    └── 建置優化
+
+### 配置驅動開發原則
+**所有功能狀態由 `@/config` 統一管理，禁止硬編碼！**
+
+```tsx
+// ✅ 正確：使用配置
+import { TICKET_SALE_CONFIG } from '@/config'
+{TICKET_SALE_CONFIG.isTicketSaleActive && <TicketSection />}
+
+// ❌ 錯誤：硬編碼
+{true && <TicketSection />}
 ```
+```typescript
+import { TICKET_SALE_CONFIG } from '@/config/tickets'
+
+if (TICKET_SALE_CONFIG.isTicketSaleActive) {
+  // 顯示購票按鈕
+}
+```
+
+---
+
+## 🤖 Serena AI 整合工作流程
+
+### 專案索引更新
+**每次重大程式碼變更後，必須執行 Serena 專案索引更新！**
+
+```bash
+# 標準 Serena 更新指令
+uvx --from git+https://github.com/oraios/serena serena project index
+```
+
+### 開發流程整合
+```bash
+# 1. 開發前更新
+uvx --from git+https://github.com/oraios/serena serena project index
+
+# 2. 開發過程
+# 進行程式碼開發...
+
+# 3. 提交前更新
+git add .
+uvx --from git+https://github.com/oraios/serena serena project index
+git commit -m "feat: 新功能 + Serena index 更新"
+
+# 4. 部署前確認
+pnpm build
+```
+
+### 何時必須更新索引
+- React 元件新增/修改
+- `config/*` 檔案變更
+- TypeScript 型別定義
+- Next.js 路由調整
+- 文檔更新
+- 功能開發完成後
 
 ---
 
 ## 🔍 版本監控系統
 
-### ⌨️ 版本監控 UI
-
-#### 核心功能設計
-- **隱式觸發**：預設隱藏，按 `Ctrl+Shift+V` 顯示
-- **版本檢查**：比較本地與遠端版本
-- **效能監控**：即時 Web Vitals 指標
-- **配置檢視**：當前票券配置狀態
-
-#### components/version-monitor.tsx
+### 快捷鍵觸發
 ```tsx
-'use client'
-
-import { useState, useEffect, useCallback } from 'react'
-import { CONFIG, TICKET_SALE_CONFIG } from '@/config'
-import { Button } from '@/components/ui/button'
-
-interface VersionInfo {
-  current: string
-  latest?: string
-  buildTime: string
-  isUpdateAvailable: boolean
-}
-
-interface WebVital {
-  name: string
-  value: number
-  rating: 'good' | 'needs-improvement' | 'poor'
-}
-
-export const VersionMonitor = () => {
-  const [isVisible, setIsVisible] = useState(false)
-  const [activeTab, setActiveTab] = useState<'version' | 'performance' | 'config'>('version')
-  const [versionInfo, setVersionInfo] = useState<VersionInfo | null>(null)
-  const [webVitals, setWebVitals] = useState<WebVital[]>([])
-  const [isLoading, setIsLoading] = useState(false)
-
-  // 快捷鍵監聽
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.ctrlKey && event.shiftKey && event.key === 'V') {
-        event.preventDefault()
-        setIsVisible(prev => !prev)
-      }
+// 按 Ctrl+Shift+V 開啟版本監控面板
+useEffect(() => {
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.ctrlKey && e.shiftKey && e.key === 'V') {
+      setIsVisible(prev => !prev)
     }
+  }
+  
+  window.addEventListener('keydown', handleKeyDown)
+  return () => window.removeEventListener('keydown', handleKeyDown)
+}, [])
+```
 
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [])
+### 監控功能
+- **版本檢查**：本地 vs 遠端版本比較
+- **效能監控**：Web Vitals 即時指標
+- **配置狀態**：當前票券/功能配置檢視
 
-  // 版本檢查功能
-  const checkVersion = useCallback(async () => {
-    setIsLoading(true)
-    try {
-      // 讀取本地版本
-      const localResponse = await fetch('/version.json')
-      const localVersion = await localResponse.json()
+---
 
-      // 檢查遠端版本（帶時間戳避免快取）
-      const remoteResponse = await fetch(`/version.json?t=${Date.now()}`)
-      const remoteVersion = await remoteResponse.json()
+## 📋 常用開發指令
 
-      setVersionInfo({
-        current: localVersion.version,
-        latest: remoteVersion.version,
-        buildTime: localVersion.buildTime,
-        isUpdateAvailable: localVersion.version !== remoteVersion.version
-      })
-    } catch (error) {
-      console.error('Version check failed:', error)
-      setVersionInfo({
-        current: 'Unknown',
-        buildTime: 'Unknown',
-        isUpdateAvailable: false
-      })
-    }
-    setIsLoading(false)
-  }, [])
+```bash
+# 基本開發
+pnpm dev                    # 開發模式
+pnpm build                  # 建置專案
+pnpm start                  # 預覽建置結果
 
-  // Web Vitals 監控
-  useEffect(() => {
-    if (isVisible && activeTab === 'performance') {
-      import('web-vitals').then(({ onCLS, onFID, onLCP, onFCP, onTTFB }) => {
-        const updateVital = (vital: any) => {
-          setWebVitals(prev => {
-            const existing = prev.find(v => v.name === vital.name)
-            if (existing) {
-              return prev.map(v => v.name === vital.name ? vital : v)
-            }
-            return [...prev, vital]
-          })
-        }
+# 程式碼品質
+pnpm lint                   # ESLint 檢查
+pnpm type-check             # TypeScript 檢查
 
-        onCLS(updateVital)
-        onFID(updateVital)
-        onLCP(updateVital)
-        onFCP(updateVital)
-        onTTFB(updateVital)
-      })
-    }
-  }, [isVisible, activeTab])
+# 圖片優化
+pnpm optimize:images        # WebP 轉換
 
-  // 初次顯示時檢查版本
-  useEffect(() => {
-    if (isVisible && !versionInfo) {
-      checkVersion()
-    }
-  }, [isVisible, versionInfo, checkVersion])
+# Serena AI
+uvx --from git+https://github.com/oraios/serena serena project index
+```
 
-  if (!isVisible) return null
+---
 
-  return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-slate-900 border border-slate-700 rounded-xl shadow-2xl w-full max-w-2xl max-h-[80vh] overflow-hidden">
-        {/* 標題列 */}
-        <div className="flex items-center justify-between p-6 border-b border-slate-700">
-          <h2 className="text-xl font-bold text-white flex items-center gap-2">
-            <span className="text-2xl">🛠️</span>
-            開發工具面板
-          </h2>
+**下一章：[第8章 SEO 與部署](./08-seo-deployment.md)**
+            size="sm"
           <Button
             variant="ghost"
             size="sm"

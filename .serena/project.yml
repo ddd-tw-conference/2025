@@ -60,31 +60,20 @@ excluded_tools:
 
 # Initial context for the project
 initial_prompt: |
-  This is the DDD Taiwan Conference 2025 official website built with Next.js 15.5.2, React 19, and TypeScript.
+  DDD Taiwan 2025 Conference 官網 - Next.js 15.5.2 + React 19 + TypeScript
   
-  **Architecture & Tech Stack:**
-  - SPA mode deployment to GitHub Pages with basePath: /2025
-  - Multi-language support (zh-tw/en) using custom i18n system
-  - Configuration-driven development pattern (config/ directory)
-  - Radix UI + Tailwind CSS for styling
-  - TypeScript strict mode with comprehensive type safety
+  **核心規範:**
+  - **t() 函式必須** - `const { t } = useI18n(); t('key.subkey')`
+  - **config 導入** - 使用 `@/config`，避免硬編碼
+  - **靜態 Tailwind** - 不使用字串插值
+  - **stopPropagation()** - 處理巢狀事件
+  - **kebab-case** - 檔案命名 (promo-code-copy.tsx)
   
-  **Key Features:**
-  - Smart ticket marketing system with promo code support
-  - Speaker management with lightbox navigation
-  - Agenda system with session management
-  - WebP image optimization (90%+ size reduction)
-  - Version monitoring and development tools
-  - Complete SEO optimization
+  **重要系統:**
+  - 票券系統 TICKET_SALE_CONFIG (config/tickets.ts)
+  - 多語言系統 i18n Context
+  - GitHub Pages 靜態部署
+  - WebP 圖片優化
   
-  **Development Patterns:**
-  - Use kebab-case for file naming
-  - Centralized configuration in config/ directory
-  - Static Tailwind classes (no string interpolation)
-  - Event isolation with stopPropagation()
-  - Responsive-first design with md: prefixes
-  
-  **Code Quality:**
-  Focus on maintainable, type-safe code following the established patterns.
-  All text should use i18n system: const { t } = useI18n(); t('key.subkey')
-  Prefer configuration over hardcoded values.
+  **開發原則:**
+  配置驅動開發，功能開關透過 config/ 控制

@@ -1,69 +1,47 @@
 # 第6章：效能優化
 
-> **本章內容**：圖片優化策略、WebP 轉換、載入效能提升、Web Vitals 優化
+> **本章內容**：WebP 圖片優化、靜態生成策略、效能監控
 
 ---
 
-## 🚀 效能優化策略概覽
+## ⚡ 效能優化策略
 
-### 📊 優化成果總覽
-| 項目 | 優化前 | 優化後 | 改善幅度 |
-|------|--------|--------|----------|
-| **圖片總大小** | 3.8MB | 296KB | **92.2% ↓** |
-| **首頁載入時間** | 3.2s | 1.1s | **65.6% ↓** |
-| **LCP (最大內容繪製)** | 4.1s | 1.8s | **56.1% ↓** |
-| **圖片格式** | PNG/JPG | WebP | **統一格式** |
+### 優化成果
+| 項目 | 優化前 | 優化後 | 改善 |
+|------|--------|--------|------|
+| **圖片大小** | 3.8MB | 296KB | **92% ↓** |
+| **載入時間** | 3.2s | 1.1s | **65% ↓** |
+| **LCP** | 4.1s | 1.8s | **56% ↓** |
 
-### 🎯 優化重點領域
-1. **🖼️ 圖片優化**：純 WebP 策略，自動化轉換
-2. **⚡ 載入優化**：延遲載入、預載入策略
-3. **📦 Bundle 優化**：程式碼分割、樹搖優化
-4. **🔄 快取策略**：靜態資源快取控制
+### 核心策略
+1. **WebP 圖片格式**：統一使用 WebP，大幅減少檔案大小
+2. **靜態生成**：Next.js SSG 模式，預先生成所有頁面
+3. **載入優化**：延遲載入、圖片優化
 
 ---
 
-## 🖼️ 純 WebP 圖片策略
+## 🖼️ WebP 圖片優化
 
-### 💡 策略原理
-WebP 格式相比傳統 PNG/JPG 格式能提供：
-- **更小檔案大小**：平均減少 25-90%
-- **更好畫質**：同等檔案大小下畫質更佳
-- **廣泛支援**：現代瀏覽器 95%+ 支援率
-
-### 🏗️ 實作架構
-
-#### 1. 自動化轉換腳本
+### 自動化轉換腳本
 ```javascript
 // scripts/generate-all-webp.js
 const sharp = require('sharp')
-const fs = require('fs')
-const path = require('path')
 
 async function convertToWebP(inputPath, outputPath) {
-  try {
-    const info = await sharp(inputPath)
-      .webp({ 
-        quality: 85,           // 高品質設定
-        effort: 6,             // 最大壓縮努力
-        smartSubsample: true   // 智慧子採樣
-      })
-      .toFile(outputPath)
-    
-    console.log(`✅ ${inputPath} → ${outputPath}`)
-    console.log(`   Size: ${info.size} bytes`)
-    return info
-  } catch (error) {
-    console.error(`❌ 轉換失敗: ${inputPath}`, error.message)
-  }
+  await sharp(inputPath)
+    .webp({ 
+      quality: 85,
+      effort: 6
+    })
+    .toFile(outputPath)
 }
 
-async function processDirectory(dirPath) {
-  const files = fs.readdirSync(dirPath, { withFileTypes: true })
-  
-  for (const file of files) {
-    const fullPath = path.join(dirPath, file.name)
-    
-    if (file.isDirectory()) {
+// 批次轉換指令
+async function processImages() {
+  // 掃描 public/images 目錄
+  // 轉換所有 PNG/JPG 為 WebP
+}
+```
       await processDirectory(fullPath)
     } else if (/\.(jpg|jpeg|png)$/i.test(file.name)) {
       const webpPath = fullPath.replace(/\.(jpg|jpeg|png)$/i, '.webp')
@@ -100,46 +78,105 @@ function analyzeDirectory(dirPath, results = { original: 0, webp: 0, count: 0 })
   
   for (const file of files) {
     const fullPath = path.join(dirPath, file.name)
-    
-    if (file.isDirectory()) {
-      analyzeDirectory(fullPath, results)
-    } else {
-      const size = getFileSize(fullPath)
-      
-      if (/\.(jpg|jpeg|png)$/i.test(file.name)) {
-        results.original += size
-      } else if (/\.webp$/i.test(file.name)) {
-        results.webp += size
-        results.count++
-      }
-    }
-  }
-  
-  return results
+### 圖片使用方式
+```tsx
+// 最佳化圖片組件
+export const OptimizedImage = ({ src, alt, ...props }) => {
+  return (
+    <Image
+      src={src.replace(/\.(jpg|jpeg|png)$/i, '.webp')}
+      alt={alt}
+      loading="lazy"
+      placeholder="blur"
+      {...props}
+    />
+  )
 }
 
-// 分析結果
-const results = analyzeDirectory('./public/images')
-const savings = results.original - results.webp
-const savingsPercent = ((savings / results.original) * 100).toFixed(1)
-
-console.log('\n📊 圖片優化分析報告')
-console.log('════════════════════════')
-console.log(`原始格式總大小: ${formatBytes(results.original)}`)
-console.log(`WebP 格式總大小: ${formatBytes(results.webp)}`)
-console.log(`節省空間: ${formatBytes(savings)} (${savingsPercent}%)`)
-console.log(`WebP 檔案數量: ${results.count}`)
+// 使用範例
+<OptimizedImage 
+  src="/images/speakers/john-doe.webp"
+  alt="John Doe"
+  width={300}
+  height={400}
+/>
 ```
 
-### 🔧 圖片處理工具函式
+---
 
-#### lib/image-optimization.ts
-```typescript
-/**
- * 取得優化後的圖片路徑
- * 自動處理 WebP 格式切換與向後相容
- */
-export function getOptimizedImagePath(originalPath: string): string {
+## 🚀 靜態生成優化
+
+### Next.js 配置
+```javascript
+// next.config.mjs
+export default {
+  output: 'export',           // 靜態輸出模式
+  trailingSlash: true,        // GitHub Pages 相容
+  images: {
+    unoptimized: true,        // 靜態部署設定
+    formats: ['webp']         // 支援 WebP 格式
+  },
+  experimental: {
+    optimizeCss: true         // CSS 優化
+  }
+}
+```
+
+### 載入效能策略
+```tsx
+// 關鍵資源預載入
+export const PerformanceOptimizer = () => {
+  useEffect(() => {
+    // 預載入關鍵圖片
+    const criticalImages = [
+      '/images/hero-bg.webp',
+      '/images/logo.webp'
+    ]
+    
+    criticalImages.forEach(src => {
+      const link = document.createElement('link')
+      link.rel = 'preload'
+      link.as = 'image'
+      link.href = src
+      document.head.appendChild(link)
+    })
+  }, [])
+
+  return null
+}
+```
+
+---
+
+## 📊 效能監控
+
+### Web Vitals 監控
+```tsx
+// lib/web-vitals.tsx
+import { getCLS, getFID, getLCP } from 'web-vitals'
+
+export function reportWebVitals() {
+  getCLS(console.log)  // Cumulative Layout Shift
+  getFID(console.log)  // First Input Delay  
+  getLCP(console.log)  // Largest Contentful Paint
+}
+```
+
+### 開發指令
+```bash
+# 圖片優化
+pnpm run optimize:images
+
+# 效能分析
+pnpm run analyze
+
+# 建置檢查
+pnpm run build
+```
+
+---
+
+**下一章：[第7章 開發工具](./07-development-tools.md)**
   // 如果已經是 WebP 格式，直接返回
   if (originalPath.endsWith('.webp')) {
     return originalPath

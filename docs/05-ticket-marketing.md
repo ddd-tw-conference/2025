@@ -1,43 +1,29 @@
 # 第5章：票券行銷系統
 
-> **本章內容**：售票流程設計、行銷功能實作、狀態管理策略
+> **本章內容**：售票流程設計、配置驅動實作、促銷機制
 
 ---
 
-## 🎫 系統概覽
+## 🎫 業務需求分析
 
-### 📋 業務需求分析
-當早鳥票售罄後，網站需要將行銷焦點轉移到一般票，透過：
-- ✅ **明顯的視覺提示**告知早鳥票售罄
-- ✅ **吸引人的行銷文案**推廣一般票
-- ✅ **清晰的視覺層級**引導購票流程
-- ✅ **預留優惠碼機制**供行銷部門使用
+### 銷售階段特徵
+1. **早鳥期**：限量優惠票券
+2. **一般期**：標準票價銷售
+3. **促銷期**：優惠碼機制
 
-### 🏗️ 解決方案架構
-```
-票券行銷系統
-├── 配置驅動設計
-│   ├── 售票狀態控制
-│   ├── 早鳥票售罄標記
-│   └── 優惠碼機制
-├── 視覺層級優化
-│   ├── 一般票（左側主要）
-│   ├── 早鳥票（右側次要）
-│   └── 動態樣式切換
-└── 行銷內容管理
-    ├── 多語言支援
-    ├── 動態文案切換
-    └── 促銷資訊展示
-```
+### 技術挑戰
+- 動態狀態切換：不同銷售階段的 UI 自動適配
+- 行銷重點轉移：早鳥售罄後突出一般票
+- 促銷碼機制：靈活的優惠碼顯示控制
+- 響應式展示：手機端優化體驗
 
 ---
 
-## ⚙️ 配置管理
+## ⚙️ 配置驅動實作
 
-### 🎛️ 核心配置檔案
-
-#### config/tickets.ts
+### 核心配置檔案
 ```typescript
+// config/tickets.ts
 export interface TicketSaleConfig {
   isTicketSaleActive: boolean        // 售票總開關
   isEarlyBirdSoldOut?: boolean      // 早鳥票售罄標記
@@ -51,83 +37,101 @@ export interface TicketSaleConfig {
 export const TICKET_SALE_CONFIG: TicketSaleConfig = {
   isTicketSaleActive: true,
   isEarlyBirdSoldOut: true,
-  purchaseUrl: "https://www.accupass.com/eflow/ticket/2410070349001779478700",
+  purchaseUrl: "https://www.accupass.com/...",
   promoCode: {
+    isVisible: true,
+    code: "DDD2025"
+  }
+}
+```
     isVisible: false,
     code: "DDDTW2025"
   }
 }
 ```
 
-#### 狀態檢查函式
-```typescript
-// 早鳥票可購買檢查
-export const isEarlyBirdAvailable = (): boolean => {
-  return TICKET_SALE_CONFIG.isTicketSaleActive && 
-         !TICKET_SALE_CONFIG.isEarlyBirdSoldOut
-}
+### 元件使用範例
+```tsx
+import { TICKET_SALE_CONFIG } from '@/config/tickets'
 
-// 一般票可購買檢查
-export const isRegularTicketAvailable = (): boolean => {
-  return TICKET_SALE_CONFIG.isTicketSaleActive
-}
+export const TicketMarketingSection = () => {
+  const { t } = useI18n()
+  
+  return (
+    <section>
+      {TICKET_SALE_CONFIG.isTicketSaleActive ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* 一般票 - 主要推廣 */}
+          <div className="order-1 bg-gradient-to-br from-blue-900/60 to-purple-900/60 
+                          border border-blue-400/30 p-6 rounded-xl">
+            <h3 className="text-xl font-semibold">{t('tickets.regular.title')}</h3>
+            <Button className="bg-gradient-to-r from-blue-600 to-purple-600">
+              {t('tickets.purchaseNow')}
+            </Button>
+          </div>
 
-// 購票連結取得
-export const getTicketPurchaseUrl = (): string => {
-  return TICKET_SALE_CONFIG.purchaseUrl
+          {/* 早鳥票 - 售罄狀態 */}
+          <div className="order-2 bg-slate-800/30 border border-slate-600/20 
+                          opacity-60 p-6 rounded-xl">
+            <h3 className="text-xl font-semibold">{t('tickets.earlyBird.title')}</h3>
+            <Button disabled className="bg-gray-500 text-gray-300">
+              {t('tickets.soldOut')}
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <p>{t('tickets.comingSoon')}</p>
+      )}
+
+      {/* 優惠碼展示 */}
+      {TICKET_SALE_CONFIG.promoCode?.isVisible && (
+        <PromoCodeCopy code={TICKET_SALE_CONFIG.promoCode.code} />
+      )}
+    </section>
+  )
 }
 ```
 
 ---
 
-## 🎨 視覺設計系統
+## 🎁 優惠碼機制
 
-### 🎭 視覺層級策略
-
-#### 一般票（主要推廣）
+### PromoCodeCopy 元件
 ```tsx
-// 醒目的漸層背景 + 光效
-const regularTicketStyle = `
-  bg-gradient-to-br from-blue-900/60 via-blue-800/50 to-purple-900/60
-  border border-blue-400/30
-  hover:border-blue-300/50
-  transform hover:scale-[1.02]
-  transition-all duration-300
-  relative overflow-hidden
-  before:absolute before:inset-0 
-  before:bg-gradient-to-r before:from-transparent 
-  before:via-white/5 before:to-transparent
-  before:translate-x-[-100%] hover:before:translate-x-[100%]
-  before:transition-transform before:duration-1000
-`
+export const PromoCodeCopy = ({ code }: { code?: string }) => {
+  const [copyState, setCopyState] = useState<'idle' | 'success' | 'manual'>('idle')
+  
+  const copyToClipboard = async () => {
+    if (!code) return
+    
+    const result = await copyWithFallback(code)
+    setCopyState(result)
+    
+    // 自動重置狀態
+    setTimeout(() => setCopyState('idle'), 
+      result === 'success' ? 2000 : 4000)
+  }
 
-// 主要購票按鈕
-const primaryButton = `
-  bg-gradient-to-r from-blue-600 to-purple-600 
-  hover:from-blue-700 hover:to-purple-700
-  text-white font-semibold
-  shadow-lg hover:shadow-xl
-  transform hover:scale-105
-`
+  return (
+    <div className="bg-yellow-500/40 text-yellow-50 border border-yellow-400/50 
+                    p-4 rounded-lg">
+      <div className="flex items-center justify-between">
+        <span>優惠碼：{code}</span>
+        <Button 
+          onClick={copyToClipboard}
+          className="bg-yellow-600 hover:bg-yellow-700"
+        >
+          {copyState === 'success' ? '已複製' : '複製'}
+        </Button>
+      </div>
+    </div>
+  )
+}
 ```
 
-#### 早鳥票（售罄狀態）
-```tsx
-// 低調的灰色系 + 售罄標示
-const earlyBirdSoldOutStyle = `
-  bg-slate-800/30
-  border border-slate-600/20
-  opacity-60
-  relative
-`
+---
 
-// 停用按鈕
-const disabledButton = `
-  bg-gray-500 
-  text-gray-300 
-  cursor-not-allowed
-  border border-gray-600
-`
+**下一章：[第6章 效能優化](./06-performance.md)**
 
 // 售罄徽章
 const soldOutBadge = `
@@ -597,6 +601,41 @@ Clipboard API 在某些環境下會被瀏覽器安全策略阻擋，特別是：
 - 某些瀏覽器的權限政策
 
 **解決方案：三層 Fallback 策略**
+
+**TypeScript 實作範例：**
+```typescript
+export const copyWithFallback = async (text: string): Promise<'success' | 'manual'> => {
+  try {
+    // 1. 現代瀏覽器（安全環境）
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text)
+      return 'success'
+    }
+    // 2. 傳統瀏覽器
+    const textArea = document.createElement('textarea')
+    textArea.value = text
+    textArea.style.position = 'fixed'
+    textArea.style.left = '-999999px'
+    textArea.style.opacity = '0'
+    document.body.appendChild(textArea)
+    textArea.focus()
+    textArea.select()
+    const result = document.execCommand('copy')
+    document.body.removeChild(textArea)
+    return result ? 'success' : 'manual'
+  } catch {
+    // 3. Fallback：顯示手動複製提示
+    return 'manual'
+  }
+}
+```
+
+**流程說明：**
+1. 優先使用 Clipboard API（安全環境）
+2. 若不支援則降級至 execCommand
+3. 仍失敗則顯示手動複製提示
+
+此流程已整合於 PromoCodeCopy 元件，確保所有瀏覽器皆可順利複製優惠碼。
 
 PromoCodeCopy 元件已實現完整的跨瀏覽器相容性：
 1. **現代瀏覽器**：`navigator.clipboard.writeText()` (HTTPS 環境)

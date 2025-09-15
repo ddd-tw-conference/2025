@@ -1,33 +1,17 @@
-# 重要函式與邏輯索引
+# 重要函式
 
-## 智慧導航系統
-### app/speakers/page.tsx
-- **SpeakersPage** - 主要講者頁面元件
-- **closeLightbox** - 智慧關閉邏輯 (考慮來源頁面)
-- **openLightbox** - 開啟講者詳情
-- **isFromHomepage** 狀態 - 追蹤使用者來源
+## 多語言
+- **useI18n()** - 多語言 Hook
+- **t('key.subkey')** - 翻譯函式
 
-### components/speaker-cards.tsx
-- **handleCardClick** - 卡片點擊處理 (導航到講者頁面)
-- **handleTicketClick** - 票券按鈕點擊 (阻止事件冒泡)
-- **generateDeterministicTheme** - 產生一致性主題色彩
+## 票券系統
+- **TICKET_SALE_CONFIG** - 票券配置
+- **PromoCodeCopy** - 促銷碼複製
 
-## 票券行銷系統
-### config/tickets.ts
-- **TICKET_SALE_CONFIG** - 主要票券配置
-- **isTicketAvailable** - 檢查票券可用性
-- **getTicketPurchaseUrl** - 取得購票連結
-- **isEarlyBirdAvailable** - 早鳥票狀態檢查
-
-## 議程管理
-### config/agenda.ts
-- **SESSION_PATTERNS** - 議程模式配置
-- **calculateSessionTimes** - 自動計算議程時間
-- **AGENDA_TIME_CONFIG** - 時間配置
-
-## 效能優化
-### config/performance.ts
-- **getOptimizedImageUrl** - 取得優化圖片 URL
+## 開發工具
+- **stopPropagation()** - 事件隔離
+- **@/config** - 配置導入
+- **WebP優化** - 圖片處理
 - **getSupportedImageFormat** - 檢測支援的圖片格式
 - **generateImageSrcSet** - 產生響應式圖片集
 

@@ -1,28 +1,132 @@
-# 第2章：架構設計
+# 第2章：系統架構設計
 
-> **本章內容**：系統架構設計、配置管理策略、目錄結構規劃
+> **本章內容**：Next.js 應用架構、配置驅動原則、目錄結構設計
 
 ---
 
-## 🏛️ 系統架構概覽
+## 🏛️ 整體架構設計
 
-### 📐 整體架構圖
+### Next.js 15 + React 19 架構
 ```
-DDD Taiwan 2025 Conference Website
-├── 前端應用 (Next.js 15.5.2)
-│   ├── App Router 路由系統
-│   ├── React 19 元件架構
-│   └── Tailwind CSS 樣式系統
-├── 配置管理層
-│   ├── 統一配置檔案
-│   ├── 環境變數管理
-│   └── 功能開關控制
-├── 國際化系統
-│   ├── 語言資源管理
-│   ├── 動態語言切換
-│   └── 內容本地化
-└── 靜態部署
-    ├── GitHub Pages 託管
+前端應用 (Next.js 15)
+├── App Router 路由系統
+├── 靜態生成 (SSG) 
+├── 配置驅動業務邏輯
+├── 多語言系統 (i18n)
+└── 響應式 UI (Tailwind CSS)
+```
+
+### ⚙️ 配置驅動架構
+
+**核心原則：** 所有業務邏輯、功能開關由 `@/config` 集中管理，實現程式碼與配置分離。
+
+**實作範例：**
+```typescript
+// config/tickets.ts
+export const TICKET_SALE_CONFIG = {
+  isTicketSaleActive: true,
+  isEarlyBirdSoldOut: false,
+  purchaseUrl: "https://www.accupass.com/...",
+  promoCode: {
+    isVisible: true,
+    code: "DDD2025"
+  }
+}
+
+// 元件中使用
+import { TICKET_SALE_CONFIG } from '@/config/tickets'
+
+{TICKET_SALE_CONFIG.isTicketSaleActive && <TicketSection />}
+```
+
+### React 19 注意事項
+```tsx
+// 解決 Hydration 警告
+<body suppressHydrationWarning={true}>
+  {children}
+</body>
+```
+// app/layout.tsx
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="zh-tw">
+      <body suppressHydrationWarning={true}>
+        {children}
+      </body>
+    </html>
+  )
+}
+```
+
+---
+
+## 📁 目錄結構設計
+
+### 🗂️ 核心目錄架構
+```
+DDD Taiwan 2025/
+├── 📱 app/                     # Next.js App Router 頁面
+│   ├── layout.tsx             # 根佈局配置
+│   ├── page.tsx               # 首頁
+---
+
+## 📁 目錄結構設計
+
+```
+專案目錄結構
+├── app/                      # Next.js App Router
+│   ├── page.tsx             # 首頁
+│   ├── about/page.tsx       # 關於頁面
+│   ├── speakers/            # 講者相關頁面
+│   ├── agenda/page.tsx      # 議程頁面
+│   └── tickets/page.tsx     # 售票頁面
+├── components/              # 可重用元件
+│   ├── ui/                  # 基礎 UI 元件
+│   ├── layout/              # 佈局元件
+│   └── speaker-cards.tsx    # 業務元件
+├── config/                  # 集中式配置管理
+│   ├── app.ts              # 應用程式基本配置
+│   ├── tickets.ts          # 票券行銷配置
+│   └── agenda.ts           # 議程配置
+├── lib/                     # 工具函式與資料
+│   ├── i18n.ts             # 國際化核心
+│   ├── utils.ts            # 通用工具函式
+│   └── data/               # 資料層
+├── locales/                 # 多語言資源
+│   ├── zh-tw.json          # 繁體中文
+│   └── en.json             # 英文
+└── public/                  # 靜態資源
+```
+
+## 🔄 狀態管理策略
+
+### 多層次狀態管理
+1. **全域狀態**：語言切換 (React Context)
+2. **頁面狀態**：Lightbox 開關 (useState)
+3. **URL 狀態**：導航參數 (useSearchParams)
+
+```typescript
+// 全域狀態
+const { language, setLanguage } = useI18n()
+
+// 頁面狀態
+const [isLightboxOpen, setIsLightboxOpen] = useState(false)
+
+// URL 狀態
+const searchParams = useSearchParams()
+const speakerId = searchParams.get('id')
+```
+   // 可分享的狀態，如講者 ID、議程時段
+   const searchParams = useSearchParams()
+   const speakerId = searchParams.get('id')
+   ```
+
+### 🔌 路由設計模式
+
+**智慧導航系統：**
+- 上下文追蹤：記錄使用者來源頁面
+- 參數化路由：`/speakers?id=speaker1&from=homepage`
+- 回退策略：優雅處理無效路由參數
     ├── WebP 圖片優化
     └── SEO 最佳化
 ```

@@ -1,33 +1,24 @@
-# 主要功能模組說明
+# 主要功能模組
 
-## 票券行銷系統
-- **檔案**: config/tickets.ts, components/ticket-marketing-section.tsx
-- **功能**: 售票狀態控制、促銷碼管理、購票流程
-- **配置**: TICKET_SALE_CONFIG 集中管理所有票券相關設定
+## 票券系統
+- **config/tickets.ts** - TICKET_SALE_CONFIG 配置
+- **components/ticket-marketing-section.tsx** - 票券行銷區塊
+- **components/promo-code-copy.tsx** - 促銷碼複製
 
-## 講者管理系統
-- **檔案**: lib/data/speakers.ts, app/speakers/page.tsx
-- **功能**: 講者資料管理、lightbox 展示、智慧導航
-- **特色**: 支援從首頁卡片直接跳轉到講者詳情
+## 講者系統
+- **app/speakers/page.tsx** - 講者頁面
+- **components/speaker-cards.tsx** - 首頁講者卡片
+- **lib/data/speakers.ts** - 講者資料
 
-## 議程系統
-- **檔案**: config/agenda.ts, app/agenda/page.tsx
-- **功能**: 議程時間計算、session 管理、議程展示
-- **特色**: 自動時間計算和 lightbox 詳情展示
+## 多語言
+- **contexts/i18n-context.tsx** - i18n Context
+- **lib/i18n.ts** - 語言邏輯
+- **locales/** - 語言檔案
 
-## 多語言系統
-- **檔案**: lib/i18n.ts, contexts/i18n-context.tsx
-- **功能**: 繁中/英文切換、語言資源管理
-- **支援**: 完整的語言切換和內容本地化
-
-## 版本監控系統
-- **檔案**: components/version-monitor.tsx, lib/version.ts
-- **功能**: 開發時版本檢查、熱重載提醒
-- **操作**: Ctrl+Shift+V 開啟監控面板
-
-## 效能監控
-- **檔案**: lib/web-vitals.tsx, components/performance-dashboard.tsx
-- **功能**: Web Vitals 監控、效能數據收集
+## 效能優化
+- **WebP 圖片** - 自動轉換
+- **bundle analyzer** - 效能分析
+- **靜態導出** - GitHub Pages
 - **特色**: 即時效能指標顯示
 
 ## 圖片優化系統

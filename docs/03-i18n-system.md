@@ -1,140 +1,123 @@
 # 第3章：國際化系統
 
-> **本章內容**：多語言架構設計、語言資源管理、動態語言切換實作
+> **本章內容**：多語言架構設計、t() 函式標準、語言資源管理
 
 ---
 
-## 🌍 多語言系統概覽
+## 🌍 國際化系統設計
 
-### 🎯 設計目標
-- **簡潔 API**：`const { t } = useI18n(); t('key.subkey')` 模式
-- **類型安全**：TypeScript 完整支援
-- **效能優化**：語言資源按需載入
-- **維護友善**：結構化 JSON 格式，便於翻譯
-
-### 🏗️ 系統架構
+### 核心架構
 ```
 國際化系統
-├── 語言資源管理
-│   ├── locales/zh-tw.json
-│   ├── locales/en.json
-│   └── 巢狀結構組織
+├── 語言資源 (locales/*.json)
 ├── Context 狀態管理
-│   ├── I18nProvider
-│   ├── 語言切換邏輯
-│   └── 瀏覽器儲存
-├── Hook 介面
-│   ├── useI18n()
-│   ├── t() 翻譯函式
-│   └── changeLanguage()
-└── 元件整合
-    ├── LanguageSelector
-    ├── 多語言內容顯示
-    └── 路由本地化
+├── useI18n() Hook
+└── t() 翻譯函式
+```
+
+### 強制使用規範
+**所有顯示文字必須透過 t() 函式處理，禁止硬編碼！**
+
+```tsx
+// ✅ 正確用法
+const { t } = useI18n()
+return <h1>{t('page.title')}</h1>
+
+// ❌ 錯誤用法
+return <h1>立即購票</h1>
 ```
 
 ---
 
-## 📁 語言資源管理
+## � 語言資源管理
 
-### 🗂️ 檔案結構
+### 檔案結構
 ```
 locales/
-├── zh-tw.json    # 繁體中文（預設語言）
+├── zh-tw.json    # 繁體中文（預設）
 └── en.json       # 英文
 ```
 
-### 📝 資源檔案格式
-
-#### locales/zh-tw.json
+### 資源檔案格式
 ```json
 {
   "common": {
     "submit": "送出",
-    "cancel": "取消",
-    "loading": "載入中...",
-    "error": "發生錯誤",
-    "success": "操作成功"
+    "cancel": "取消"
   },
   "nav": {
     "home": "首頁",
     "about": "關於會議",
-    "speakers": "講者介紹",
-    "agenda": "議程表",
-    "tickets": "購票資訊",
-    "transportation": "交通資訊"
+    "speakers": "講者介紹"
   },
   "page": {
     "home": {
-      "title": "DDDTW 2025 - AI時代軟體開發方法",
-      "subtitle": "探索領域驅動設計在人工智慧時代的實踐與創新",
-      "heroAction": "立即購票",
-      "heroSecondary": "了解更多"
-    },
-    "tickets": {
-      "title": "購票資訊",
-      "earlyBirdTitle": "早鳥票",
-      "regularTitle": "一般票",
-      "description": "選擇適合的票種參加 DDDTW 2025",
-      "features": {
-        "access": "完整會議入場權",
-        "materials": "會議資料包",
-        "networking": "茶歇交流時間",
-        "certificate": "參與證書"
-      }
+      "title": "DDDTW 2025",
+      "heroAction": "立即購票"
     }
-  },
-  "speakers": {
-    "pageTitle": "講者介紹",
-    "keynoteTitle": "主題演講",
-    "sessionTitle": "專題分享",
-    "bio": "講者簡介",
-    "session": "演講主題"
-  },
-  "tickets": {
-    "earlyBirdSoldOut": "🔥 早鳥票已售完！",
-    "regularPromo": "一般票現正熱賣中，把握最後機會參加 DDDTW 2025！",
-    "purchaseNow": "立即購票",
-    "soldOut": "已售完",
-    "recommended": "⭐ 推薦",
-    "promoCodeHint": "限時優惠碼"
   }
 }
 ```
+---
 
-#### locales/en.json
-```json
-{
-  "common": {
-    "submit": "Submit",
-    "cancel": "Cancel",
-    "loading": "Loading...",
-    "error": "An error occurred",
-    "success": "Operation successful"
-  },
-  "nav": {
-    "home": "Home",
-    "about": "About",
-    "speakers": "Speakers",
-    "agenda": "Agenda",
-    "tickets": "Tickets",
-    "transportation": "Transportation"
-  },
-  "page": {
-    "home": {
-      "title": "DDDTW 2025 - Software Development in the AI Era",
-      "subtitle": "Exploring Domain-Driven Design practices and innovations in the age of artificial intelligence",
-      "heroAction": "Get Tickets",
-      "heroSecondary": "Learn More"
-    },
-    "tickets": {
-      "title": "Ticket Information",
-      "earlyBirdTitle": "Early Bird",
-      "regularTitle": "Regular Ticket",
-      "description": "Choose the right ticket type for DDDTW 2025",
-      "features": {
-        "access": "Full Conference Access",
-        "materials": "Conference Materials",
+## 🔧 使用方式
+
+### 基本用法
+```tsx
+'use client'
+
+import { useI18n } from '@/hooks/use-i18n'
+
+export const Component = () => {
+  const { t, language, changeLanguage } = useI18n()
+  
+  return (
+    <div>
+      <h1>{t('page.home.title')}</h1>
+      <p>{t('page.home.subtitle')}</p>
+      <button onClick={() => changeLanguage('en')}>
+        Switch to English
+      </button>
+    </div>
+  )
+}
+```
+
+### 語言切換器
+```tsx
+export const LanguageSelector = () => {
+  const { language, changeLanguage } = useI18n()
+  
+  return (
+    <select 
+      value={language} 
+      onChange={(e) => changeLanguage(e.target.value as Language)}
+    >
+      <option value="zh-tw">繁體中文</option>
+      <option value="en">English</option>
+    </select>
+  )
+}
+```
+
+### 實用範例
+```tsx
+// 按鈕文字
+<Button>{t('common.submit')}</Button>
+
+// 導航選單
+<Link href="/about">{t('nav.about')}</Link>
+
+// 頁面標題
+<h1>{t('page.tickets.title')}</h1>
+
+// 動態內容
+{isLoading ? t('common.loading') : t('common.success')}
+```
+
+---
+
+**下一章：[第4章 設計系統](./04-design-system.md)**
         "networking": "Networking Breaks",
         "certificate": "Participation Certificate"
       }
@@ -159,6 +142,50 @@ locales/
 ```
 
 ### 🔑 命名規範
+
+---
+
+## 🌐 多語系處理規範
+
+### 必須規範：所有文字皆用 t() 處理
+
+所有前端顯示文字、按鈕、提示、標題、訊息等，**一律必須透過 `t()` 函式取得**，禁止硬編文字於元件、頁面或 config 內。
+
+#### 標準用法
+```tsx
+import { useI18n } from '@/contexts/i18n-context'
+
+const { t } = useI18n()
+
+return <h1>{t('page.home.title')}</h1>
+```
+
+#### 按鈕範例
+```tsx
+<button>{t('common.submit')}</button>
+```
+
+#### 動態參數範例
+```tsx
+t('tickets.earlyBirdTitle', { date: '2025/01/01' })
+```
+
+#### config 檔案範例
+```typescript
+// config/tickets.ts
+export const TICKET_LABEL = {
+  title: t('tickets.title'),
+  earlyBird: t('tickets.earlyBirdTitle'),
+}
+```
+
+#### 錯誤範例（禁止）
+```tsx
+return <h1>DDD Taiwan 2025</h1> // ❌ 禁止硬編文字
+```
+
+---
+
 ```typescript
 // 階層式命名，使用點號分隔
 "page.home.title"           // 頁面 > 首頁 > 標題

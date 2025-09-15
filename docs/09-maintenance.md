@@ -1,15 +1,15 @@
-# 第9章：維護手冊
+# 第9章：運維與維護
 
-> **本章內容**：日常維護任務、故障排除指南、系統更新流程
+> **本章內容**：系統監控、日常維護任務、故障排除指南
 
 ---
 
 ## 🛠️ 日常維護任務
 
-### 📋 例行檢查清單
+### 例行檢查清單
 
 #### 每日檢查
-- [ ] 網站正常運作 (`https://ddd-tw-conference.github.io/2025/`)
+- [ ] 網站正常運作 (`https://conf.ddd.tw`)
 - [ ] 售票連結有效性
 - [ ] 多語言切換功能
 - [ ] 版本監控系統 (`Ctrl+Shift+V`)
@@ -20,114 +20,84 @@
 - [ ] 圖片載入速度
 - [ ] SEO 搜尋結果
 
-#### 開發後檢查（每次功能開發完成後）
-- [ ] **Serena 專案索引更新** (`uvx --from git+https://github.com/oraios/serena serena project index`)
+#### 開發後檢查
+- [ ] **Serena 專案索引更新**
 - [ ] 程式碼品質檢查 (`pnpm lint`)
 - [ ] 型別檢查 (`pnpm type-check`)
 - [ ] 建置測試 (`pnpm build`)
 
-#### 重要時期檢查（售票開始/會議前）
+```bash
+# Serena 專案索引更新（必須執行）
+uvx --from git+https://github.com/oraios/serena serena project index
+```
+
+#### 重要時期檢查
 - [ ] 票券狀態配置正確
 - [ ] Accupass 整合正常
 - [ ] 會議資訊更新
 - [ ] 講者資料完整
-- [ ] **Serena 索引包含最新配置** (重新執行索引)
-
+  promoCode: {
+    isVisible: false              // 🔒 暫不顯示優惠碼
 ---
 
 ## ⚙️ 配置更新指南
 
-### 🎫 票券系統維護
-
-#### 開始售票
+### 票券系統維護
 ```typescript
 // config/tickets.ts
-export const TICKET_SALE_CONFIG: TicketSaleConfig = {
-  isTicketSaleActive: true,        // ✅ 啟用售票
-  isEarlyBirdSoldOut: false,      // ✅ 早鳥票可購買
-  purchaseUrl: "https://www.accupass.com/eflow/ticket/[票券ID]",
-  promoCode: {
-    isVisible: false              // 🔒 暫不顯示優惠碼
-  }
-}
-```
 
-#### 早鳥票售罄
-```typescript
-export const TICKET_SALE_CONFIG: TicketSaleConfig = {
+// 開始售票
+export const TICKET_SALE_CONFIG = {
+  isTicketSaleActive: true,        // 啟用售票
+  isEarlyBirdSoldOut: false,      // 早鳥票可購買
+  purchaseUrl: "https://www.accupass.com/...",
+  promoCode: { isVisible: false }
+}
+
+// 早鳥票售罄
+export const TICKET_SALE_CONFIG = {
   isTicketSaleActive: true,
-  isEarlyBirdSoldOut: true,       // ⚠️ 標記早鳥票售罄
+  isEarlyBirdSoldOut: true,       // 標記早鳥票售罄
   purchaseUrl: "...",
   promoCode: {
-    isVisible: true,              // 🎯 啟用優惠碼促銷
+    isVisible: true,              // 啟用優惠碼促銷
     code: "DDDTW2025"
   }
 }
-```
 
-#### 停止售票
-```typescript
-export const TICKET_SALE_CONFIG: TicketSaleConfig = {
-  isTicketSaleActive: false,      // 🛑 停用所有售票
-  // 其他設定保持不變
+// 停止售票
+export const TICKET_SALE_CONFIG = {
+  isTicketSaleActive: false      // 停用所有售票
 }
 ```
 
-### 🌍 內容更新流程
+### 內容更新流程
 
 #### 新增講者資料
-1. **準備圖片**：
-   ```bash
-   # 將講者照片放入 public/images/speakers/
-   node scripts/generate-all-webp.js  # 轉換為 WebP
-   ```
-
-2. **更新資料檔案**：
-   ```typescript
-   // lib/data/speakers.ts
-   export const speakers: Speaker[] = [
-     {
-       id: "new-speaker",
-       name: { 'zh-tw': "講者姓名", 'en': "Speaker Name" },
-       title: { 'zh-tw': "職稱", 'en': "Title" },
-       bio: { 'zh-tw': "簡介...", 'en': "Bio..." },
-       avatar: "/images/speakers/new-speaker.webp"
-     }
-   ]
-   ```
-
-3. **多語言內容**：
-   ```json
-   // locales/zh-tw.json
-   {
-     "speakers": {
-       "new-speaker": {
-         "session": "演講主題"
-       }
-     }
-   }
-   ```
-
-#### 議程時間更新
 ```typescript
-// config/agenda.ts
-export const AGENDA_CONFIG = {
-  timeSlots: [
-    { time: "09:00-09:30", type: "registration" },
-    { time: "09:30-10:30", type: "keynote", speaker: "keynote-speaker" },
-    // 新增時段...
-  ]
-}
+// lib/data/speakers.ts
+export const speakers: Speaker[] = [
+  {
+    id: "new-speaker",
+    name: { 'zh-tw': "講者姓名", 'en': "Speaker Name" },
+    title: { 'zh-tw': "職稱", 'en': "Title" },
+    bio: { 'zh-tw': "簡介...", 'en': "Bio..." },
+    avatar: "/images/speakers/new-speaker.webp"
+  }
+]
 ```
 
-### 📸 圖片管理
-
-#### 新增圖片流程
+#### 圖片更新
 ```bash
-# 1. 將原始圖片放入對應目錄
+# 1. 將新圖片放入對應目錄
 cp new-image.jpg public/images/
 
 # 2. 轉換為 WebP 格式
+pnpm optimize:images
+
+# 3. 提交變更
+git add . && git commit -m "feat: 更新講者資料"
+```
 node scripts/generate-all-webp.js
 
 # 3. 檢查優化效果
@@ -151,43 +121,73 @@ import { getOptimizedImagePath } from '@/lib/image-optimization'
 
 ---
 
-## 🤖 Serena AI 輔助工具維護
+## 🚨 故障排除指南
 
-### 📋 Serena 索引管理
+### 常見問題與解決方案
 
-#### 🔄 何時需要重新索引
-**強制重新索引情況**：
-- ✅ 新增或修改 React 元件
-- ✅ 更新 `config/*` 配置檔案
-- ✅ 修改 TypeScript 型別定義
-- ✅ 新增或變更頁面路由
-- ✅ 更新專案文件 (`docs/`, `README.md`, `copilot-instructions.md`)
-- ✅ 完成重要功能開發
-
-**可選重新索引情況**：
-- 🔶 樣式調整（僅 CSS/Tailwind 變更）
-- 🔶 文字內容更新（不涉及程式邏輯）
-- 🔶 圖片資源新增/替換
-
-#### 📝 標準索引流程
+#### 網站無法載入
 ```bash
-# 1. 確保在專案根目錄
-cd C:\Users\a8022\Desktop\2025
+# 檢查部署狀態
+curl -I https://conf.ddd.tw
 
-# 2. 執行 Serena 專案索引
-uvx --from git+https://github.com/oraios/serena serena project index
-
-# 3. 驗證索引完成
-# 看到 "Symbols saved to .serena/cache/..." 即表示成功
+# 檢查 GitHub Pages 設定
+# GitHub Repository > Settings > Pages
 ```
 
-#### 🚀 開發工作流程集成
+#### 圖片載入失敗
 ```bash
-# 開發前：確認索引是最新的
-uvx --from git+https://github.com/oraios/serena serena project index
+# 重新產生 WebP 圖片
+pnpm optimize:images
 
-# 開發中：重大變更後立即索引
-git add .
+# 檢查圖片路徑
+ls -la public/images/
+```
+
+#### 建置失敗
+```bash
+# 檢查 TypeScript 錯誤
+pnpm type-check
+
+# 檢查 ESLint 錯誤
+pnpm lint
+
+# 清除快取重新建置
+rm -rf .next out
+pnpm build
+```
+
+#### 配置不生效
+1. 檢查 `config/*` 檔案語法
+2. 確認 import 路徑正確
+3. 重啟開發伺服器 (`pnpm dev`)
+
+### 版本回復
+```bash
+# 回復到上一個穩定版本
+git log --oneline  # 查看提交歷史
+git reset --hard [commit-hash]
+git push --force-with-lease
+```
+
+---
+
+## 📋 維護檢查表
+
+### 每次變更後
+- [ ] Serena 專案索引更新
+- [ ] 程式碼檢查通過
+- [ ] 建置成功
+- [ ] 功能測試通過
+
+### 定期維護
+- [ ] 依賴套件更新
+- [ ] 安全性掃描
+- [ ] 效能監控檢視
+- [ ] 備份重要配置
+
+---
+
+**文檔結束 - 完整的 DDD Taiwan 2025 技術文檔**
 uvx --from git+https://github.com/oraios/serena serena project index
 git commit -m "feat: 新功能並更新 Serena 索引"
 

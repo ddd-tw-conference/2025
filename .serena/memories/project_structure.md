@@ -1,33 +1,29 @@
-# 專案結構與目錄說明
+# 專案結構
 
-## 根目錄配置檔案
-- **package.json**: 依賴管理和指令定義
-- **next.config.mjs**: Next.js 配置 (SPA 模式、GitHub Pages)
-- **tailwind.config.ts**: Tailwind CSS 配置
-- **tsconfig.json**: TypeScript 編譯設定
-- **pnpm-lock.yaml**: 鎖定依賴版本
+## 根目錄
+- **package.json** - 依賴管理
+- **next.config.mjs** - Next.js 配置
+- **tailwind.config.ts** - Tailwind 配置
 
-## 核心目錄結構
+## 主要目錄
 
-### app/ - Next.js App Router 頁面
-- **layout.tsx**: 根佈局，包含全域設定
-- **page.tsx**: 首頁
-- **about/**: 關於頁面
-- **speakers/**: 講者頁面 (含 lightbox 功能)
-- **agenda/**: 議程頁面
-- **tickets/**: 購票頁面
-- **transportation/**: 交通資訊
-- **providers/**: React Context 提供者
+### app/ - 頁面
+- **page.tsx** - 首頁
+- **speakers/** - 講者頁面
+- **tickets/** - 票券頁面
 
-### components/ - 可重用元件
-- **ui/**: shadcn/ui 元件庫
-- **layout/**: 佈局元件 (Header, Footer, Hero)
-- **ticket-marketing-section.tsx**: 票券行銷元件
-- **language-selector.tsx**: 語言切換器
-- **version-monitor.tsx**: 開發工具 (Ctrl+Shift+V)
+### config/ - 配置
+- **tickets.ts** - 票券配置
+- **app.ts** - 基本配置
 
-### config/ - 集中式配置管理
-- **app.ts**: 應用程式基本設定
+### components/ - 元件
+- **ticket-marketing-section.tsx** - 票券行銷
+- **promo-code-copy.tsx** - 促銷碼複製
+- **language-selector.tsx** - 語言切換
+
+### locales/ - 多語言
+- **zh-tw.json** - 繁體中文
+- **en.json** - 英文
 - **tickets.ts**: 票務配置和邏輯
 - **agenda.ts**: 議程資料和時間計算
 - **constants.ts**: 全域常數定義
