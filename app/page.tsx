@@ -7,6 +7,7 @@ import HeroSection from "@/components/layout/hero-section"
 import AboutSection from "@/components/layout/about-section"
 import SpeakerCards from "@/components/speaker-cards"
 import StructuredData from "@/components/structured-data"
+import EventSchema from "@/components/event-schema"
 import {
   generateEventStructuredData,
   generateOrganizationStructuredData,
@@ -25,7 +26,10 @@ export default function ConferencePage() {
 
   return (
     <>
-      {/* SEO 結構化資料 */}
+      {/* Google Search Console 活動結構化資料 */}
+      <EventSchema />
+      
+      {/* 其他 SEO 結構化資料 */}
       <StructuredData data={structuredData} />
 
       <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-700 to-blue-500">

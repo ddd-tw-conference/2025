@@ -320,5 +320,11 @@
   "button.tryAgain": "重新嘗試",
   "button.contactUs": "聯繫我們",
   "button.later": "稍後",
-  "button.refresh": "立即更新"
+  "button.refresh": "立即更新",
+  
+  "event.name": "DDDTW 2025 成果發表會",
+  "event.description": "Domain Driven Design Taiwan 2025年會 - AI時代的軟體開發方法。與頂尖專家一同探討最新技術趨勢，分享實務經驗與最佳實踐。",
+  "event.location.name": "台北市商業會",
+  "event.location.address": "台北市中山區南京東路二段72號6樓",
+  "organizer.name": "DDDesign TW"
 }

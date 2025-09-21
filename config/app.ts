@@ -35,6 +35,28 @@ export const CONFIG = {
     },
     organization: ORGANIZATION,
     copyright: `© ${CONFERENCE_YEAR} ${ORGANIZATION}. All rights reserved.`
+  },
+
+  // 活動結構化資料配置
+  event: {
+    startDate: `${CONFERENCE_YEAR}-11-08T09:00:00+08:00`,
+    endDate: `${CONFERENCE_YEAR}-11-08T17:00:00+08:00`,
+    eventStatus: 'https://schema.org/EventScheduled',
+    image: 'https://ddd-tw-conference.github.io/2025/images/ddd-taiwan-2025-og.jpg',
+    location: {
+      latitude: 25.0530,
+      longitude: 121.5312
+    },
+    ticketUrl: 'https://ddd-tw-conference.github.io/2025/tickets',
+    price: '2000',
+    ticketStartDate: '2025-07-01T10:00:00+08:00'
+  },
+
+  // 主辦單位結構化資料配置
+  organizer: {
+    url: 'https://ddd-tw-conference.github.io/2025',
+    logo: 'https://ddd-tw-conference.github.io/2025/images/logo.png',
+    email: 'service@dddtaiwan.org'
   }
 }
 
@@ -42,3 +64,5 @@ export const CONFIG = {
 export type Config = typeof CONFIG
 export type DeploymentConfig = typeof CONFIG.deployment
 export type ConferenceConfig = typeof CONFIG.conference
+export type EventConfig = typeof CONFIG.event
+export type OrganizerConfig = typeof CONFIG.organizer

@@ -320,5 +320,11 @@
   "button.tryAgain": "Try Again",
   "button.contactUs": "Contact Us",
   "button.later": "Later",
-  "button.refresh": "Refresh Now"
+  "button.refresh": "Refresh Now",
+  
+  "event.name": "DDDTW 2025 Conference",
+  "event.description": "Domain Driven Design Taiwan 2025 Conference - Software Development Methods in the AI Era. Explore the latest technology trends with top experts and share practical experience and best practices.",
+  "event.location.name": "Taipei Chamber of Commerce",
+  "event.location.address": "6F, No.72, Sec.2, Nanjing E. Rd., Zhongshan Dist., Taipei City",
+  "organizer.name": "DDDesign TW"
 }
