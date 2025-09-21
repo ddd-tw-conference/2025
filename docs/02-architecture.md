@@ -500,6 +500,43 @@ DDD Taiwan 2025 實作了智慧講者導航系統，支援多種進入方式和�
     └── 分享連結支援
 ```
 
+### 🎭 議程分段系統架構
+
+**核心功能**: 將單一議程時段拆分為詳細的講者分段展示，每段包含時間、講者、描述和關鍵字。
+
+#### 標準時間結構
+- **30分鐘**: Knowledge 段落（概念介紹）
+- **10分鐘**: 休息時間
+- **90分鐘**: Workshop 段落（實作工作坊）
+- **20分鐘**: 休息時間  
+- **30分鐘**: Practice 段落（實務分享）
+
+#### 資料結構設計
+```typescript
+interface Session {
+  time: string                      // 總體時間範圍
+  title: LocalizedContent           // 議程標題
+  speaker: string                   // 講者摘要
+  segments: Segment[]               // 詳細分段
+}
+
+interface Segment {
+  duration: number                  // 段落時長（分鐘）
+  title: LocalizedContent           // 段落標題
+  description: LocalizedContent     // 段落描述
+  speakerIds: string[]             // 講者 ID 列表
+  keywords: LocalizedContent<string[]> // 關鍵字標籤
+  type: 'knowledge' | 'workshop' | 'practice' | 'break' // 段落類型
+}
+```
+
+#### UI 設計特色
+- **類型色彩系統**: knowledge=藍、workshop=綠、practice=紫、break=橙
+- **動態時間計算**: 基於 duration 自動計算段落時間範圍
+- **響應式關鍵字排版**: 桌面同行顯示，手機自動換行
+- **講者頭像群組**: 支援多講者協作段落展示
+- **段落類型圖標**: 每種類型配有專屬圖標和漸層背景
+
 #### 講者 ID 系統設計
 
 **設計原則：**

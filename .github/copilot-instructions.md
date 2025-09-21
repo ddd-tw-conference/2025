@@ -19,8 +19,10 @@ Next.js 15.5.2 + React 19 + TypeScript + Tailwind CSS + GitHub Pages + i18n (zh-
 - Config-driven features over hardcoded states
 - Multi-language through `t()` function (REQUIRED)
 - Event isolation with `stopPropagation()`
-- Responsive design (`md:` prefixes)
+- Responsive design (`sm:` breakpoints for mobile-first)
 - Three-layer clipboard fallback (API → execCommand → manual)
+- Speaker ID format: kebab-case (`"michael-chen"`, `"sunny-cheng"`)
+- Standard agenda timing: 30+10+90+20+30 minute segments
 
 ## Ticket System 🎫
 ```typescript
@@ -79,6 +81,8 @@ uvx --from git+https://github.com/oraios/serena serena project index
 3. **Static Tailwind only** - No className interpolation
 4. **stopPropagation()** - For nested event handling
 5. **Config-driven features** - Use TICKET_SALE_CONFIG pattern
+6. **Responsive breakpoints** - Use `sm:` for mobile-first design
+7. **Speaker IDs** - Always kebab-case format
 
 ---
 *v6.0 - Refined for clarity and token efficiency*

@@ -36,6 +36,15 @@ export interface Speaker {
   }
 }
 
+export interface Segment {
+  duration: number // 該段落時長（分鐘）
+  title: { 'zh-tw': string; 'en': string }
+  description: { 'zh-tw': string; 'en': string }
+  speakerIds: string[] // 參與該段落的講者 ID 列表
+  keywords: { 'zh-tw': string[]; 'en': string[] }
+  type: 'knowledge' | 'workshop' | 'practice' | 'break' // 段落類型
+}
+
 export interface Session {
   time: string
   title: { 'zh-tw': string; 'en': string }
@@ -43,6 +52,7 @@ export interface Session {
   description: { 'zh-tw': string; 'en': string }
   track: { 'zh-tw': string; 'en': string }
   type: 'workshop' | 'talk'
+  segments?: Segment[] // 可選的段落詳細資訊
 }
 
 export interface SpeakerTopic {
