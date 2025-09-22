@@ -32,6 +32,33 @@ import {
   generateBreadcrumbStructuredData 
 } from "@/lib/structured-data"
 
+// 解析 bio 並提取優惠碼
+const parseBioWithPromoCode = (bio: string, currentLang: string) => {
+  // 正則表達式匹配優惠碼模式
+  const promoCodeRegex = /🎫\s*(?:購票優惠：使用優惠碼|Ticket Discount: Use promo code)\s*([A-Z0-9]+)/i
+  const match = bio.match(promoCodeRegex)
+  
+  if (match && match[1]) {
+    const promoCode = match[1]
+    const beforePromo = bio.substring(0, match.index || 0).trim()
+    const promoSection = match[0]
+    const afterPromo = bio.substring((match.index || 0) + match[0].length).trim()
+    
+    return {
+      hasPromoCode: true as const,
+      promoCode,
+      beforeText: beforePromo,
+      afterText: afterPromo,
+      fullPromoText: promoSection
+    }
+  }
+  
+  return {
+    hasPromoCode: false as const,
+    fullText: bio
+  }
+}
+
 export default function SpeakersPage() {
   const { t, language } = useI18n()
   const router = useRouter()
@@ -360,7 +387,40 @@ export default function SpeakersPage() {
                           />
                         </div>
                       </div>
-                      <p className="text-slate-600 text-xs leading-relaxed">{getLocalizedText(speaker.bio, language)}</p>
+                      {(() => {
+                        const bioText = getLocalizedText(speaker.bio, language)
+                        const bioAnalysis = parseBioWithPromoCode(bioText, language)
+                        
+                        if (bioAnalysis.hasPromoCode) {
+                          return (
+                            <div className="space-y-2">
+                              {/* 一般介紹文字 */}
+                              {bioAnalysis.beforeText && (
+                                <p className="text-slate-600 text-xs leading-relaxed">
+                                  {bioAnalysis.beforeText}
+                                </p>
+                              )}
+                              
+                              {/* 優惠碼組件 */}
+                              <div className="flex justify-center">
+                                <PromoCodeCopy 
+                                  code={bioAnalysis.promoCode}
+                                  theme="blue"
+                                  className="text-xs scale-90"
+                                  label={language === 'zh-tw' ? '點擊複製' : 'Click to copy'}
+                                />
+                              </div>
+                            </div>
+                          )
+                        }
+                        
+                        // 沒有優惠碼的一般顯示
+                        return (
+                          <p className="text-slate-600 text-xs leading-relaxed">
+                            {bioText}
+                          </p>
+                        )
+                      })()}
                       <div className="flex justify-center space-x-3 pt-2">
                         <a
                           href={speaker.linkedin}
@@ -459,7 +519,40 @@ export default function SpeakersPage() {
                     <User className="w-6 h-6 mr-2 text-blue-600" />
                     {t('speakers.speakerBio')}
                   </h3>
-                  <p className="text-slate-700 leading-relaxed text-lg">{getLocalizedText(selectedSpeaker.bio, language)}</p>
+                  {(() => {
+                    const bioText = getLocalizedText(selectedSpeaker.bio, language)
+                    const bioAnalysis = parseBioWithPromoCode(bioText, language)
+                    
+                    if (bioAnalysis.hasPromoCode) {
+                      return (
+                        <div className="space-y-4">
+                          {/* 一般介紹文字 */}
+                          {bioAnalysis.beforeText && (
+                            <p className="text-slate-700 leading-relaxed text-lg">
+                              {bioAnalysis.beforeText}
+                            </p>
+                          )}
+                          
+                          {/* 優惠碼組件 */}
+                          <div className="flex justify-center">
+                            <PromoCodeCopy 
+                              code={bioAnalysis.promoCode}
+                              theme="blue"
+                              className="text-sm"
+                              label={language === 'zh-tw' ? '點擊複製優惠碼' : 'Click to copy promo code'}
+                            />
+                          </div>
+                        </div>
+                      )
+                    }
+                    
+                    // 沒有優惠碼的一般顯示
+                    return (
+                      <p className="text-slate-700 leading-relaxed text-lg">
+                        {bioText}
+                      </p>
+                    )
+                  })()}
                 </div>
 
                 {/* Topic Section */}

@@ -31,10 +31,10 @@ export const TICKET_SALE_CONFIG: TicketSaleConfig = {
   // 🎯 早鳥票售罄狀態
   isEarlyBirdSoldOut: true,
   
-  // 🎟️ 優惠碼設定 - 已啟動！
+  // 🎟️ 優惠碼設定 - 已到期移除
   promoCode: {
-    isVisible: true,
-    code: "PS3ETZ"
+    isVisible: false,
+    code: ""
   }
 }
 

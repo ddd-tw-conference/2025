@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { useI18n } from '@/contexts/i18n-context'
 import { SPEAKERS_DATA, Speaker } from '@/lib/data'
+import { PromoCodeCopy } from '@/components/promo-code-copy'
 
 // 卡片色系配置
 const cardThemes = {
@@ -30,6 +31,33 @@ type ThemeKey = keyof typeof cardThemes
 // 輔助函數：獲取本地化文字
 const getLocalizedText = (text: { 'zh-tw': string; 'en': string }, lang: string) => {
   return text[lang as keyof typeof text] || text['zh-tw']
+}
+
+// 解析 bio 並提取優惠碼
+const parseBioWithPromoCode = (bio: string, currentLang: string) => {
+  // 正則表達式匹配優惠碼模式
+  const promoCodeRegex = /🎫\s*(?:購票優惠：使用優惠碼|Ticket Discount: Use promo code)\s*([A-Z0-9]+)/i
+  const match = bio.match(promoCodeRegex)
+  
+  if (match && match[1]) {
+    const promoCode = match[1]
+    const beforePromo = bio.substring(0, match.index || 0).trim()
+    const promoSection = match[0]
+    const afterPromo = bio.substring((match.index || 0) + match[0].length).trim()
+    
+    return {
+      hasPromoCode: true as const,
+      promoCode,
+      beforeText: beforePromo,
+      afterText: afterPromo,
+      fullPromoText: promoSection
+    }
+  }
+  
+  return {
+    hasPromoCode: false as const,
+    fullText: bio
+  }
 }
 
 // 計算當前應該顯示的講者（每3天切換一位）- 使用固定的種子確保一致性
@@ -210,18 +238,58 @@ const SpeakerCard = ({ speaker, theme, currentLang, onTicketClick, onCardClick }
 
       {/* 講者介紹 */}
       <div className="speaker-content flex-1 text-center mb-4">
-        <p
-          className="text-xs lg:text-xs opacity-85 leading-relaxed"
-          style={{
-            maxHeight: '4.2em',
-            overflow: 'hidden',
-            display: '-webkit-box',
-            WebkitLineClamp: 3,
-            WebkitBoxOrient: 'vertical'
-          }}
-        >
-          {getLocalizedText(speaker.bio, currentLang)}
-        </p>
+        {(() => {
+          const bioText = getLocalizedText(speaker.bio, currentLang)
+          const bioAnalysis = parseBioWithPromoCode(bioText, currentLang)
+          
+          if (bioAnalysis.hasPromoCode) {
+            return (
+              <div className="space-y-2">
+                {/* 一般介紹文字 */}
+                {bioAnalysis.beforeText && (
+                  <p
+                    className="text-xs lg:text-xs opacity-85 leading-relaxed"
+                    style={{
+                      maxHeight: '3em',
+                      overflow: 'hidden',
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical'
+                    }}
+                  >
+                    {bioAnalysis.beforeText}
+                  </p>
+                )}
+                
+                {/* 優惠碼組件 */}
+                <div className="flex justify-center mt-2">
+                  <PromoCodeCopy 
+                    code={bioAnalysis.promoCode}
+                    theme="purple"
+                    className="text-xs scale-90 hover:scale-95"
+                    label={currentLang === 'zh-tw' ? '點擊複製' : 'Click to copy'}
+                  />
+                </div>
+              </div>
+            )
+          }
+          
+          // 沒有優惠碼的一般顯示
+          return (
+            <p
+              className="text-xs lg:text-xs opacity-85 leading-relaxed"
+              style={{
+                maxHeight: '4.2em',
+                overflow: 'hidden',
+                display: '-webkit-box',
+                WebkitLineClamp: 3,
+                WebkitBoxOrient: 'vertical'
+              }}
+            >
+              {bioText}
+            </p>
+          )
+        })()}
       </div>
 
       {/* 購票 CTA */}
