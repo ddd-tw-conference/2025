@@ -101,7 +101,7 @@ export const PERFORMANCE_CONFIG = {
     // 關鍵資源
     critical: [
       '/images/logos/dddtw-logo.webp',
-      '/images/speakers/'
+      '/images/banners/banner-main.webp'
     ],
     
     // 字體預載入
@@ -203,7 +203,22 @@ export const PERFORMANCE_CONFIG = {
     localStorage: {
       key: 'dddtw-web-vitals',
       maxRecords: 50
-    }
+    },
+    
+    // 頁面活動監控
+    idleThreshold: 30 * 60 * 1000, // 30分鐘閒置閾值
+    checkInterval: 5 * 60 * 1000   // 每5分鐘檢查閒置狀態
+  },
+
+  // 版本檢查配置
+  versionCheck: {
+    minInterval: 60 * 1000,        // 最小檢查間隔：60秒
+    timeout: 10 * 1000,           // 請求超時：10秒
+    initialDelay: 3000,           // 初始延遲：3秒
+    periodicInterval: 15 * 60 * 1000, // 定期檢查：15分鐘
+    routeDelay: 5000,             // 路由變化延遲：5秒
+    visibilityDelay: 2000,        // 可見性變化延遲：2秒
+    activityDelay: 1000           // 活動恢復延遲：1秒
   }
 } as const
 

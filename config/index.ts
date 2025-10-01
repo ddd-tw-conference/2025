@@ -25,6 +25,10 @@ export {
   getSupportedImageFormat
 } from './performance'
 
+// 系統配置
+export { SYSTEM_CONFIG, SYSTEM_MESSAGES } from './system'
+export type { SystemConfig } from './system'
+
 // 應用常數
 export {
   UI_CONSTANTS,

@@ -7,7 +7,10 @@ import { I18nProvider } from '@/contexts/i18n-context'
 import { VersionProvider } from './providers/version-provider'
 import { VersionNotification } from './components/version-notification'
 import { VersionMonitor } from '@/components/version-monitor'
+import { ResourcePreloader } from '@/components/resource-preloader'
+import { PageActivityMonitor } from '@/components/page-activity-monitor'
 import PerformanceDashboard from '@/components/performance-dashboard'
+import { SYSTEM_CONFIG } from '@/config/system'
 import './globals.css'
 
 export default function RootLayout({
@@ -31,6 +34,8 @@ export default function RootLayout({
         className={`${GeistSans.variable} ${GeistMono.variable} font-sans`}
         suppressHydrationWarning={true}
       >
+        <ResourcePreloader />
+        <PageActivityMonitor />
         <WebVitalsReporter />
         <I18nProvider>
           <VersionProvider>
@@ -38,7 +43,7 @@ export default function RootLayout({
             {children}
           </VersionProvider>
         </I18nProvider>
-        <PerformanceDashboard />
+        {SYSTEM_CONFIG.enablePerformanceMonitoring && <PerformanceDashboard />}
         <VersionMonitor />
       </body>
     </html>

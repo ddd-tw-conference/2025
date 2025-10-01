@@ -4,6 +4,8 @@ import React, { createContext, useContext, useEffect, useState, useCallback, use
 import { usePathname } from "next/navigation"
 import { BUILD_VERSION } from "@/lib/version"
 import { getVersionUrl } from "@/lib/paths"
+import { PERFORMANCE_CONFIG } from "@/config/performance"
+import { SYSTEM_MESSAGES, SYSTEM_CONFIG } from "@/config/system"
 
 interface VersionContextType {
   hasNewVersion: boolean
@@ -24,12 +26,27 @@ export function VersionProvider({ children }: { children: React.ReactNode }) {
   const abortControllerRef = useRef<AbortController | null>(null)
   const pathname = usePathname()
 
-  // 優化的版本檢查函數 - 減少頻繁請求
+  // 如果系統配置禁用版本檢查，則不執行任何操作
+  if (!SYSTEM_CONFIG.enableVersionCheck) {
+    return (
+      <VersionContext.Provider value={{
+        hasNewVersion: false,
+        checkVersion: () => {},
+        dismissNotification: () => {}
+      }}>
+        {children}
+      </VersionContext.Provider>
+    )
+  }
+
+
+
+  // 優化的版本檢查函數 - 加強長時間閒置穩定性
   const checkVersion = useCallback(async () => {
     const now = Date.now()
-    // 防止頻繁請求：至少間隔 60 秒才允許下一次檢查
-    if (now - lastCheckTimeRef.current < 60 * 1000) {
-      console.log("Version check skipped - too frequent")
+    // 防止頻繁請求
+    if (now - lastCheckTimeRef.current < PERFORMANCE_CONFIG.versionCheck.minInterval) {
+      console.log(SYSTEM_MESSAGES.versionCheck.skippedFrequent)
       return
     }
     
@@ -41,35 +58,58 @@ export function VersionProvider({ children }: { children: React.ReactNode }) {
     const abortController = new AbortController()
     abortControllerRef.current = abortController
     
+    // 設定超時處理，避免長時間掛起
+    const timeoutId = setTimeout(() => {
+      abortController.abort()
+    }, PERFORMANCE_CONFIG.versionCheck.timeout)
+    
     try {
       lastCheckTimeRef.current = now
       const versionUrl = getVersionUrl()
-      console.log("Checking version from:", versionUrl)
+      console.log(SYSTEM_MESSAGES.versionCheck.checking, versionUrl)
       
       const response = await fetch(versionUrl, { 
         cache: 'no-cache',
-        headers: { 'Cache-Control': 'no-cache' },
+        headers: { 
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache'
+        },
         signal: abortController.signal
       })
       
+      clearTimeout(timeoutId)
+      
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`)
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`)
       }
       
       const data = await response.json()
       
+      // 驗證回應資料格式
+      if (!data || typeof data.version !== 'string') {
+        throw new Error('Invalid version data format')
+      }
+      
       if (data.version !== BUILD_VERSION) {
         setHasNewVersion(true)
         setIsDismissed(false)
-        console.log("New version detected:", data.version, "current:", BUILD_VERSION)
+        console.log(SYSTEM_MESSAGES.versionCheck.newVersionDetected, data.version, SYSTEM_MESSAGES.versionCheck.current, BUILD_VERSION)
       } else {
-        console.log("Version check passed - no update needed")
+        console.log(SYSTEM_MESSAGES.versionCheck.passed)
       }
     } catch (error) {
-      if (error instanceof Error && error.name === 'AbortError') {
-        console.log("Version check aborted")
+      clearTimeout(timeoutId)
+      
+      if (error instanceof Error) {
+        if (error.name === 'AbortError') {
+          console.log(SYSTEM_MESSAGES.versionCheck.aborted)
+        } else if (error.name === 'TypeError' && error.message.includes('fetch')) {
+          console.warn(SYSTEM_MESSAGES.versionCheck.networkError, error.message)
+        } else {
+          console.warn(SYSTEM_MESSAGES.versionCheck.failed, error.message)
+        }
       } else {
-        console.warn("Version check failed:", error)
+        console.warn(SYSTEM_MESSAGES.versionCheck.unknownError, error)
       }
     } finally {
       if (abortControllerRef.current === abortController) {
@@ -78,32 +118,69 @@ export function VersionProvider({ children }: { children: React.ReactNode }) {
     }
   }, [])
 
-  // 初始檢查 + 定時檢查（大幅減少頻率）
+  // 初始檢查 + 定時檢查（加強生命週期管理）
   useEffect(() => {
-    // 延遲初始檢查，避免影響頁面載入性能
-    const initialTimer = setTimeout(() => {
-      checkVersion()
-    }, 3000) // 3秒後進行初始檢查
+    let initialTimer: NodeJS.Timeout | null = null
+    let interval: NodeJS.Timeout | null = null
     
-    // 10分鐘檢查一次，大幅減少頻率
-    const interval = setInterval(checkVersion, 10 * 60 * 1000)
+    // 延遲初始檢查，避免影響頁面載入性能
+    initialTimer = setTimeout(() => {
+      checkVersion()
+    }, PERFORMANCE_CONFIG.versionCheck.initialDelay)
+    
+    // 定期檢查，減少伺服器負載並提高穩定性
+    interval = setInterval(() => {
+      // 檢查頁面是否仍然可見，避免後台無用請求
+      if (document.visibilityState === 'visible') {
+        checkVersion()
+      } else {
+        console.log(SYSTEM_MESSAGES.versionCheck.pageNotVisible)
+      }
+    }, PERFORMANCE_CONFIG.versionCheck.periodicInterval)
+    
+    // 監聽頁面可見性變化，重新檢查版本
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        setTimeout(checkVersion, PERFORMANCE_CONFIG.versionCheck.visibilityDelay)
+      }
+    }
+    
+    // 監聽頁面活動恢復事件
+    const handleActivityResumed = () => {
+      console.log(SYSTEM_MESSAGES.versionCheck.triggeredByActivity)
+      setTimeout(checkVersion, PERFORMANCE_CONFIG.versionCheck.activityDelay)
+    }
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    window.addEventListener('page-activity-resumed', handleActivityResumed)
     
     return () => {
-      clearTimeout(initialTimer)
-      clearInterval(interval)
+      if (initialTimer) clearTimeout(initialTimer)
+      if (interval) clearInterval(interval)
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+      window.removeEventListener('page-activity-resumed', handleActivityResumed)
+      
       if (abortControllerRef.current) {
         abortControllerRef.current.abort()
+        abortControllerRef.current = null
       }
     }
   }, [checkVersion])
 
   // 路由變化時檢查（但有嚴格的頻率限制）
   useEffect(() => {
-    const timer = setTimeout(() => {
-      checkVersion()
-    }, 5000) // 延遲 5 秒後檢查
+    let timer: NodeJS.Timeout | null = null
     
-    return () => clearTimeout(timer)
+    // 只在頁面可見時才檢查
+    if (document.visibilityState === 'visible') {
+      timer = setTimeout(() => {
+        checkVersion()
+      }, PERFORMANCE_CONFIG.versionCheck.routeDelay)
+    }
+    
+    return () => {
+      if (timer) clearTimeout(timer)
+    }
   }, [pathname, checkVersion])
 
   const dismissNotification = () => {

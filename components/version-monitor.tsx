@@ -26,42 +26,52 @@ export function VersionMonitor() {
       const [input] = args
       let url = ''
       
-      if (typeof input === 'string') {
-        url = input
-      } else if (input instanceof URL) {
-        url = input.href
-      } else if (input instanceof Request) {
-        url = input.url
-      }
-      
-      // 只記錄 version.json 請求
-      if (url.includes('version.json')) {
-        const timestamp = Date.now()
-        console.log(`🔍 Version check intercepted: ${url}`)
-        
-        try {
-          const response = await originalFetch(...args)
-          setRequests(prev => [...prev, {
-            timestamp,
-            url,
-            status: response.ok ? 'success' as const : 'error' as const,
-            details: `HTTP ${response.status}`
-          }].slice(-50)) // 保留最近 50 次請求
-          
-          return response
-        } catch (error) {
-          setRequests(prev => [...prev, {
-            timestamp,
-            url,
-            status: 'error' as const,
-            details: error instanceof Error ? error.message : 'Unknown error'
-          }].slice(-50))
-          
-          throw error
+      try {
+        if (typeof input === 'string') {
+          url = input
+        } else if (input instanceof URL) {
+          url = input.href
+        } else if (input instanceof Request) {
+          url = input.url
         }
+        
+        // 只記錄 version.json 請求
+        if (url.includes('version.json')) {
+          const timestamp = Date.now()
+          console.log(`🔍 Version check intercepted: ${url}`)
+          
+          try {
+            const response = await originalFetch(...args)
+            setRequests(prev => [...prev, {
+              timestamp,
+              url,
+              status: response.ok ? 'success' as const : 'error' as const,
+              details: `HTTP ${response.status}${response.statusText ? ` ${response.statusText}` : ''}`
+            }].slice(-50)) // 保留最近 50 次請求
+            
+            return response
+          } catch (error) {
+            const errorMessage = error instanceof Error 
+              ? (error.name === 'AbortError' ? 'Request aborted' : error.message)
+              : 'Unknown error'
+              
+            setRequests(prev => [...prev, {
+              timestamp,
+              url,
+              status: 'error' as const,
+              details: errorMessage
+            }].slice(-50))
+            
+            throw error
+          }
+        }
+        
+        return originalFetch(...args)
+      } catch (error) {
+        // 如果 fetch 攔截本身出錯，使用原始 fetch
+        console.warn('Version monitor fetch interception failed:', error)
+        return originalFetch(...args)
       }
-      
-      return originalFetch(...args)
     }
 
     // 鍵盤快捷鍵切換顯示
@@ -145,7 +155,7 @@ export function VersionMonitor() {
         <div className="text-xs text-gray-500 mt-3 pt-2 border-t border-gray-600">
           🎯 預期行為：每 60 秒最多 1 次請求<br/>
           🚀 路由切換：延遲 5 秒後檢查<br/>
-          ⏰ 定期檢查：每 10 分鐘一次
+          ⏰ 定期檢查：每 15 分鐘一次
         </div>
       </div>
     </div>
