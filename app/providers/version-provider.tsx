@@ -6,6 +6,7 @@ import { BUILD_VERSION } from "@/lib/version"
 import { getVersionUrl } from "@/lib/paths"
 import { PERFORMANCE_CONFIG } from "@/config/performance"
 import { SYSTEM_MESSAGES, SYSTEM_CONFIG } from "@/config/system"
+import { useI18n } from "@/contexts/i18n-context"
 
 interface VersionContextType {
   hasNewVersion: boolean
@@ -20,6 +21,7 @@ const VersionContext = createContext<VersionContextType>({
 })
 
 export function VersionProvider({ children }: { children: React.ReactNode }) {
+  const { t } = useI18n()
   const [hasNewVersion, setHasNewVersion] = useState(false)
   const [isDismissed, setIsDismissed] = useState(false)
   const lastCheckTimeRef = useRef(0)
@@ -46,7 +48,7 @@ export function VersionProvider({ children }: { children: React.ReactNode }) {
     const now = Date.now()
     // 防止頻繁請求
     if (now - lastCheckTimeRef.current < PERFORMANCE_CONFIG.versionCheck.minInterval) {
-      console.log(SYSTEM_MESSAGES.versionCheck.skippedFrequent)
+      console.log(t(SYSTEM_MESSAGES.versionCheck.skippedFrequent))
       return
     }
     
@@ -66,7 +68,7 @@ export function VersionProvider({ children }: { children: React.ReactNode }) {
     try {
       lastCheckTimeRef.current = now
       const versionUrl = getVersionUrl()
-      console.log(SYSTEM_MESSAGES.versionCheck.checking, versionUrl)
+      console.log(t(SYSTEM_MESSAGES.versionCheck.checking), versionUrl)
       
       const response = await fetch(versionUrl, { 
         cache: 'no-cache',
@@ -93,30 +95,30 @@ export function VersionProvider({ children }: { children: React.ReactNode }) {
       if (data.version !== BUILD_VERSION) {
         setHasNewVersion(true)
         setIsDismissed(false)
-        console.log(SYSTEM_MESSAGES.versionCheck.newVersionDetected, data.version, SYSTEM_MESSAGES.versionCheck.current, BUILD_VERSION)
+        console.log(t(SYSTEM_MESSAGES.versionCheck.newVersionDetected), data.version, t(SYSTEM_MESSAGES.versionCheck.current), BUILD_VERSION)
       } else {
-        console.log(SYSTEM_MESSAGES.versionCheck.passed)
+        console.log(t(SYSTEM_MESSAGES.versionCheck.passed))
       }
     } catch (error) {
       clearTimeout(timeoutId)
       
       if (error instanceof Error) {
         if (error.name === 'AbortError') {
-          console.log(SYSTEM_MESSAGES.versionCheck.aborted)
+          console.log(t(SYSTEM_MESSAGES.versionCheck.aborted))
         } else if (error.name === 'TypeError' && error.message.includes('fetch')) {
-          console.warn(SYSTEM_MESSAGES.versionCheck.networkError, error.message)
+          console.warn(t(SYSTEM_MESSAGES.versionCheck.networkError), error.message)
         } else {
-          console.warn(SYSTEM_MESSAGES.versionCheck.failed, error.message)
+          console.warn(t(SYSTEM_MESSAGES.versionCheck.failed), error.message)
         }
       } else {
-        console.warn(SYSTEM_MESSAGES.versionCheck.unknownError, error)
+        console.warn(t(SYSTEM_MESSAGES.versionCheck.unknownError), error)
       }
     } finally {
       if (abortControllerRef.current === abortController) {
         abortControllerRef.current = null
       }
     }
-  }, [])
+  }, [t])
 
   // 初始檢查 + 定時檢查（加強生命週期管理）
   useEffect(() => {
@@ -134,7 +136,7 @@ export function VersionProvider({ children }: { children: React.ReactNode }) {
       if (document.visibilityState === 'visible') {
         checkVersion()
       } else {
-        console.log(SYSTEM_MESSAGES.versionCheck.pageNotVisible)
+        console.log(t(SYSTEM_MESSAGES.versionCheck.pageNotVisible))
       }
     }, PERFORMANCE_CONFIG.versionCheck.periodicInterval)
     
@@ -147,7 +149,7 @@ export function VersionProvider({ children }: { children: React.ReactNode }) {
     
     // 監聽頁面活動恢復事件
     const handleActivityResumed = () => {
-      console.log(SYSTEM_MESSAGES.versionCheck.triggeredByActivity)
+      console.log(t(SYSTEM_MESSAGES.versionCheck.triggeredByActivity))
       setTimeout(checkVersion, PERFORMANCE_CONFIG.versionCheck.activityDelay)
     }
     
@@ -165,7 +167,7 @@ export function VersionProvider({ children }: { children: React.ReactNode }) {
         abortControllerRef.current = null
       }
     }
-  }, [checkVersion])
+  }, [checkVersion, t])
 
   // 路由變化時檢查（但有嚴格的頻率限制）
   useEffect(() => {

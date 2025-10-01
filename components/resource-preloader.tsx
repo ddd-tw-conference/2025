@@ -4,12 +4,15 @@ import { useEffect } from 'react'
 import { PERFORMANCE_CONFIG } from '@/config/performance'
 import { SYSTEM_MESSAGES, SYSTEM_CONFIG } from '@/config/system'
 import { getOptimizedImagePath } from '@/lib/image-optimization'
+import { useI18n } from '@/contexts/i18n-context'
 
 /**
  * 資源預載入元件
  * 負責預載入關鍵資源，避免 preload 未使用警告
  */
 export function ResourcePreloader() {
+  const { t } = useI18n()
+  
   // 如果系統配置禁用資源預載入，則不執行任何操作
   if (!SYSTEM_CONFIG.enableResourcePreloader) {
     return null
@@ -36,7 +39,7 @@ export function ResourcePreloader() {
         img.style.display = 'none'
         img.onload = () => img.remove()
         img.onerror = () => {
-          console.warn(SYSTEM_MESSAGES.resourcePreloader.preloadFailed, imagePath)
+          console.warn(t(SYSTEM_MESSAGES.resourcePreloader.preloadFailed), imagePath)
           img.remove()
         }
       })
@@ -63,7 +66,7 @@ export function ResourcePreloader() {
     const timer = setTimeout(initializeResources, 100)
 
     return () => clearTimeout(timer)
-  }, [])
+  }, [t])
 
   return null // 這是一個無 UI 的工具元件
 }

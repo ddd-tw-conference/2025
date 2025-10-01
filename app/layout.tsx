@@ -34,10 +34,10 @@ export default function RootLayout({
         className={`${GeistSans.variable} ${GeistMono.variable} font-sans`}
         suppressHydrationWarning={true}
       >
-        <ResourcePreloader />
-        <PageActivityMonitor />
         <WebVitalsReporter />
         <I18nProvider>
+          <ResourcePreloader />
+          <PageActivityMonitor />
           <VersionProvider>
             <VersionNotification />
             {children}

@@ -3,17 +3,17 @@
 import { useEffect, useRef } from 'react'
 import { PERFORMANCE_CONFIG } from '@/config/performance'
 import { SYSTEM_MESSAGES, SYSTEM_CONFIG } from '@/config/system'
+import { useI18n } from '@/contexts/i18n-context'
 
 /**
  * 頁面活動監控工具
  * 處理長時間閒置後的系統恢復
  */
 export function PageActivityMonitor() {
+  const { t } = useI18n()
   const lastActivityRef = useRef(Date.now())
   const isIdleRef = useRef(false)
-  
 
-  
   useEffect(() => {
     const updateActivity = () => {
       const now = Date.now()
@@ -24,7 +24,7 @@ export function PageActivityMonitor() {
       
       // 如果從閒置狀態恢復，執行恢復操作
       if (wasIdle) {
-        console.log(SYSTEM_MESSAGES.pageActivity.recovering)
+        console.log(t(SYSTEM_MESSAGES.pageActivity.recovering))
         
         // 觸發自訂事件，讓其他系統知道頁面已恢復活動
         window.dispatchEvent(new CustomEvent('page-activity-resumed', {
@@ -39,7 +39,7 @@ export function PageActivityMonitor() {
       
       if (idleTime > PERFORMANCE_CONFIG.monitoring.idleThreshold && !isIdleRef.current) {
         isIdleRef.current = true
-        console.log(SYSTEM_MESSAGES.pageActivity.enteredIdle)
+        console.log(t(SYSTEM_MESSAGES.pageActivity.enteredIdle))
         
         // 觸發閒置事件
         window.dispatchEvent(new CustomEvent('page-idle', {
@@ -65,12 +65,12 @@ export function PageActivityMonitor() {
     
     // 網路狀態變化
     const handleOnline = () => {
-      console.log(SYSTEM_MESSAGES.pageActivity.networkRestored)
+      console.log(t(SYSTEM_MESSAGES.pageActivity.networkRestored))
       updateActivity()
     }
     
     const handleOffline = () => {
-      console.log(SYSTEM_MESSAGES.pageActivity.networkLost)
+      console.log(t(SYSTEM_MESSAGES.pageActivity.networkLost))
     }
     
     // 註冊事件監聽器
@@ -97,7 +97,7 @@ export function PageActivityMonitor() {
       
       clearInterval(idleCheckInterval)
     }
-  }, [])
+  }, [t])
 
   return null // 無 UI 的監控元件
 }

@@ -326,5 +326,24 @@
   "event.description": "Domain Driven Design Taiwan 2025年會 - AI時代的軟體開發方法。與頂尖專家一同探討最新技術趨勢，分享實務經驗與最佳實踐。",
   "event.location.name": "台北市商業會",
   "event.location.address": "台北市中山區南京東路二段72號6樓",
-  "organizer.name": "DDDesign TW"
+  "organizer.name": "DDDesign TW",
+
+  "system.versionCheck.skippedFrequent": "版本檢查已跳過 - 請求過於頻繁",
+  "system.versionCheck.checking": "正在檢查版本：",
+  "system.versionCheck.newVersionDetected": "發現新版本：",
+  "system.versionCheck.current": "目前版本：",
+  "system.versionCheck.passed": "版本檢查通過 - 無需更新",
+  "system.versionCheck.aborted": "版本檢查已中止",
+  "system.versionCheck.networkError": "版本檢查失敗 - 網路錯誤（可能離線）：",
+  "system.versionCheck.failed": "版本檢查失敗：",
+  "system.versionCheck.unknownError": "版本檢查失敗，發生未知錯誤：",
+  "system.versionCheck.pageNotVisible": "版本檢查已跳過 - 頁面不可見",
+  "system.versionCheck.triggeredByActivity": "🔄 活動恢復觸發版本檢查",
+
+  "system.pageActivity.recovering": "🔄 從閒置狀態恢復中",
+  "system.pageActivity.enteredIdle": "😴 頁面進入閒置狀態",
+  "system.pageActivity.networkRestored": "🌐 網路連線已恢復",
+  "system.pageActivity.networkLost": "📴 網路連線中斷",
+
+  "system.resourcePreloader.preloadFailed": "預載入圖片失敗："
 }
