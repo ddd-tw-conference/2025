@@ -71,6 +71,10 @@ pnpm dev          # Development mode
 pnpm build        # Production build
 pnpm build:analyze # Bundle analysis
 
+# Image Optimization (Use existing scripts)
+node scripts/generate-all-webp.js    # Smart WebP conversion
+node scripts/check-image-sizes.js    # Size validation
+
 # Serena AI Integration
 uvx --from git+https://github.com/oraios/serena serena project index
 ```
@@ -83,6 +87,7 @@ uvx --from git+https://github.com/oraios/serena serena project index
 5. **Config-driven features** - Use TICKET_SALE_CONFIG pattern
 6. **Responsive breakpoints** - Use `sm:` for mobile-first design
 7. **Speaker IDs** - Always kebab-case format
+8. **Use existing scripts** - Leverage built-in image optimization tools
 
 ---
 *v6.0 - Refined for clarity and token efficiency*

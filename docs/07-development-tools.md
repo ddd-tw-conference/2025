@@ -40,6 +40,25 @@ if (TICKET_SALE_CONFIG.isTicketSaleActive) {
 }
 ```
 
+### 最小修改原則（圖片更新實踐智慧）
+**善用現有工具鏈，避免重複造輪子！**
+
+```powershell
+# ✅ 正確：使用專案既有腳本
+# 1. 觸發覆寫判斷（利用 mtime 機制）
+(Get-Item 'path/to/image.jpg').LastWriteTime = Get-Date
+# 2. 執行現有轉換腳本（已含智慧品質設定）
+node scripts/generate-all-webp.js
+
+# ❌ 錯誤：手動處理或新增工具
+# 不要重複開發已有功能
+```
+
+**關鍵洞察**：專案的 `scripts/generate-all-webp.js` 已具備：
+- mtime 檢查（避免重複轉換）
+- 智慧品質設定（85-90 based on file size）
+- 自動壓縮優化（平均節省 40%+ 空間）
+
 ---
 
 ## 🤖 Serena AI 整合工作流程
