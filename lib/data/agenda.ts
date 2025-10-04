@@ -167,7 +167,7 @@ export const AGENDA_DATA: Session[] = [
     ]
   },
   {
-    time: "13:00 - 16:00",
+  time: "13:30 - 16:30",
     title: { 'zh-tw': "DX with AI", 'en': "DX with AI" },
     speaker: "劉鳳軒(Fong)，李智樺(Ruddy 老師)",
     description: { 'zh-tw': "從事件響應自動化到開發流程重塑，探索AI如何改變開發者的工作體驗與協作模式。", 'en': "From incident response automation to development process transformation, exploring how AI changes developer experience and collaboration patterns." },
@@ -247,7 +247,7 @@ export const AGENDA_DATA: Session[] = [
     ]
   },
   {
-    time: "13:00 - 16:00",
+  time: "13:30 - 16:30",
     title: { 'zh-tw': "AI輔助軟體開發", 'en': "AI-Assisted Software Development" },
     speaker: "Arthur，李民偉(Ean)，Stephen",
     description: { 'zh-tw': "在軟體3.0時代，掌握AI驅動的開發語言。", 'en': "Mastering AI-driven development languages in the Software 3.0 era." },
