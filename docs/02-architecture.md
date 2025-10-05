@@ -127,8 +127,107 @@ const speakerId = searchParams.get('id')
 - 上下文追蹤：記錄使用者來源頁面
 - 參數化路由：`/speakers?id=speaker1&from=homepage`
 - 回退策略：優雅處理無效路由參數
-    ├── WebP 圖片優化
-    └── SEO 最佳化
+
+---
+
+## 📅 議程資料架構
+
+### Session + Segment 架構設計
+
+專案使用雙層資料結構管理議程：
+
+```typescript
+interface Session {
+  time: string           // 時段："09:00 - 12:00"
+  title: LocalizedText   // 主題標題
+  speaker: string        // 講者名稱
+  description: LocalizedText
+  track: LocalizedText   // 會場：主會場 A / 會議室 B
+  type: string
+  segments: Segment[]    // 時段內的細分段落
+}
+
+interface Segment {
+  duration: number       // 分鐘數
+  title: LocalizedText
+  description: LocalizedText
+  speakerIds: string[]   // 講者 ID 陣列（關聯到 speakers.ts）
+  keywords: LocalizedText
+  type: 'knowledge' | 'workshop' | 'practice' | 'break'
+}
+```
+
+### 關鍵設計原則
+
+1. **資料關聯而非複製**
+   - 使用 `speakerIds` 參照講者資料，避免資料重複
+   - 透過 `getSpeakerById()` 函數查詢講者詳細資訊
+
+2. **類型驅動 UI**
+   - 不同 `type` 自動套用不同顏色與 icon
+   - `break` 類型支援兩種模式：一般休息 / 專家面對面
+
+3. **向後相容性**
+   ```typescript
+   // 一般休息 (speakerIds = [])
+   { type: "break", speakerIds: [] }
+   // → 顯示「放鬆時光，準備下一階段」
+   
+   // 專家面對面 (speakerIds.length > 0)
+   { type: "break", speakerIds: ["expert-morning-kao"] }
+   // → 顯示專家資訊 + t('agenda.expertBreakHint')
+   ```
+
+4. **擴展性設計**
+   - 支援多專家同時在場：`speakerIds: ["id1", "id2"]`
+   - Lightbox 使用 `.map()` 自動渲染所有專家
+
+### 實作範例：專家面對面功能
+
+```typescript
+// lib/data/agenda.ts
+{
+  duration: 20,
+  title: { 
+    'zh-tw': "休息時間 — 專家面對面",
+    'en': "Break Time — Face-to-Face with Experts" 
+  },
+  description: { 
+    'zh-tw': "20 分鐘專家諮詢，現場與專家面對面交流。",
+    'en': "20-minute expert consultation, on-site face-to-face with experts."
+  },
+  speakerIds: ["expert-morning-kao"],  // 關聯到講者資料
+  keywords: { 
+    'zh-tw': ["專家面對面", "諮詢"],
+    'en': ["Face-to-Face", "Consultation"]
+  },
+  type: "break"
+}
+```
+
+```tsx
+// components/ui/agenda-lightbox.tsx
+{segment.type === 'break' && (
+  <div className="mt-2 space-y-3">
+    <Coffee className={iconColor} />
+    <span>{segment.speakerIds.length > 0 
+      ? t('agenda.expertBreakHint')
+      : '放鬆時光，準備下一階段'
+    }</span>
+    
+    {/* 顯示專家資訊 */}
+    {segment.speakerIds.map(id => {
+      const speaker = getSpeakerById(id)
+      return speaker ? (
+        <div key={id}>
+          <img src={speaker.image} />
+          <span>{getLocalizedText(speaker.name, language)}</span>
+          <span>{getLocalizedText(speaker.title, language)}</span>
+        </div>
+      ) : null
+    })}
+  </div>
+)}
 ```
 
 ### 🎯 設計原則
@@ -137,6 +236,55 @@ const speakerId = searchParams.get('id')
 3. **類型安全**：TypeScript 嚴格模式
 4. **效能優先**：靜態生成 + 圖片優化
 5. **多語言**：完整的 i18n 支援
+
+### 📌 實際案例：講者資料更新最佳實踐
+
+**情境**：上線前需更新「專家面對面」講者資訊，遵循最小修改原則。
+
+#### 資料連結機制
+```typescript
+// lib/data/speakers.ts（講者資料源）
+{
+  id: "expert-morning-kao",
+  name: { 'zh-tw': "即將公布（Kao）", 'en': "To be announced (Kao)" },
+  // ... 其他欄位
+}
+
+// lib/data/agenda.ts（透過 speakerIds 關聯）
+segments: [{
+  speakerIds: ["expert-morning-kao"],  // 🔗 ID 連結
+  type: "break"
+}]
+
+// components/ui/agenda-lightbox.tsx（查詢與顯示）
+const speaker = getSpeakerById(id)  // 🔍 根據 ID 查詢
+```
+
+#### 關鍵注意事項
+1. **ID 命名規範**：
+   - 上午場（09:00-12:00）：`expert-morning-*`
+   - 下午場（13:30-16:30）：`expert-afternoon-*`
+
+2. **同步更新原則**：
+   - 修改 `speakers.ts` 的 `id` 時，必須同步更新 `agenda.ts` 中所有 `speakerIds` 引用
+   - 使用搜尋工具確認所有引用位置
+
+3. **型別安全保證**：
+   ```typescript
+   // ✅ 正確：遵循 Speaker 介面
+   socialLinks: {}  // 空物件而非 undefined
+   
+   // ❌ 錯誤：缺少必要的雙語欄位
+   name: { 'zh-tw': "名稱" }  // 缺少 'en'
+   ```
+
+4. **向後相容性**：
+   ```typescript
+   // 組件中使用長度檢查避免破壞性
+   {segment.speakerIds?.length > 0 && <ExpertInfo />}
+   ```
+
+**完整案例請參考**：`docs/09-maintenance.md` > 講者資料更新案例研究
 
 ---
 

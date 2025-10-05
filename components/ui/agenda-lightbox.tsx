@@ -246,11 +246,45 @@ export function AgendaLightbox({ open, onClose, session }: AgendaLightboxProps) 
                         
                         {/* 休息時間的特殊提示 */}
                         {segment.type === 'break' && (
-                          <div className="flex items-center space-x-2 mt-2">
-                            <Coffee className={`w-4 h-4 ${iconColor}`} />
-                            <span className={`text-sm ${iconColor} font-medium`}>
-                              {language === 'zh-tw' ? '放鬆時光，準備下一階段' : 'Relax time, prepare for the next stage'}
-                            </span>
+                          <div className="mt-2 space-y-3">
+                            <div className="flex items-center space-x-2">
+                              <Coffee className={`w-4 h-4 ${iconColor}`} />
+                              <span className={`text-sm ${iconColor} font-medium`}>
+                                {segment.speakerIds.length > 0 
+                                  ? t('agenda.expertBreakHint')
+                                  : (language === 'zh-tw' ? '放鬆時光，準備下一階段' : 'Relax time, prepare for the next stage')
+                                }
+                              </span>
+                            </div>
+                            
+                            {/* 專家面對面：顯示講者 */}
+                            {segment.speakerIds.length > 0 && (
+                              <div className="flex flex-wrap gap-2 mt-2">
+                                {segment.speakerIds.map((speakerId: string) => {
+                                  const speaker = getSpeakerById(speakerId)
+                                  return speaker ? (
+                                    <div 
+                                      key={speakerId}
+                                      className="flex items-center space-x-2 bg-white dark:bg-neutral-700 rounded-lg px-3 py-2 border"
+                                    >
+                                      <img 
+                                        src={speaker.image} 
+                                        alt={getLocalizedText(speaker.name, language)}
+                                        className="w-8 h-8 rounded-full object-cover"
+                                      />
+                                      <div className="flex flex-col">
+                                        <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+                                          {getLocalizedText(speaker.name, language)}
+                                        </span>
+                                        <span className="text-xs text-neutral-500 dark:text-neutral-400">
+                                          {getLocalizedText(speaker.title, language)} • {getLocalizedText(speaker.company, language)}
+                                        </span>
+                                      </div>
+                                    </div>
+                                  ) : null
+                                })}
+                              </div>
+                            )}
                           </div>
                         )}
                       </div>

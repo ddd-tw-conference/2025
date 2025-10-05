@@ -58,15 +58,15 @@ export const AGENDA_DATA: Session[] = [
       },
       {
         duration: 20,
-        title: { 'zh-tw': "休息時間", 'en': "Break Time" },
+        title: { 'zh-tw': "休息時間 — 專家面對面", 'en': "Break Time — Face-to-Face with Experts" },
         description: { 
-          'zh-tw': "休息交流，為最後的實務分享做準備。", 
-          'en': "Break and networking, preparing for the final practical sharing session." 
+          'zh-tw': "20 分鐘專家諮詢，現場與專家面對面交流。", 
+          'en': "20-minute expert consultation, on-site face-to-face with experts." 
         },
-        speakerIds: [],
+        speakerIds: ["expert-morning-kao"],
         keywords: { 
-          'zh-tw': ["休息", "交流"], 
-          'en': ["Break", "Networking"] 
+          'zh-tw': ["專家面對面", "諮詢"], 
+          'en': ["Face-to-Face", "Consultation"] 
         },
         type: "break"
       },
@@ -138,15 +138,15 @@ export const AGENDA_DATA: Session[] = [
       },
       {
         duration: 20,
-        title: { 'zh-tw': "休息時間", 'en': "Break Time" },
+        title: { 'zh-tw': "休息時間 — 專家面對面", 'en': "Break Time — Face-to-Face with Experts" },
         description: { 
-          'zh-tw': "休息交流，分享文件自動化經驗。", 
-          'en': "Break and networking, sharing documentation automation experience." 
+          'zh-tw': "20 分鐘專家諮詢，現場與專家面對面交流。", 
+          'en': "20-minute expert consultation, on-site face-to-face with experts." 
         },
-        speakerIds: [],
+        speakerIds: ["expert-morning-kao"],
         keywords: { 
-          'zh-tw': ["休息", "交流"], 
-          'en': ["Break", "Networking"] 
+          'zh-tw': ["專家面對面", "諮詢"], 
+          'en': ["Face-to-Face", "Consultation"] 
         },
         type: "break"
       },
@@ -218,15 +218,15 @@ export const AGENDA_DATA: Session[] = [
       },
       {
         duration: 20,
-        title: { 'zh-tw': "休息時間", 'en': "Break Time" },
+        title: { 'zh-tw': "休息時間 — 專家面對面", 'en': "Break Time — Face-to-Face with Experts" },
         description: { 
-          'zh-tw': "休息交流，分享自動化實作心得。", 
-          'en': "Break and networking, sharing automation implementation insights." 
+          'zh-tw': "20 分鐘專家諮詢，現場與專家面對面交流。", 
+          'en': "20-minute expert consultation, on-site face-to-face with experts." 
         },
-        speakerIds: [],
+        speakerIds: ["expert-afternoon-hsieh"],
         keywords: { 
-          'zh-tw': ["休息", "交流"], 
-          'en': ["Break", "Networking"] 
+          'zh-tw': ["專家面對面", "諮詢"], 
+          'en': ["Face-to-Face", "Consultation"] 
         },
         type: "break"
       },
@@ -298,15 +298,15 @@ export const AGENDA_DATA: Session[] = [
       },
       {
         duration: 20,
-        title: { 'zh-tw': "休息時間", 'en': "Break Time" },
+        title: { 'zh-tw': "休息時間 — 專家面對面", 'en': "Break Time — Face-to-Face with Experts" },
         description: { 
-          'zh-tw': "休息交流，分享實戰心得。", 
-          'en': "Break and networking, sharing practical insights." 
+          'zh-tw': "20 分鐘專家快問快答，聚焦技術落地與自動化。", 
+          'en': "20-minute rapid Q&A with experts, focusing on technical delivery and automation." 
         },
-        speakerIds: [],
+        speakerIds: ["expert-afternoon-hsieh"],
         keywords: { 
-          'zh-tw': ["休息", "交流"], 
-          'en': ["Break", "Networking"] 
+          'zh-tw': ["專家面對面", "技術諮詢"], 
+          'en': ["Face-to-Face", "Technical Consultation"] 
         },
         type: "break"
       },

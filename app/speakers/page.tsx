@@ -170,6 +170,20 @@ export default function SpeakersPage() {
         badge: "bg-indigo-100 text-indigo-700 border-indigo-300",
         gradient: "from-indigo-50/80 via-indigo-50/40 to-indigo-50/80",
       },
+      orange: {
+        tab: isActive
+          ? "bg-orange-600 text-white border-orange-500"
+          : "bg-slate-100/90 text-slate-700 border-slate-300 hover:bg-orange-50 hover:text-orange-600",
+        badge: "bg-orange-100 text-orange-700 border-orange-300",
+        gradient: "from-orange-50/80 via-orange-50/40 to-orange-50/80",
+      },
+      pink: {
+        tab: isActive
+          ? "bg-pink-600 text-white border-pink-500"
+          : "bg-slate-100/90 text-slate-700 border-slate-300 hover:bg-pink-50 hover:text-pink-600",
+        badge: "bg-pink-100 text-pink-700 border-pink-300",
+        gradient: "from-pink-50/80 via-pink-50/40 to-pink-50/80",
+      },
     }
     return colors[color as keyof typeof colors]
   }

@@ -101,6 +101,74 @@ git add public/images/speakers/講者ID.webp && git commit -m "chore(images): re
 - **響應式設計**: 使用 `sm:` 斷點而非 `md:` 以確保更好的手機體驗
 - **JSX 語法**: 注意 React 19 的嚴格標籤閉合要求
 
+### 🎯 專家面對面功能開發經驗
+
+#### 實作總結 (2025-10-05)
+- ✅ **零 Type 修改**: 使用現有 `speakerIds` 欄位，無需變更 types.ts
+- ✅ **完全向後相容**: 空 `speakerIds` 的 break 維持原樣
+- ✅ **配置驅動**: 修改 4 個 Session 的 break segments 即可
+- ✅ **最小變更範圍**: 5 個檔案，約 200 行程式碼
+
+#### 關鍵技術決策
+1. **為何不修改 types.ts？**
+   - 現有 `Segment` 已有 `speakerIds: string[]` 欄位
+   - 透過 `speakerIds.length > 0` 判斷即可區分
+   - 避免破壞現有 type 定義，降低回歸風險
+
+2. **為何保留 Coffee icon？**
+   - 維持「休息時間」的視覺識別
+   - 專家面對面本質仍是休息時段，只是增加互動
+   - 保持 UI 一致性
+
+3. **講者資料查詢效率**
+   - 使用 `getSpeakerById()` 的 `.find()` 查找
+   - 當前規模（~15 位講者）效能可接受
+   - 未來若超過 50 位，可改用 Map 結構
+
+#### 常見問題與解決方案
+
+**問題 1: Color Type 限制**
+```typescript
+// ❌ 錯誤：color: "teal" 不在允許的類型中
+color: "teal"  // Type error!
+
+// ✅ 正確：使用允許的顏色
+color: "orange"  // "blue" | "purple" | "green" | "indigo" | "orange" | "pink"
+```
+
+**問題 2: Speakers 頁面 Runtime 錯誤**
+```
+⨯ TypeError: Cannot read properties of undefined (reading 'tab')
+   at app\speakers\page.tsx:261:143
+```
+**原因：** `getColorClasses()` 函數缺少新顏色定義
+**解決：** 在 `app/speakers/page.tsx` 中新增 `orange` 和 `pink` 的完整定義
+
+```typescript
+const getColorClasses = (color: string, isActive: boolean) => {
+  const colors = {
+    blue: { tab: "...", badge: "...", gradient: "..." },
+    orange: {  // 新增
+      tab: isActive
+        ? "bg-orange-600 text-white border-orange-500"
+        : "bg-slate-100/90 text-slate-700 hover:bg-orange-50",
+      badge: "bg-orange-100 text-orange-700 border-orange-300",
+      gradient: "from-orange-50/80 via-orange-50/40 to-orange-50/80",
+    },
+  }
+  return colors[color as keyof typeof colors]
+}
+```
+
+**問題 3: 開發伺服器連線失敗**
+```powershell
+# ❌ 背景執行但立即退出
+pnpm dev &
+
+# ✅ 在新 PowerShell 視窗中啟動
+Start-Process pwsh -ArgumentList '-NoExit', '-Command', 'cd C:\Path\To\Project; pnpm dev'
+```
+
 #### 重要時期檢查
 - [ ] 票券狀態配置正確
 - [ ] Accupass 整合正常
@@ -108,6 +176,139 @@ git add public/images/speakers/講者ID.webp && git commit -m "chore(images): re
 - [ ] 講者資料完整
   promoCode: {
     isVisible: false              // 🔒 暫不顯示優惠碼
+
+---
+
+## 📋 講者資料更新案例研究
+
+### 案例：專家面對面講者資料替換（2025 上線前）
+
+**任務背景**：將「專家面對面」模擬講者替換為真實解決方案架構師／DevOps 顧問資訊。
+
+#### 修改範圍（最小修改原則）
+```typescript
+// ✅ 修改的檔案
+1. lib/data/speakers.ts        // 替換 2 位講者物件
+2. lib/data/agenda.ts          // 更新 4 處 speakerIds 引用
+3. public/images/speakers/     // 新增 myst.webp
+4. docs/02-architecture.md     // 同步文件範例
+
+// ❌ 不修改的檔案
+- lib/data/types.ts           // 型別定義無需變更
+- 其他講者資料               // 保持向後相容
+```
+
+#### 執行步驟
+
+**1. 準備頭像圖片**
+```bash
+# 專案使用純 WebP 策略，需手動轉檔
+# 放置位置：public/images/speakers/myst.webp
+```
+
+**2. 更新講者物件**
+```typescript
+// lib/data/speakers.ts
+{
+  id: "expert-morning-kao",  // 上午場：Kao
+  name: { 'zh-tw': "即將公布（Kao）", 'en': "To be announced (Kao)" },
+  company: { 'zh-tw': "知名科技公司", 'en': "Well‑known Tech Company" },
+  image: getOptimizedImagePath("/images/speakers/myst.webp"),
+  // ... 其他欄位
+}
+
+{
+  id: "expert-afternoon-hsieh",  // 下午場：Hsieh  
+  name: { 'zh-tw': "即將公布（Hsieh）", 'en': "To be announced (Hsieh)" },
+  company: { 'zh-tw': "國際知名製造業", 'en': "International Manufacturing" },
+  image: getOptimizedImagePath("/images/speakers/myst.webp"),
+  // ... 其他欄位
+}
+```
+
+**3. 同步更新 agenda.ts 引用**
+```typescript
+// lib/data/agenda.ts（4 處需更新）
+
+// ✅ 上午場（09:00-12:00）使用 expert-morning-kao
+speakerIds: ["expert-morning-kao"]
+
+// ✅ 下午場（13:30-16:30）使用 expert-afternoon-hsieh  
+speakerIds: ["expert-afternoon-hsieh"]
+```
+
+**4. 驗證流程**
+```bash
+# TypeScript 型別檢查
+pnpm tsc --noEmit
+
+# Linter 檢查
+pnpm lint
+
+# 建置測試
+pnpm build
+
+# 本機視覺檢查
+pnpm dev
+# 檢查：/speakers、/agenda 頁面、多語切換、頭像載入
+```
+
+**5. 搜尋引用確認**
+```powershell
+# 確認舊 id 已完全移除
+Get-ChildItem -Path "." -Include *.ts,*.tsx -Recurse | 
+  Select-String -Pattern "expert-morning-chen|expert-afternoon-hsu"
+
+# 確認新 id 引用正確
+Get-ChildItem -Path "." -Include *.ts,*.tsx -Recurse | 
+  Select-String -Pattern "expert-morning-kao|expert-afternoon-hsieh"
+```
+
+#### 關鍵注意事項
+
+1. **ID 引用一致性**
+   - `speakers.ts` 中的講者 `id` 必須與 `agenda.ts` 中的 `speakerIds` 完全匹配
+   - 時間分配：上午場用 `expert-morning-*`，下午場用 `expert-afternoon-*`
+
+2. **多語欄位完整性**
+   - 所有文字欄位必須包含 `'zh-tw'` 和 `'en'` 鍵值
+   - 避免語系切換時顯示錯誤
+
+3. **圖片路徑規範**
+   - 統一使用 `getOptimizedImagePath()` 函數
+   - 專案採用純 WebP 格式策略
+
+4. **型別定義遵循**
+   - 保持 `socialLinks: {}` 空物件結構
+   - 遵循現有 `Speaker` 介面定義
+
+#### 風險管理
+
+| 風險 | 緩解措施 |
+|------|---------|
+| ID 引用不一致 | 執行搜尋指令確認所有引用位置 |
+| 型別定義不匹配 | 執行 `pnpm tsc --noEmit` 檢查 |
+| 多語顯示異常 | 本機測試時切換語系驗證 |
+| 圖片授權問題 | 確認素材來源合法性 |
+
+#### 提交範例
+```bash
+git add public/images/speakers/myst.webp
+git add lib/data/speakers.ts
+git add lib/data/agenda.ts
+git add docs/02-architecture.md
+
+git commit -m "feat: 更新專家面對面講者資訊（上線前準備）
+
+- 新增神秘講者頭像 (myst.webp)
+- 上午場：即將公布（Kao）- 知名科技公司解決方案架構師
+- 下午場：即將公布（Hsieh）- 國際製造業 DevOps 顧問
+- 同步更新 agenda.ts 中 4 處 speakerIds 引用
+- 更新文件範例以保持一致性"
+```
+
+**延伸閱讀**：完整計畫文件請參考 `docs/10-speaker-update-plan.md`
+
 ---
 
 ## ⚙️ 配置更新指南

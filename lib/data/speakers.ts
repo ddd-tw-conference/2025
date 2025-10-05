@@ -249,5 +249,47 @@ export const SPEAKERS_DATA: SpeakerTopic[] = [
         },
       }
     ],
+  },
+  {
+    topic: { 'zh-tw': "專家面對面", 'en': "Face-to-Face with Experts" },
+    shortTitle: { 'zh-tw': "專家面對面", 'en': "Face-to-Face" },
+    description: { 'zh-tw': "20 分鐘專家諮詢，安排於上午/下午茶歇。", 'en': "20-minute expert consultation during morning/afternoon breaks." },
+    color: "orange",
+    speakers: [
+      {
+        id: "expert-morning-kao",
+        name: { 'zh-tw': "即將公布（Kao）", 'en': "To be announced (Kao)" },
+        title: { 'zh-tw': "解決方案架構師 / 顧問", 'en': "Solutions Architect / Consultant" },
+        company: { 'zh-tw': "知名科技公司", 'en': "Well‑known Tech Company" },
+        topic: { 'zh-tw': "專家面對面（上午）", 'en': "Face-to-Face (Morning)" },
+        content: { 'zh-tw': "20 分鐘諮詢：專注雲端軟體架構、可擴展性、成本優化與觀測性實作建議。", 'en': "20-minute consult: focused on cloud software architecture, scalability, cost optimization and practical observability recommendations." },
+        bio: { 'zh-tw': "現任知名公司解決方案架構師顧問，專長雲端系統架構與分散式系統設計，擅長評估架構折衷、定義事件 schema 與建立可重複的部署與觀測流程。適合討論架構決策、遷移策略與可量測的工程實作。", 'en': "Solutions architect consultant at a well‑known company, specialized in cloud system architecture and distributed systems design. Skilled at evaluating architectural trade‑offs, defining event schemas, and building reproducible deployment and observability flows. Suitable for discussing architecture decisions, migration strategies and measurable engineering implementations." },
+        image: getOptimizedImagePath("/images/speakers/myst.webp"),
+        experience: { 'zh-tw': "多年在大型雲端產品擔任架構與實作顧問，帶領跨團隊雲端遷移與效能優化專案。", 'en': "Years advising on architecture and implementations for large cloud products; led cross‑team cloud migrations and performance optimization projects." },
+        expertise: { 'zh-tw': ["雲端軟體架構", "可擴展性設計", "領域驅動設計"], 'en': ["Cloud Software Architecture", "Scalability Design", "Observability & Event Tracking"] },
+        achievements: { 'zh-tw': ["大型雲端遷移技術負責人", "建立跨團隊事件 schema 與監控標準"], 'en': ["Technical lead for major cloud migrations", "Established cross‑team event schema and monitoring standards"] },
+        socialLinks: {
+          linkedin: "https://linkedin.com/",
+          github: "https://github.com/"
+        },
+      },
+      {
+        id: "expert-afternoon-hsieh",
+        name: { 'zh-tw': "即將公布（Hsieh）", 'en': "To be announced (Hsieh)" },
+        title: { 'zh-tw': "解決方案架構師 / DevOps Tech Lead", 'en': "Solutions Architect / DevOps Tech Lead" },
+        company: { 'zh-tw': "國際知名製造業", 'en': "International Manufacturing" },
+        topic: { 'zh-tw': "專家面對面（下午）", 'en': "Face-to-Face (Afternoon)" },
+        content: { 'zh-tw': "20 分鐘快問快答：聚焦軟體開發流程、CI/CD、自動化部署與混合雲/邊緣部署實務。", 'en': "20-minute rapid Q&A: focused on software development workflows, CI/CD, automated deployment, and hybrid cloud/edge deployment practices." },
+        bio: { 'zh-tw': "現於國際製造業擔任Tech Lead，結合軟體開發與 DevOps 實務，擅長建立從開發到生產的端到端交付流水線，並導入可量測的交付指標以提升交付穩定性與恢復速度。", 'en': "Solutions architect consultant serving an international manufacturing company, combining software development and DevOps practices. Experienced in building end‑to‑end delivery pipelines from dev to prod and introducing measurable delivery metrics to improve stability and recovery time." },
+        image: getOptimizedImagePath("/images/speakers/myst.webp"),
+        experience: { 'zh-tw': "在企業環境負責 CI/CD 與自動化管線導入，包含混合雲與生產系統整合與現場部署經驗。", 'en': "Responsible for implementing CI/CD and automation pipelines in enterprise environments, including hybrid cloud and production system integration and on‑site deployments." },
+        expertise: { 'zh-tw': ["CI/CD 與流水線自動化", "軟體解決方案設計", "效能驗證與監控"], 'en': ["CI/CD & Pipeline Automation", "Deployment Strategy & Security", "Performance Validation & Monitoring"] },
+        achievements: { 'zh-tw': ["為製造業建立可量測交付指標（MTTR/Lead Time）", "設計跨團隊自動化測試與部署流程"], 'en': ["Established measurable delivery metrics (MTTR/Lead Time) for manufacturing", "Designed cross‑team automated test and deployment flows"] },
+        socialLinks: {
+          linkedin: "https://linkedin.com/",
+          github: "https://github.com/"
+        },
+      }
+    ],
   }
 ]
