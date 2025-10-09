@@ -1,32 +1,65 @@
-# 關鍵配置與狀態
+# 關鍵配置與狀態 (最新版)
 
-## 票券銷售配置 (config/tickets.ts)
+## 🎫 票券銷售配置 (config/tickets.ts)
 ```typescript
 TICKET_SALE_CONFIG: {
-  isTicketSaleActive: true,          // 🎯 開賣控制開關
+  isTicketSaleActive: true,          // 🎯 開賣控制開關 - 已啟動
   earlyBirdSaleStartDate: "2025-09-03",
   regularSaleStartDate: "2025-10-16", 
   saleEndDate: "2025-11-07",
   purchaseUrl: "https://www.accupass.com/eflow/ticket/2508301008076132622520",
   isEarlyBirdSoldOut: true,          // 🎯 早鳥票售罄狀態
   promoCode: {
-    isVisible: true,                 // 🎟️ 優惠碼設定 - 已啟動！
-    code: "PS3ETZ"
+    isVisible: false,                // 🎟️ 優惠碼 - 已到期移除
+    code: ""
   }
 }
 ```
 
-## 重要狀態值
+## 📊 當前銷售狀態
 - **票券開賣**: ✅ 啟動中 (isTicketSaleActive: true)
 - **早鳥票**: ❌ 已售完 (isEarlyBirdSoldOut: true)  
-- **優惠碼**: ✅ 顯示中 (promoCode.isVisible: true, code: "PS3ETZ")
-- **購票連結**: Accupass 平台
+- **一般票**: ✅ 販售中
+- **優惠碼**: ❌ 已停用 (promoCode.isVisible: false)
+- **購票平台**: Accupass 整合
 
-## 關鍵功能開關
-- 票券銷售狀態控制
-- 早鳥票/一般票切換邏輯
-- 促銷碼顯示/隱藏機制
-- 購票平台導向邏輯
+## ⚙️ 其他關鍵配置
 
-## 配置驅動的功能
-所有票券相關功能均透過此配置控制，無需修改業務邏輯程式碼即可調整銷售策略。
+### 議程配置 (config/agenda.ts)
+- 完整議程時間表和講者安排
+- 動態時間計算和狀態顯示
+
+### 效能配置 (config/performance.ts)
+- Web Vitals 監控設定
+- 圖片優化參數
+- 快取策略配置
+
+### 志工配置 (config/volunteers.ts)
+- 志工招募狀態控制
+- 職位類別和需求人數
+- 報名表單配置
+
+### 系統配置 (config/system.ts)
+- 多語言設定
+- 版本控制資訊
+- 外部服務整合
+
+## 🔄 配置驅動功能
+所有功能狀態均透過配置檔案控制：
+- 票券銷售邏輯完全配置化
+- 功能開關無需修改程式碼
+- 環境切換簡單快速
+- A/B 測試支援完善
+
+## 📈 配置檔案結構
+```
+config/
+├── index.ts         # 統一匯出
+├── tickets.ts       # 票券銷售
+├── agenda.ts        # 議程安排
+├── volunteers.ts    # 志工系統
+├── performance.ts   # 效能監控
+├── system.ts        # 系統設定
+├── app.ts          # 應用配置
+└── constants.ts    # 全域常數
+```

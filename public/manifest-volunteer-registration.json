@@ -1,0 +1,13 @@
+{
+  "name": "報到組志工 - DDD Taiwan 2025",
+  "short_name": "報到組",
+  "description": "DDD Taiwan 2025 報到組志工管理系統",
+  "start_url": "/volunteer/registration",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "categories": ["productivity", "business"],
+  "orientation": "portrait-primary",
+  "scope": "/volunteer/registration",
+  "lang": "zh-TW"
+}
