@@ -274,7 +274,7 @@ export const SPEAKERS_DATA: SpeakerTopic[] = [
         },
       },
       {
-        id: "expert-face-ai-hsieh",
+        id: "expert-afternoon-hsieh",
         name: { 'zh-tw': "Duran Hsieh", 'en': "Duran Hsieh" },
         title: { 'zh-tw': "台積電主任工程師 / GitHub Star", 'en': "TSMC Senior Engineer / GitHub Star" },
         company: { 'zh-tw': "台積電（TSMC）", 'en': "TSMC (Taiwan Semiconductor Manufacturing Company)" },
