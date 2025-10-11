@@ -43,7 +43,8 @@ export const VOLUNTEER_ROLES: VolunteerRole[] = [
         "Check-in data statistics and reporting",
         "Handle on-site registration issues and inquiries"
       ]
-    }
+    },
+    emergencyContact: { 'zh-tw': "Kim", 'en': "Kim" }
   },
   {
     id: "guide",
@@ -64,7 +65,8 @@ export const VOLUNTEER_ROLES: VolunteerRole[] = [
         "Emergency evacuation and safety guidance",
         "Assist with speaker and expert reception"
       ]
-    }
+    },
+    emergencyContact: { 'zh-tw': "姍姍", 'en': "San San" }
   },
   {
     id: "technical",
@@ -85,7 +87,8 @@ export const VOLUNTEER_ROLES: VolunteerRole[] = [
         "Live streaming system monitoring and troubleshooting",
         "Network environment maintenance and WiFi support"
       ]
-    }
+    },
+    emergencyContact: { 'zh-tw': "魚咬章(Taco)", 'en': "Taco" }
   },
   {
     id: "venue",
@@ -106,7 +109,8 @@ export const VOLUNTEER_ROLES: VolunteerRole[] = [
         "Catering service coordination and supervision",
         "Venue cleaning and waste sorting"
       ]
-    }
+    },
+    emergencyContact: { 'zh-tw': "Peter", 'en': "Peter" }
   }
 ]
 
@@ -116,20 +120,18 @@ export const VOLUNTEER_SCHEDULES: { [roleId: string]: VolunteerSchedule[] } = {
     {
       timeSlot: "08:30-09:00",
       title: { 'zh-tw': "報到系統準備", 'en': "Check-in System Setup" },
-      location: { 'zh-tw': "主會場入口", 'en': "Main Hall Entrance" },
+      location: { 'zh-tw': "會場入口", 'en': "Main Hall Entrance" },
       priority: "high",
       estimatedDuration: 30,
-      contactPerson: "尚未指定",
       notes: { 'zh-tw': "確認報到系統正常運作，準備會議資料袋", 'en': "Ensure check-in system is operational, prepare conference material bags" },
       relatedSessions: []
     },
     {
       timeSlot: "09:00-12:00",
       title: { 'zh-tw': "上午場報到服務", 'en': "Morning Session Check-in Service" },
-      location: { 'zh-tw': "主會場入口", 'en': "Main Hall Entrance" },
+      location: { 'zh-tw': "會場入口", 'en': "Main Hall Entrance" },
       priority: "high",
       estimatedDuration: 180,
-      contactPerson: "尚未指定",
       notes: { 'zh-tw': "處理遲到參會者報到，維護報到櫃台秩序", 'en': "Handle late attendee check-ins, maintain check-in counter order" },
       relatedSessions: ["morning-session-1", "morning-session-2"]
     },
@@ -139,27 +141,24 @@ export const VOLUNTEER_SCHEDULES: { [roleId: string]: VolunteerSchedule[] } = {
       location: { 'zh-tw': "後勤區", 'en': "Logistics Area" },
       priority: "medium",
       estimatedDuration: 90,
-      contactPerson: "尚未指定",
       notes: { 'zh-tw': "協助接收外送便當，僅供工作人員使用", 'en': "Assist with receiving delivered lunch boxes for staff only" },
       relatedSessions: []
     },
     {
       timeSlot: "13:30-16:30",
       title: { 'zh-tw': "下午場報到服務", 'en': "Afternoon Session Check-in Service" },
-      location: { 'zh-tw': "主會場入口", 'en': "Main Hall Entrance" },
+      location: { 'zh-tw': "會場入口", 'en': "Main Hall Entrance" },
       priority: "high",
       estimatedDuration: 180,
-      contactPerson: "尚未指定",
       notes: { 'zh-tw': "下午場次報到確認，處理臨時參會者", 'en': "Afternoon session check-in confirmation, handle walk-in attendees" },
       relatedSessions: ["afternoon-session-1", "afternoon-session-2"]
     },
     {
       timeSlot: "16:30-17:00",
       title: { 'zh-tw': "報到資料整理", 'en': "Check-in Data Organization" },
-      location: { 'zh-tw': "辦公室", 'en': "Office" },
+      location: { 'zh-tw': "講師、後勤休息區", 'en': "Staff Rest Area" },
       priority: "medium",
       estimatedDuration: 30,
-      contactPerson: "尚未指定",
       notes: { 'zh-tw': "整理當日報到統計資料，準備結算報告", 'en': "Organize daily check-in statistics, prepare settlement report" },
       relatedSessions: []
     }
@@ -169,10 +168,9 @@ export const VOLUNTEER_SCHEDULES: { [roleId: string]: VolunteerSchedule[] } = {
     {
       timeSlot: "08:30-09:00",
       title: { 'zh-tw': "會場導引準備", 'en': "Venue Guidance Preparation" },
-      location: { 'zh-tw': "各會議室", 'en': "All Conference Rooms" },
+      location: { 'zh-tw': "主會場 A & 會議室 B", 'en': "Main Hall A & Conference Room B" },
       priority: "high",
       estimatedDuration: 30,
-      contactPerson: "尚未指定",
       notes: { 'zh-tw': "檢查會場指標，準備引導工具", 'en': "Check venue signage, prepare guidance tools" },
       relatedSessions: []
     },
@@ -182,17 +180,15 @@ export const VOLUNTEER_SCHEDULES: { [roleId: string]: VolunteerSchedule[] } = {
       location: { 'zh-tw': "主會場 A & 會議室 B", 'en': "Main Hall A & Conference Room B" },
       priority: "high",
       estimatedDuration: 180,
-      contactPerson: "尚未指定",
       notes: { 'zh-tw': "協助參會者找到座位，維持會場秩序", 'en': "Help attendees find seats, maintain venue order" },
       relatedSessions: ["morning-session-1", "morning-session-2"]
     },
     {
       timeSlot: "12:00-13:30",
       title: { 'zh-tw': "會眾午餐引導", 'en': "Attendee Lunch Guidance" },
-      location: { 'zh-tw': "主會場", 'en': "Main Hall" },
+      location: { 'zh-tw': "主會場 A & 會議室 B", 'en': "Main Hall A & Conference Room B" },
       priority: "medium",
       estimatedDuration: 90,
-      contactPerson: "尚未指定",
       notes: { 'zh-tw': "引導會眾至附近用餐地點，說明午餐自理政策", 'en': "Guide attendees to nearby dining locations, explain self-service lunch policy" },
       relatedSessions: []
     },
@@ -202,17 +198,15 @@ export const VOLUNTEER_SCHEDULES: { [roleId: string]: VolunteerSchedule[] } = {
       location: { 'zh-tw': "主會場 A & 會議室 B", 'en': "Main Hall A & Conference Room B" },
       priority: "high",
       estimatedDuration: 180,
-      contactPerson: "尚未指定",
       notes: { 'zh-tw': "下午議程引導，專家面對面時段協助", 'en': "Afternoon session guidance, assist during expert face-to-face sessions" },
       relatedSessions: ["afternoon-session-1", "afternoon-session-2"]
     },
     {
       timeSlot: "16:30-17:00",
       title: { 'zh-tw': "會場整理指引", 'en': "Venue Cleanup Guidance" },
-      location: { 'zh-tw': "所有會場", 'en': "All Venues" },
+      location: { 'zh-tw': "主會場 A & 會議室 B", 'en': "Main Hall A & Conference Room B" },
       priority: "medium",
       estimatedDuration: 30,
-      contactPerson: "尚未指定",
       notes: { 'zh-tw': "協助參會者離場，引導會場清理", 'en': "Assist attendee departure, guide venue cleanup" },
       relatedSessions: []
     }
@@ -222,11 +216,10 @@ export const VOLUNTEER_SCHEDULES: { [roleId: string]: VolunteerSchedule[] } = {
     {
       timeSlot: "08:30-09:00",
       title: { 'zh-tw': "設備系統檢查", 'en': "Equipment System Check" },
-      location: { 'zh-tw': "技術控制室", 'en': "Technical Control Room" },
+      location: { 'zh-tw': "主會場 A & 會議室 B", 'en': "Main Hall A & Conference Room B" },
       priority: "high",
       estimatedDuration: 30,
-      contactPerson: "尚未指定",
-      notes: { 'zh-tw': "檢查所有技術設備，測試直播系統", 'en': "Check all technical equipment, test live streaming system" },
+      notes: { 'zh-tw': "檢查所有技術設備，測試投影、音響系統", 'en': "Check all technical equipment, test projection and audio systems" },
       relatedSessions: []
     },
     {
@@ -235,17 +228,15 @@ export const VOLUNTEER_SCHEDULES: { [roleId: string]: VolunteerSchedule[] } = {
       location: { 'zh-tw': "主會場 A & 會議室 B", 'en': "Main Hall A & Conference Room B" },
       priority: "high",
       estimatedDuration: 180,
-      contactPerson: "尚未指定",
       notes: { 'zh-tw': "監控音響設備，支援講者簡報", 'en': "Monitor audio equipment, support speaker presentations" },
       relatedSessions: ["morning-session-1", "morning-session-2"]
     },
     {
       timeSlot: "12:00-13:30",
       title: { 'zh-tw': "設備維護時段", 'en': "Equipment Maintenance Period" },
-      location: { 'zh-tw': "技術控制室", 'en': "Technical Control Room" },
+      location: { 'zh-tw': "主會場 A & 會議室 B", 'en': "Main Hall A & Conference Room B" },
       priority: "medium",
       estimatedDuration: 90,
-      contactPerson: "尚未指定",
       notes: { 'zh-tw': "檢查設備狀態，準備下午場次", 'en': "Check equipment status, prepare for afternoon sessions" },
       relatedSessions: []
     },
@@ -255,17 +246,15 @@ export const VOLUNTEER_SCHEDULES: { [roleId: string]: VolunteerSchedule[] } = {
       location: { 'zh-tw': "主會場 A & 會議室 B", 'en': "Main Hall A & Conference Room B" },
       priority: "high",
       estimatedDuration: 180,
-      contactPerson: "尚未指定",
       notes: { 'zh-tw': "監控直播品質，處理技術問題", 'en': "Monitor live stream quality, handle technical issues" },
       relatedSessions: ["afternoon-session-1", "afternoon-session-2"]
     },
     {
       timeSlot: "16:30-17:00",
       title: { 'zh-tw': "設備收整與備份", 'en': "Equipment Storage and Backup" },
-      location: { 'zh-tw': "技術控制室", 'en': "Technical Control Room" },
+      location: { 'zh-tw': "主會場 A & 會議室 B", 'en': "Main Hall A & Conference Room B" },
       priority: "medium",
       estimatedDuration: 30,
-      contactPerson: "尚未指定",
       notes: { 'zh-tw': "關閉設備系統，備份直播資料", 'en': "Shutdown equipment systems, backup streaming data" },
       relatedSessions: []
     }
@@ -275,11 +264,10 @@ export const VOLUNTEER_SCHEDULES: { [roleId: string]: VolunteerSchedule[] } = {
     {
       timeSlot: "08:30-09:00",
       title: { 'zh-tw': "會場最終確認", 'en': "Final Venue Confirmation" },
-      location: { 'zh-tw': "所有會場", 'en': "All Venues" },
+      location: { 'zh-tw': "主會場 A & 會議室 B", 'en': "Main Hall A & Conference Room B" },
       priority: "high",
       estimatedDuration: 30,
-      contactPerson: "尚未指定",
-      notes: { 'zh-tw': "檢查座位配置，確認物料準備", 'en': "Check seating arrangement, confirm material preparation" },
+      notes: { 'zh-tw': "檢查座位配置，確認零食、飲料準備", 'en': "Check seating arrangement, confirm snacks and drinks preparation" },
       relatedSessions: []
     },
     {
@@ -288,17 +276,15 @@ export const VOLUNTEER_SCHEDULES: { [roleId: string]: VolunteerSchedule[] } = {
       location: { 'zh-tw': "主會場 A & 會議室 B", 'en': "Main Hall A & Conference Room B" },
       priority: "high",
       estimatedDuration: 180,
-      contactPerson: "尚未指定",
       notes: { 'zh-tw': "維持會場清潔，監督餐點準備", 'en': "Maintain venue cleanliness, supervise catering preparation" },
       relatedSessions: ["morning-session-1", "morning-session-2"]
     },
     {
       timeSlot: "12:00-13:30",
       title: { 'zh-tw': "工作人員便當管理", 'en': "Staff Lunch Box Management" },
-      location: { 'zh-tw': "後勤休息區", 'en': "Staff Rest Area" },
+      location: { 'zh-tw': "講師、後勤休息區", 'en': "Staff Rest Area" },
       priority: "high",
       estimatedDuration: 90,
-      contactPerson: "尚未指定",
       notes: { 'zh-tw': "協助便當接收與工作人員用餐區域維護", 'en': "Assist with lunch box reception and staff dining area maintenance" },
       relatedSessions: []
     },
@@ -308,17 +294,15 @@ export const VOLUNTEER_SCHEDULES: { [roleId: string]: VolunteerSchedule[] } = {
       location: { 'zh-tw': "主會場 A & 會議室 B", 'en': "Main Hall A & Conference Room B" },
       priority: "high",
       estimatedDuration: 180,
-      contactPerson: "尚未指定",
       notes: { 'zh-tw': "維持會場狀態，準備茶點服務", 'en': "Maintain venue condition, prepare refreshment service" },
       relatedSessions: ["afternoon-session-1", "afternoon-session-2"]
     },
     {
       timeSlot: "16:30-17:00",
       title: { 'zh-tw': "會場收拾整理", 'en': "Venue Cleanup and Organization" },
-      location: { 'zh-tw': "所有會場", 'en': "All Venues" },
+      location: { 'zh-tw': "主會場 A & 會議室 B", 'en': "Main Hall A & Conference Room B" },
       priority: "high",
       estimatedDuration: 30,
-      contactPerson: "尚未指定",
       notes: { 'zh-tw': "進行會場清理，物料回收整理", 'en': "Conduct venue cleanup, organize material collection" },
       relatedSessions: []
     }
@@ -337,7 +321,7 @@ export const VOLUNTEER_CONFIG: VolunteerConfig = {
 }
 
 // 時間進度計算工具函式
-export const calculateVolunteerProgress = (currentTime: Date = new Date()): {
+export const calculateVolunteerProgress = (roleId: string, currentTime: Date = new Date()): {
   overallProgress: number
   currentTask: VolunteerSchedule | null
   nextTask: VolunteerSchedule | null
@@ -368,8 +352,8 @@ export const calculateVolunteerProgress = (currentTime: Date = new Date()): {
     overallProgress = ((currentTotalMinutes - startMinutes) / totalWorkingMinutes) * 100
   }
   
-  // 找尋當前和下一個任務 (以 registration 為例)
-  const schedules = VOLUNTEER_SCHEDULES.registration
+  // 根據角色ID獲取對應的排班資料
+  const schedules = VOLUNTEER_SCHEDULES[roleId] || []
   let currentTask: VolunteerSchedule | null = null
   let nextTask: VolunteerSchedule | null = null
   
@@ -403,6 +387,35 @@ export const calculateVolunteerProgress = (currentTime: Date = new Date()): {
 // 根據角色ID獲取排班資料
 export const getScheduleByRole = (roleId: string): VolunteerSchedule[] => {
   return VOLUNTEER_SCHEDULES[roleId] || []
+}
+
+// 根據角色ID獲取活躍的排班資料（過濾已結束的項目，當前和未來的項目按時間排序）
+export const getActiveScheduleByRole = (roleId: string, currentTime: Date = new Date()): VolunteerSchedule[] => {
+  const schedules = VOLUNTEER_SCHEDULES[roleId] || []
+  const currentTotalMinutes = currentTime.getHours() * 60 + currentTime.getMinutes()
+  
+  // 過濾出未結束的項目（當前進行中或尚未開始的）
+  const activeSchedules = schedules.filter(schedule => {
+    const [, endTime] = schedule.timeSlot.split('-')
+    const [endHour, endMin] = endTime.split(':').map(Number)
+    const scheduleEndMinutes = endHour * 60 + endMin
+    
+    // 只顯示尚未結束的項目
+    return currentTotalMinutes < scheduleEndMinutes
+  })
+  
+  // 按開始時間排序，讓當前或即將開始的項目顯示在最上方
+  return activeSchedules.sort((a, b) => {
+    const [aStartTime] = a.timeSlot.split('-')
+    const [bStartTime] = b.timeSlot.split('-')
+    const [aStartHour, aStartMin] = aStartTime.split(':').map(Number)
+    const [bStartHour, bStartMin] = bStartTime.split(':').map(Number)
+    
+    const aStartMinutes = aStartHour * 60 + aStartMin
+    const bStartMinutes = bStartHour * 60 + bStartMin
+    
+    return aStartMinutes - bStartMinutes
+  })
 }
 
 // 根據角色ID獲取角色資訊

@@ -32,6 +32,7 @@ import {
   VOLUNTEER_CONFIG, 
   calculateVolunteerProgress, 
   getScheduleByRole, 
+  getActiveScheduleByRole,
   getRoleById 
 } from '@/config/volunteers'
 import type { VolunteerRole, VolunteerSchedule } from '@/lib/data/types'
@@ -105,7 +106,7 @@ export default function VolunteerDashboard({ currentRole, className }: Volunteer
 
   // 獲取當前角色資料
   const roleData = getRoleById(currentRole)
-  const schedules = getScheduleByRole(currentRole)
+  const schedules = getActiveScheduleByRole(currentRole, currentTime || new Date())
   
   if (!roleData) {
     return (
@@ -123,14 +124,14 @@ export default function VolunteerDashboard({ currentRole, className }: Volunteer
     const updateTime = () => {
       const now = new Date()
       setCurrentTime(now)
-      setProgress(calculateVolunteerProgress(now))
+      setProgress(calculateVolunteerProgress(currentRole, now))
     }
 
     updateTime() // 初始化
     const interval = setInterval(updateTime, 1000) // 每秒更新
 
     return () => clearInterval(interval)
-  }, [])
+  }, [currentRole])
 
   // 如果時間還未初始化，顯示預設狀態
   if (!currentTime) {
@@ -220,6 +221,17 @@ export default function VolunteerDashboard({ currentRole, className }: Volunteer
                   </li>
                 ))}
               </ul>
+
+              {/* 緊急聯絡人資訊 */}
+              <div className={cn("p-3 rounded-lg border", colors.bg, colors.border)}>
+                <div className="flex items-center gap-2">
+                  <Phone className="h-4 w-4 text-red-500" />
+                  <span className="font-semibold text-sm">{t('volunteer.emergencyContact')}：</span>
+                  <span className={cn("font-medium", colors.text)}>
+                    {roleData.emergencyContact[language as 'zh-tw' | 'en']}
+                  </span>
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -256,15 +268,27 @@ export default function VolunteerDashboard({ currentRole, className }: Volunteer
                 <span>{t('volunteer.todayProgress')}</span>
                 <span>{progress.overallProgress.toFixed(1)}%</span>
               </div>
-              <Progress 
-                value={progress.overallProgress} 
-                className="h-2"
-              />
+              <div className="relative h-2 w-full overflow-hidden rounded-full bg-secondary">
+                <div 
+                  className={cn(
+                    "h-full transition-all bg-gradient-to-r",
+                    colors.gradient
+                  )}
+                  style={{ 
+                    width: `${progress.overallProgress}%`,
+                    transformOrigin: 'left'
+                  }}
+                />
+              </div>
             </div>
 
             <Badge 
               variant={progress.isWorkingHours ? "default" : "secondary"}
-              className="w-full justify-center"
+              className={cn(
+                "w-full justify-center",
+                // 工作時段使用角色顏色，非工作時段保持 secondary
+                progress.isWorkingHours && cn(colors.bg, colors.text, colors.border, "border")
+              )}
               suppressHydrationWarning={true}
             >
               {progress.isWorkingHours ? t('volunteer.workingHours') : t('volunteer.nonWorkingHours')}
@@ -292,7 +316,7 @@ export default function VolunteerDashboard({ currentRole, className }: Volunteer
               schedule={schedule}
               colors={colors}
               isActive={progress.currentTask?.timeSlot === schedule.timeSlot}
-              isCompleted={false} // TODO: 實作完成狀態邏輯
+              isCompleted={false} // 由於已過濾掉已結束項目，顯示的都是未完成的
             />
           ))}
         </div>
@@ -372,11 +396,6 @@ function ScheduleCard({ schedule, colors, isActive, isCompleted }: ScheduleCardP
               </p>
             )}
 
-            {/* 聯絡人資訊 */}
-            <div className="flex items-center gap-2 text-sm">
-              <Phone className="h-3 w-3" />
-              <span>{t('volunteer.contactPerson')}：{schedule.contactPerson}</span>
-            </div>
           </div>
 
           {/* 狀態徽章 */}

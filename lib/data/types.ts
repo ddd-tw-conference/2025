@@ -91,6 +91,7 @@ export interface VolunteerRole {
   color: 'blue' | 'purple' | 'green' | 'indigo' | 'orange' | 'pink'
   icon: string // Lucide Icon 名稱
   responsibilities: { 'zh-tw': string[]; 'en': string[] }
+  emergencyContact: LocalizedText // 緊急聯絡人
 }
 
 // 志工排班時段
@@ -100,7 +101,6 @@ export interface VolunteerSchedule {
   location: LocalizedText
   priority: 'high' | 'medium' | 'low'
   estimatedDuration: number // 預估時長（分鐘）
-  contactPerson: string // 聯絡人
   notes?: LocalizedText // 備註說明
   relatedSessions?: string[] // 關聯議程 ID
 }
