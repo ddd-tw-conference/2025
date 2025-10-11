@@ -60,26 +60,21 @@ const parseBioWithPromoCode = (bio: string, currentLang: string) => {
   }
 }
 
-// 計算當前應該顯示的講者（每3天切換一位）- 使用固定的種子確保一致性
+// 計算當前應該顯示的講者（每3天切換一位）- 以第一位講師為基準
 const calculateCurrentSpeakers = (): { speakers: Speaker[], currentIndex: number } => {
   const allSpeakers: Speaker[] = []
   SPEAKERS_DATA.forEach(topic => {
     allSpeakers.push(...topic.speakers)
   })
   
-  // 找到Sunny講者的索引（Sunny Cheng是第二位講者，索引為1）
-  const sunnyIndex = allSpeakers.findIndex(speaker => 
-    getLocalizedText(speaker.name, 'zh-tw').includes('Sunny Cheng')
-  )
-  
   const baseDate = new Date('2025-09-13')
   const today = new Date()
   const diffTime = Math.abs(today.getTime() - baseDate.getTime())
   const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
 
-  // 每3天輪換一位講者，但以Sunny為起始點
-  const rotationIndex = Math.floor(diffDays / 3) % allSpeakers.length
-  const currentIndex = (sunnyIndex + rotationIndex) % allSpeakers.length
+  // 每1天輪換一位講者，從第一位講師開始（索引0）
+  const rotationIndex = Math.floor(diffDays / 1) % allSpeakers.length
+  const currentIndex = rotationIndex
   
   return { 
     speakers: [allSpeakers[currentIndex]], // 只顯示一位講者
