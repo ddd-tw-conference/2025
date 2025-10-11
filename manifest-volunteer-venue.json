@@ -1,0 +1,13 @@
+{
+  "name": "場地組志工 - DDD Taiwan 2025",
+  "short_name": "場地組",
+  "description": "DDD Taiwan 2025 場地組志工管理系統",
+  "start_url": "/volunteer/venue",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#6366f1",
+  "categories": ["productivity", "business"],
+  "orientation": "portrait-primary",
+  "scope": "/volunteer/venue",
+  "lang": "zh-TW"
+}
