@@ -258,16 +258,16 @@ export const SPEAKERS_DATA: SpeakerTopic[] = [
     speakers: [
       {
         id: "expert-morning-kao",
-        name: { 'zh-tw': "即將公布（Kao）", 'en': "To be announced (Kao)" },
-        title: { 'zh-tw': "解決方案架構師 / 顧問", 'en': "Solutions Architect / Consultant" },
-        company: { 'zh-tw': "知名科技公司", 'en': "Well‑known Tech Company" },
+        name: { 'zh-tw': "Kim", 'en': "Kim" },
+        title: { 'zh-tw': "AWS Account Manager / Senior Solutions Architect", 'en': "AWS Account Manager / Senior Solutions Architect" },
+        company: { 'zh-tw': "AWS", 'en': "AWS" },
         topic: { 'zh-tw': "專家面對面（上午）", 'en': "Face-to-Face (Morning)" },
         content: { 'zh-tw': "20 分鐘諮詢：專注雲端軟體架構、可擴展性、成本優化與觀測性實作建議。", 'en': "20-minute consult: focused on cloud software architecture, scalability, cost optimization and practical observability recommendations." },
-        bio: { 'zh-tw': "現任知名公司解決方案架構師顧問，專長雲端系統架構與分散式系統設計，擅長評估架構折衷、定義事件 schema 與建立可重複的部署與觀測流程。適合討論架構決策、遷移策略與可量測的工程實作。", 'en': "Solutions architect consultant at a well‑known company, specialized in cloud system architecture and distributed systems design. Skilled at evaluating architectural trade‑offs, defining event schemas, and building reproducible deployment and observability flows. Suitable for discussing architecture decisions, migration strategies and measurable engineering implementations." },
-        image: getOptimizedImagePath("/images/speakers/myst.webp"),
-        experience: { 'zh-tw': "多年在大型雲端產品擔任架構與實作顧問，帶領跨團隊雲端遷移與效能優化專案。", 'en': "Years advising on architecture and implementations for large cloud products; led cross‑team cloud migrations and performance optimization projects." },
-        expertise: { 'zh-tw': ["雲端軟體架構", "可擴展性設計", "領域驅動設計"], 'en': ["Cloud Software Architecture", "Scalability Design", "Observability & Event Tracking"] },
-        achievements: { 'zh-tw': ["大型雲端遷移技術負責人", "建立跨團隊事件 schema 與監控標準"], 'en': ["Technical lead for major cloud migrations", "Established cross‑team event schema and monitoring standards"] },
+        bio: { 'zh-tw': "人生已經被良好架構的三寶爸，現任職於 AWS 擔任資深解決方案架構師，主要關注在開發者專家加速計畫 (Developer Acceleration, DevAx)，同時也是台灣領域驅動設計社群 (DDD Taiwan Community) 發起人之一。\n\n致力於投入大眾對於 Sociotechnical 的共鳴，推動企業透過 DDD 與便捷的雲端服務，打造更適切的系統方案，解決真切的商務問題。", 'en': "A well-architected father of three, currently serving as a Senior Solutions Architect at AWS, focusing on the Developer Acceleration (DevAx) program, and one of the founders of the DDD Taiwan Community.\n\nDedicated to creating public resonance for Sociotechnical approaches, promoting enterprises to build more suitable system solutions through DDD and convenient cloud services to solve real business problems." },
+        image: getOptimizedImagePath("/images/speakers/kim.webp"),
+        experience: { 'zh-tw': "現任職於 AWS 擔任資深解決方案架構師，專注於開發者專家加速計畫，擁有豐富的雲端架構設計與企業數位轉型經驗。", 'en': "Currently serving as a Senior Solutions Architect at AWS, focusing on Developer Acceleration programs, with extensive experience in cloud architecture design and enterprise digital transformation." },
+        expertise: { 'zh-tw': ["領域驅動設計", "AWS 雲端架構", "開發者體驗", "Sociotechnical 系統"], 'en': ["Domain-Driven Design", "AWS Cloud Architecture", "Developer Experience", "Sociotechnical Systems"] },
+        achievements: { 'zh-tw': ["DDD Taiwan Community 發起人之一", "AWS 資深解決方案架構師", "開發者專家加速計畫負責人"], 'en': ["Co-founder of DDD Taiwan Community", "AWS Senior Solutions Architect", "Developer Acceleration Program Lead"] },
         socialLinks: {
           linkedin: "https://linkedin.com/",
           github: "https://github.com/"
