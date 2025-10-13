@@ -15,10 +15,35 @@ export default function Error({
   const router = useRouter()
   const { t } = useI18n()
 
+  // 檢查是否為 Chunk Loading 錯誤
+  const isChunkError = error.message?.includes('Loading chunk') || 
+                       error.message?.includes('ChunkLoadError') ||
+                       error.name === 'ChunkLoadError'
+
   useEffect(() => {
     // Log the error to an error reporting service
     console.error(error)
-  }, [error])
+    
+    // 如果是 Chunk Loading 錯誤，嘗試清除快取並重新載入
+    if (isChunkError) {
+      const clearCacheAndReload = async () => {
+        try {
+          if ('caches' in window) {
+            const cacheNames = await caches.keys()
+            await Promise.all(
+              cacheNames.map(cacheName => 
+                caches.delete(cacheName)
+              )
+            )
+          }
+        } catch (cacheError) {
+          console.warn('Cache clearing failed:', cacheError)
+        }
+      }
+      
+      clearCacheAndReload()
+    }
+  }, [error, isChunkError])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-700 to-blue-500 flex items-center justify-center">
@@ -43,27 +68,50 @@ export default function Error({
                 </svg>
               </div>
               <h1 className="text-2xl font-bold text-white mb-2">
-                {t('error.somethingWentWrong')}
+                {isChunkError ? `🔧 ${t('error.chunkLoadError')}` : t('error.somethingWentWrong')}
               </h1>
               <p className="text-gray-300 mb-6">
-                {t('error.tryAgainLater')}
+                {isChunkError 
+                  ? t('error.chunkLoadDescription')
+                  : t('error.tryAgainLater')
+                }
               </p>
             </div>
             
             <div className="space-y-4">
-              <Button
-                onClick={reset}
-                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold"
-              >
-                🔄 {t('button.tryAgain')}
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => router.push('/')}
-                className="w-full border-white/30 bg-white/10 text-white hover:bg-white/20 hover:border-white/50 backdrop-blur-sm font-medium"
-              >
-                🏠 {t('button.backHome')}
-              </Button>
+              {isChunkError ? (
+                <>
+                  <Button
+                    onClick={() => window.location.reload()}
+                    className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold"
+                  >
+                    🔄 {t('error.reloadPage')}
+                  </Button>
+                  <Button
+                    onClick={reset}
+                    variant="outline"
+                    className="w-full border-white/30 bg-white/10 text-white hover:bg-white/20 hover:border-white/50 backdrop-blur-sm font-medium"
+                  >
+                    🛠️ {t('error.chunkRetryFix')}
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button
+                    onClick={reset}
+                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold"
+                  >
+                    🔄 {t('button.tryAgain')}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => router.push('/')}
+                    className="w-full border-white/30 bg-white/10 text-white hover:bg-white/20 hover:border-white/50 backdrop-blur-sm font-medium"
+                  >
+                    🏠 {t('button.backHome')}
+                  </Button>
+                </>
+              )}
             </div>
             
             {process.env.NODE_ENV === 'development' && (

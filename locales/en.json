@@ -22,6 +22,10 @@
   "error.unknown": "Unknown error occurred, please contact technical support",
   "error.notFound": "The page you are looking for was not found",
   "error.serverError": "Server error, please try again later",
+  "error.chunkLoadError": "Loading Error",
+  "error.chunkLoadDescription": "Some website features failed to load, usually due to prolonged browsing. Please reload the page to resolve this issue.",
+  "error.chunkRetryFix": "Try to Fix",
+  "error.reloadPage": "Reload Page",
   
   "nav.home": "Home",
   "nav.about": "About",

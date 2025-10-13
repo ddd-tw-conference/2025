@@ -22,6 +22,10 @@
   "error.unknown": "發生未知錯誤，請聯繫技術支援",
   "error.notFound": "找不到您要的頁面",
   "error.serverError": "伺服器錯誤，請稍後再試",
+  "error.chunkLoadError": "載入錯誤",
+  "error.chunkLoadDescription": "網頁的部分功能載入失敗，通常是由於長時間瀏覽導致。請重新載入頁面即可解決。",
+  "error.chunkRetryFix": "嘗試修復",
+  "error.reloadPage": "重新載入頁面",
   
   "nav.home": "首頁",
   "nav.about": "關於大會",

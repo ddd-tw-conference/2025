@@ -11,6 +11,7 @@ import { ResourcePreloader } from '@/components/resource-preloader'
 import { PageActivityMonitor } from '@/components/page-activity-monitor'
 import PerformanceDashboard from '@/components/performance-dashboard'
 import { SYSTEM_CONFIG } from '@/config/system'
+import { GlobalErrorHandler } from '@/components/global-error-handler'
 import './globals.css'
 
 export default function RootLayout({
@@ -34,6 +35,7 @@ export default function RootLayout({
         className={`${GeistSans.variable} ${GeistMono.variable} font-sans`}
         suppressHydrationWarning={true}
       >
+        <GlobalErrorHandler />
         <WebVitalsReporter />
         <I18nProvider>
           <ResourcePreloader />
