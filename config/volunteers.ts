@@ -78,13 +78,11 @@ export const VOLUNTEER_ROLES: VolunteerRole[] = [
       'zh-tw': [
         "音響設備與麥克風系統管理",
         "投影設備與簡報技術支援",
-        "直播系統監控與故障排除",
         "網路環境維護與WiFi支援"
       ],
       'en': [
         "Audio equipment and microphone system management",
         "Projection equipment and presentation technical support",
-        "Live streaming system monitoring and troubleshooting",
         "Network environment maintenance and WiFi support"
       ]
     },
