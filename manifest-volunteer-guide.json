@@ -1,0 +1,13 @@
+{
+  "name": "引導組志工 - DDD Taiwan 2025",
+  "short_name": "引導組",
+  "description": "DDD Taiwan 2025 引導組志工管理系統",
+  "start_url": "/volunteer/guide",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#8b5cf6",
+  "categories": ["productivity", "business"],
+  "orientation": "portrait-primary",
+  "scope": "/volunteer/guide",
+  "lang": "zh-TW"
+}
