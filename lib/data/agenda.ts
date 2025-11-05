@@ -217,20 +217,6 @@ export const AGENDA_DATA: Session[] = [
         type: "workshop"
       },
       {
-        duration: 20,
-        title: { 'zh-tw': "休息時間 — 專家面對面", 'en': "Break Time — Face-to-Face with Experts" },
-        description: { 
-          'zh-tw': "20 分鐘專家諮詢，現場與專家面對面交流。", 
-          'en': "20-minute expert consultation, on-site face-to-face with experts." 
-        },
-        speakerIds: ["expert-afternoon-hsieh"],
-        keywords: { 
-          'zh-tw': ["專家面對面", "諮詢"], 
-          'en': ["Face-to-Face", "Consultation"] 
-        },
-        type: "break"
-      },
-      {
         duration: 30,
         title: { 'zh-tw': "AI未來與DDD演進", 'en': "AI Future and DDD Evolution" },
         description: { 
@@ -295,20 +281,6 @@ export const AGENDA_DATA: Session[] = [
           'en': ["Context Engineering", "Architectural Thinking", "BDD"] 
         },
         type: "workshop"
-      },
-      {
-        duration: 20,
-        title: { 'zh-tw': "休息時間 — 專家面對面", 'en': "Break Time — Face-to-Face with Experts" },
-        description: { 
-          'zh-tw': "20 分鐘專家快問快答，聚焦技術落地與自動化。", 
-          'en': "20-minute rapid Q&A with experts, focusing on technical delivery and automation." 
-        },
-        speakerIds: ["expert-afternoon-hsieh"],
-        keywords: { 
-          'zh-tw': ["專家面對面", "技術諮詢"], 
-          'en': ["Face-to-Face", "Technical Consultation"] 
-        },
-        type: "break"
       },
       {
         duration: 30,

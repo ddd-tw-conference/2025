@@ -253,7 +253,7 @@ export const SPEAKERS_DATA: SpeakerTopic[] = [
   {
     topic: { 'zh-tw': "專家面對面", 'en': "Face-to-Face with Experts" },
     shortTitle: { 'zh-tw': "專家面對面", 'en': "Face-to-Face" },
-    description: { 'zh-tw': "20 分鐘專家諮詢，安排於上午/下午茶歇。", 'en': "20-minute expert consultation during morning/afternoon breaks." },
+    description: { 'zh-tw': "20 分鐘專家諮詢，安排於上午茶歇。", 'en': "20-minute expert consultation during morning break." },
     color: "orange",
     speakers: [
       {
@@ -272,38 +272,6 @@ export const SPEAKERS_DATA: SpeakerTopic[] = [
           linkedin: "https://linkedin.com/",
           github: "https://github.com/"
         },
-      },
-      {
-        id: "expert-afternoon-hsieh",
-        name: { 'zh-tw': "Duran Hsieh", 'en': "Duran Hsieh" },
-        title: { 'zh-tw': "台積電主任工程師 / GitHub Star", 'en': "TSMC Senior Engineer / GitHub Star" },
-        company: { 'zh-tw': "台積電（TSMC）", 'en': "TSMC (Taiwan Semiconductor Manufacturing Company)" },
-        topic: { 'zh-tw': "專家面對面：AI 輔助開發與 GitHub Hero 的實戰之路", 'en': "Face-to-Face: AI-Assisted Development & GitHub Hero Journey" },
-        content: {
-          'zh-tw': "Duran 將分享他在台積電導入 AI 輔助開發的實戰經驗，以及身為 GitHub Hero 的心路歷程。內容聚焦如何善用 GitHub Copilot 與 DevOps 工具，建立高效率、自動化且安全的軟體交付流程。",
-          'en': "Duran shares his hands-on experience implementing AI-assisted development at TSMC and his journey as a GitHub Hero. The session focuses on leveraging GitHub Copilot and DevOps tools to build efficient, automated, and secure software delivery pipelines."
-        },
-        bio: {
-          'zh-tw': "現任台積電主任工程師，專注於 AI 輔助開發與 DevOps 實務導入。身為台灣首位獲選 GitHub Star 的開發者，長期推動企業軟體現代化、AI 工具應用及開源文化推廣，並著有《GitHub Copilot 讓你寫程式快 10 倍！AI 程式開發大解放》。",
-          'en': "Currently a Senior Engineer at TSMC, Duran focuses on implementing AI-assisted development and DevOps practices. As Taiwan's first GitHub Star, he advocates for software modernization, AI tool adoption, and open-source collaboration. He is also the author of 'GitHub Copilot – Boost Your Coding Speed by 10x'."
-        },
-        image: getOptimizedImagePath("/images/speakers/duran_hsieh.webp"),
-        experience: {
-          'zh-tw': "負責推動企業內 AI 輔助開發與 DevOps 流程，整合 GitHub Copilot 與自動化部署管線，提升研發效能與交付品質。",
-          'en': "Leads AI-assisted development and DevOps initiatives at TSMC, integrating GitHub Copilot and CI/CD automation pipelines to enhance development efficiency and delivery quality."
-        },
-        expertise: {
-          'zh-tw': ["AI 輔助開發", "DevOps 與自動化部署", "軟體現代化與雲端整合"],
-          'en': ["AI-Assisted Development", "DevOps & Automation", "Software Modernization & Cloud Integration"]
-        },
-        achievements: {
-          'zh-tw': ["台灣首位獲選 GitHub Star", "出版《GitHub Copilot 讓你寫程式快 10 倍！AI 程式開發大解放》", "持續推動 AI 開發與開源文化教育"],
-          'en': ["First GitHub Star from Taiwan", "Author of 'GitHub Copilot – Boost Your Coding Speed by 10x'", "Active promoter of AI development and open-source education"]
-        },
-        socialLinks: {
-          linkedin: "https://www.linkedin.com/in/duran-hsieh-4b65a688/",
-          github: "https://github.com/duranhsieh"
-        }
       }
     ],
   }
