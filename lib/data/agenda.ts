@@ -8,7 +8,7 @@ import type { Session } from './types'
 export const AGENDA_DATA: Session[] = [
   {
     time: "09:00 - 12:00",
-    title: { 'zh-tw': "從敘事到塑模", 'en': "From Storytelling to Modeling" },
+    title: { 'zh-tw': "語意為本，架構為體", 'en': "Semantics as Foundation, Architecture as Form" },
     speaker: "陳勉修(Michael)，Sunny Cheng",
     description: { 'zh-tw': "用Domain Storytelling建立跨職能對齊的語意基礎。", 'en': "Building Cross-functional Semantic Foundation with Domain Storytelling." },
     track: { 'zh-tw': "主會場 A", 'en': "Main Hall A" },
@@ -16,10 +16,10 @@ export const AGENDA_DATA: Session[] = [
     segments: [
       {
         duration: 30,
-        title: { 'zh-tw': "領域故事基礎", 'en': "Domain Story Fundamentals" },
+        title: { 'zh-tw': "在 AI 與低碼時代，為什麼系統越快開發、架構卻越難維護？", 'en': "In the AI and Low-Code Era, Why Does Faster Development Lead to Harder-to-Maintain Architecture?" },
         description: { 
-          'zh-tw': "介紹Domain Storytelling的核心概念與實務應用，建立跨職能對齊的語意基礎。", 
-          'en': "Introducing core concepts and practical applications of Domain Storytelling, establishing a common language foundation." 
+          'zh-tw': "在自動化與生成式開發快速崛起的時代，我們必須重新回到「語言」──以語意建模為基礎，設計能隨業務演進而不崩壞的架構。", 
+          'en': "In the era of rapidly rising automation and generative development, we must return to 'language'—using semantic modeling as the foundation to design architectures that can evolve with business without collapsing." 
         },
         speakerIds: ["michael-chen"],
         keywords: { 
@@ -44,10 +44,10 @@ export const AGENDA_DATA: Session[] = [
       },
       {
         duration: 90,
-        title: { 'zh-tw': "從敘事到塑模實作工作坊", 'en': "From Storytelling to Modeling Workshop" },
+        title: { 'zh-tw': "從語意到架構 — AI 協作下的 Domain Storytelling 實作體驗", 'en': "From Semantics to Architecture — Hands-on Domain Storytelling Experience with AI Collaboration" },
         description: { 
-          'zh-tw': "透過實際案例練習Domain Storytelling技法，從故事到模型的轉換過程。", 
-          'en': "Practice Domain Storytelling techniques through real cases, from stories to model transformation." 
+          'zh-tw': "透過 AI 與 Domain Storytelling 的協作，親手體驗如何將語意句轉化為架構邊界，從語言出發打造可演化的系統設計。", 
+          'en': "Through collaboration between AI and Domain Storytelling, experience hands-on how to transform semantic sentences into architectural boundaries, building evolvable system designs starting from language." 
         },
         speakerIds: ["michael-chen"],
         keywords: { 

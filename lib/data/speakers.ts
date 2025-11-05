@@ -14,8 +14,8 @@ import type { SpeakerTopic } from './types'
 
 export const SPEAKERS_DATA: SpeakerTopic[] = [
   {
-    topic: { 'zh-tw': "從敘事到塑模", 'en': "From Storytelling to Modeling" },
-    shortTitle: { 'zh-tw': "AI驅動的DDD戰略實務", 'en': "AI-Driven DDD Strategic Practice" },
+    topic: { 'zh-tw': "語意為本，架構為體", 'en': "Semantics as Foundation, Architecture as Form" },
+    shortTitle: { 'zh-tw': "在 AI 與低碼時代，用語意建模導出可維運的系統設計", 'en': "Semantic Modeling for Maintainable System Design in the AI and Low-Code Era" },
     description: { 'zh-tw': "用Domain Storytelling建立跨職能對齊的語意基礎", 'en': "Building Cross-functional Semantic Foundation with Domain Storytelling" },
     color: "blue",
     speakers: [
@@ -24,7 +24,7 @@ export const SPEAKERS_DATA: SpeakerTopic[] = [
         name: { 'zh-tw': "陳勉修(Michael)", 'en': "Michael" },
         title: { 'zh-tw': "產品處副總經理", 'en': "Deputy General Manager of Product Division" },
         company: { 'zh-tw': "樂屋國際資訊股份有限公司", 'en': "Rakuya International Information Co., Ltd." },
-        topic: { 'zh-tw': "從敘事到塑模", 'en': "From Storytelling to Modeling" },
+        topic: { 'zh-tw': "語意為本，架構為體", 'en': "Semantics as Foundation, Architecture as Form" },
         content: { 'zh-tw': "用Domain Storytelling建立跨職能對齊的語意基礎", 'en': "Building Cross-functional Semantic Foundation with Domain Storytelling" },
         bio: { 'zh-tw': "專注於領域驅動設計與Domain Storytelling應用於軟體工程流程中，促進人跡協作與語意對齊，讓AI工具能真正參與需求建模與架構設計，實現貼近業務語境且可持續演進的軟體工程實踐。", 'en': "Focuses on Domain-Driven Design and Domain Storytelling applications in software engineering processes, promoting human-AI collaboration and semantic alignment, enabling AI tools to truly participate in requirements modeling and architecture design, achieving business-context-oriented and continuously evolving software engineering practices." },
         image: getOptimizedImagePath("/images/speakers/michael.webp"),
