@@ -22,12 +22,12 @@ export default function Header() {
   const closeMenu = () => setIsMenuOpen(false);
 
   const navLinks = [
-    { href: "/tickets", label: t("nav.tickets") },
     { href: "/agenda", label: t("nav.agenda") },
     { href: "/speakers", label: t("nav.speakers") },
     { href: "/transportation", label: t("nav.transportation") },
     { href: "/rules", label: t("nav.rules") },
     { href: "/about", label: t("nav.about") },
+    { href: "/tickets", label: t("nav.tickets") },
   ];
 
   return (
