@@ -4,39 +4,12 @@ import { useState } from "react"
 import Header from "@/components/layout/header"
 import Footer from "@/components/layout/footer"
 import CalendarEvent from "@/components/calendar-event"
-import TicketMarketingSection from "@/components/ticket-marketing-section"
 import { useI18n } from "@/contexts/i18n-context"
-import { AlertDialog, AlertDialogAction, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
-import { isTicketAvailable, isEarlyBirdAvailable, isRegularTicketAvailable, getTicketPurchaseUrl } from "@/config/tickets"
 
 export default function TicketsPage() {
   const { t } = useI18n()
-  const [isEarlyBirdDialogOpen, setIsEarlyBirdDialogOpen] = useState(false)
-  const [isRegularDialogOpen, setIsRegularDialogOpen] = useState(false)
-  
-  // 檢查票券販售狀態
-  const ticketSaleActive = isTicketAvailable()
-  const earlyBirdAvailable = isEarlyBirdAvailable()
-  const regularTicketAvailable = isRegularTicketAvailable()
-
-  // 處理購票按鈕點擊
-  const handleEarlyBirdClick = () => {
-    if (!ticketSaleActive || !earlyBirdAvailable) {
-      setIsEarlyBirdDialogOpen(true)
-    } else {
-      // 導向到 Accupass 購票頁面
-      window.open(getTicketPurchaseUrl(), '_blank')
-    }
-  }
-
-  const handleRegularTicketClick = () => {
-    if (!ticketSaleActive || !regularTicketAvailable) {
-      setIsRegularDialogOpen(true)
-    } else {
-      // 導向到 Accupass 購票頁面
-      window.open(getTicketPurchaseUrl(), '_blank')
-    }
-  }
+  const [] = useState(false)
+  const [] = useState(false)
   
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-700 to-blue-500">
@@ -105,109 +78,59 @@ export default function TicketsPage() {
             </div>
           </div>
 
-          {/* 票券行銷區塊 */}
-          <TicketMarketingSection />
-
           {/* Tickets Section */}
           <div className="space-y-12">
             {/* Ticket Options */}
             <div className="grid md:grid-cols-2 gap-8">
-              {/* Regular Ticket - 移到左邊，使用原早鳥票的絢爛效果 */}
-              <div className="bg-gradient-to-br from-blue-900/60 via-blue-800/50 to-purple-900/60 rounded-xl p-8 backdrop-blur-sm border-2 border-blue-400/50 relative overflow-hidden transform hover:scale-105 transition-all duration-300 shadow-2xl shadow-blue-500/20">
-                {/* Glowing effect */}
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-transparent to-purple-500/10 rounded-xl"></div>
-                
-                {/* Animated border glow */}
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-400/20 via-purple-400/20 to-blue-400/20 bg-[length:200%_200%] animate-pulse"></div>
-                
-                <div className="absolute top-0 right-0 bg-gradient-to-l from-green-500 to-blue-500 text-white px-4 py-1 text-sm font-medium rounded-bl-lg shadow-lg">
-                  <span className="relative z-10">{t("tickets.hotSelling")}</span>
-                </div>
-                
-                {/* 推薦標籤 */}
-                <div className="absolute top-2 left-2 bg-gradient-to-r from-green-400 to-blue-400 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg z-20">
-                  {t("tickets.recommended")}
+              {/* Regular Ticket - 已售罄，使用黯淡效果 */}
+              <div className="bg-slate-800/30 rounded-xl p-8 backdrop-blur-sm border border-slate-600/30 relative overflow-hidden opacity-60">
+                {/* 售罄標籤 */}
+                <div className="absolute top-0 right-0 bg-gray-600 text-gray-300 px-4 py-1 text-sm font-medium rounded-bl-lg shadow-lg">
+                  <span className="relative z-10">{t("tickets.soldOut")}</span>
                 </div>
                 <div className="space-y-6 relative z-10">
                   <div>
-                    <h3 className="text-3xl font-bold bg-gradient-to-r from-blue-200 via-white to-purple-200 bg-clip-text text-transparent mb-2 drop-shadow-lg">{t("tickets.regular")}</h3>
-                    <p className="text-blue-100">{t("tickets.regularDescription")}</p>
+                    <h3 className="text-3xl font-bold text-gray-400 mb-2">{t("tickets.regular")}</h3>
+                    <p className="text-gray-500">{t("tickets.regularDescription")}</p>
                   </div>
                   <div className="space-y-2">
-                    <div className="text-5xl font-bold text-white drop-shadow-lg">
-                      NT$ <span className="bg-gradient-to-r from-blue-300 to-cyan-300 bg-clip-text text-transparent">2,500</span>
+                    <div className="text-5xl font-bold text-gray-400">
+                      NT$ <span className="line-through">2,500</span>
                     </div>
-                    <div className="text-sm text-blue-200">
+                    <div className="text-sm text-gray-500">
                       {t("tickets.standardPrice")}
                     </div>
                   </div>
-                  <ul className="space-y-3 text-blue-100">
+                  <ul className="space-y-3 text-gray-500">
                     <li className="flex items-center">
-                      <svg className="w-5 h-5 text-cyan-400 mr-3 drop-shadow-sm" fill="currentColor" viewBox="0 0 20 20">
+                      <svg className="w-5 h-5 text-gray-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
                       </svg>
                       {t("tickets.fullDayAccess")}
                     </li>
                     <li className="flex items-center">
-                      <svg className="w-5 h-5 text-cyan-400 mr-3 drop-shadow-sm" fill="currentColor" viewBox="0 0 20 20">
+                      <svg className="w-5 h-5 text-gray-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
                       </svg>
                       {t("tickets.afternoonTea")}
                     </li>
                     <li className="flex items-center">
-                      <svg className="w-5 h-5 text-cyan-400 mr-3 drop-shadow-sm" fill="currentColor" viewBox="0 0 20 20">
+                      <svg className="w-5 h-5 text-gray-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
                       </svg>
                       {t("tickets.speakerInteraction")}
                     </li>
                   </ul>
-                  {/* 一般票購買按鈕 - 使用原早鳥票的絢爛效果 */}
-                  {!ticketSaleActive || !regularTicketAvailable ? (
-                    <AlertDialog open={isRegularDialogOpen} onOpenChange={setIsRegularDialogOpen}>
-                      <AlertDialogTrigger asChild>
-                        <button 
-                          onClick={handleRegularTicketClick}
-                          className="w-full bg-gradient-to-r from-blue-500 via-purple-600 to-blue-500 hover:from-blue-600 hover:via-purple-700 hover:to-blue-600 text-white font-bold py-4 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-blue-500/30 bg-[length:200%_200%] hover:bg-[position:right_center] relative overflow-hidden"
-                        >
-                          <span className="relative z-10">{t("tickets.buyRegular")}</span>
-                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 transform translate-x-[-100%] hover:translate-x-[100%] transition-transform duration-1000"></div>
-                        </button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent className="bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-600 shadow-2xl">
-                        <AlertDialogHeader className="text-center">
-                          <div className="flex justify-center mb-4">
-                            <div className="w-16 h-16 bg-yellow-400/20 rounded-full flex items-center justify-center">
-                              <svg className="w-8 h-8 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
-                              </svg>
-                            </div>
-                          </div>
-                          <AlertDialogTitle className="text-white text-xl font-bold">
-                            {t("tickets.notYetAvailable")}
-                          </AlertDialogTitle>
-                          <AlertDialogDescription className="text-gray-300 text-base mt-2 leading-relaxed">
-                            {t("tickets.notYetAvailableMessage")}
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter className="flex justify-center pt-6">
-                          <AlertDialogAction className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-2 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg">
-                            {t("common.confirm")}
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-                  ) : (
-                    <button 
-                      onClick={handleRegularTicketClick}
-                      className="w-full bg-gradient-to-r from-blue-500 via-purple-600 to-blue-500 hover:from-blue-600 hover:via-purple-700 hover:to-blue-600 text-white font-bold py-4 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-blue-500/30 bg-[length:200%_200%] hover:bg-[position:right_center] relative overflow-hidden"
-                    >
-                      <span className="relative z-10">{t("tickets.buyRegular")}</span>
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 transform translate-x-[-100%] hover:translate-x-[100%] transition-transform duration-1000"></div>
-                    </button>
-                  )}
+                  {/* 一般票已售罄按鈕 */}
+                  <button 
+                    disabled
+                    className="w-full bg-gray-600 text-gray-300 font-medium py-4 px-6 rounded-lg cursor-not-allowed relative"
+                  >
+                    {t("tickets.regularSoldOutButton")}
+                  </button>
                   <div className="text-center">
-                    <p className="text-sm text-yellow-300 font-bold drop-shadow-sm">
-                      {ticketSaleActive && regularTicketAvailable ? t("tickets.regularAvailable") : t("tickets.comingSoon")}
+                    <p className="text-sm text-gray-500">
+                      {t("tickets.regularSoldOut")}
                     </p>
                   </div>
                 </div>
