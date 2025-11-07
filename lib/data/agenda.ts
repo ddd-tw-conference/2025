@@ -96,10 +96,10 @@ export const AGENDA_DATA: Session[] = [
     segments: [
       {
         duration: 30,
-        title: { 'zh-tw': "文件即程式碼 (DaC) 自動化核心概念", 'en': "Documentation as Code (DaC) Automation Core Concepts" },
+        title: { 'zh-tw': "文件即程式碼 (DaC)  X 文件驅動開發", 'en': "Documentation as Code (DaC) X Document-Driven Development" },
         description: { 
-          'zh-tw': "探討DaC的核心理念與自動化實作策略，從手動轉向完全自動化的關鍵步驟與最佳實踐。", 
-          'en': "Exploring DaC core concepts and automation implementation strategies, key steps and best practices for transitioning from manual to fully automated processes." 
+          'zh-tw': "探討文件即程式碼（DaC）與文件驅動開發如何結合 AI，打造以文件為核心的開發流程。", 
+          'en': "Exploring how Documentation as Code (DaC) and Document-Driven Development can integrate AI to create document-centric development processes." 
         },
         speakerIds: ["tung"],
         keywords: { 

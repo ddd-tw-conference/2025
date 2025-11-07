@@ -259,7 +259,7 @@ export const SPEAKERS_DATA: SpeakerTopic[] = [
       {
         id: "expert-morning-kao",
         name: { 'zh-tw': "Kim", 'en': "Kim" },
-        title: { 'zh-tw': "AWS Account Manager / Senior Solutions Architect", 'en': "AWS Account Manager / Senior Solutions Architect" },
+        title: { 'zh-tw': "AWS,  Solutions Architecture Manager", 'en': "AWS Solutions Architecture Manager" },
         company: { 'zh-tw': "AWS", 'en': "AWS" },
         topic: { 'zh-tw': "專家面對面（上午）", 'en': "Face-to-Face (Morning)" },
         content: { 'zh-tw': "20 分鐘諮詢：專注雲端軟體架構、可擴展性、成本優化與觀測性實作建議。", 'en': "20-minute consult: focused on cloud software architecture, scalability, cost optimization and practical observability recommendations." },
