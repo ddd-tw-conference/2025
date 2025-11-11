@@ -382,5 +382,22 @@
   "volunteer.registration.title": "報到組",
   "volunteer.guide.title": "引導組", 
   "volunteer.technical.title": "技術組",
-  "volunteer.venue.title": "場地組"
+  "volunteer.venue.title": "場地組",
+
+  "slides.cta.download": "下載投影片",
+  "slides.cta.view": "檢視投影片",
+  "slides.cta.choose": "選擇投影片",
+  "slides.menu.title": "選擇要下載的投影片",
+  "slides.menu.close": "關閉",
+  "slides.speaker.label": "講者：",
+  "slides.notice.viewOnly": "此投影片僅供線上檢視",
+  "slides.unknown-speaker": "講者資訊未提供",
+  "slides.tung.dac-x-document-driven-development": "文件即程式碼 (DaC) X 文件驅動開發",
+  "slides.waterball.bdd-ddd-automation": "BDD+DDD 自動化實踐經驗",
+  "slides.fong-liu.redefining-dx": "開發者體驗重新定義",
+  "slides.ruddy-lee.ai-future-ddd-evolution": "AI 未來與 DDD 演進",
+  "slides.arthur.software-3-0-overview": "軟體 3.0 時代概覽",
+  "slides.stephen-tung.event-sourcing-ai-storage": "事件溯源與 AI 的現代資料儲存",
+  "slides.michael-chen.ai-low-code-architecture": "在 AI 與低碼時代，為什麼系統越快開發、架構卻越難維護？",
+  "slides.sunny-cheng.ddd-comedy-company": "喜劇公司的 DDD 導入歷程"
 }

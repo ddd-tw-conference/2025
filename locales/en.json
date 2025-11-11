@@ -384,5 +384,22 @@
   "volunteer.registration.title": "Registration Team",
   "volunteer.guide.title": "Guide Team",
   "volunteer.technical.title": "Technical Team",
-  "volunteer.venue.title": "Venue Team"
+  "volunteer.venue.title": "Venue Team",
+
+  "slides.cta.download": "Download Slides",
+  "slides.cta.view": "View Slides",
+  "slides.cta.choose": "Choose Slides",
+  "slides.menu.title": "Select slides to download",
+  "slides.menu.close": "Close",
+  "slides.speaker.label": "Speaker: ",
+  "slides.notice.viewOnly": "This slide is view-only",
+  "slides.unknown-speaker": "Speaker information unavailable",
+  "slides.tung.dac-x-document-driven-development": "Documentation as Code (DaC) X Document-Driven Development",
+  "slides.waterball.bdd-ddd-automation": "BDD+DDD Automation Practice Experience",
+  "slides.fong-liu.redefining-dx": "Redefining Developer Experience",
+  "slides.ruddy-lee.ai-future-ddd-evolution": "AI Future and DDD Evolution",
+  "slides.arthur.software-3-0-overview": "Software 3.0 Era Overview",
+  "slides.stephen-tung.event-sourcing-ai-storage": "Event Sourcing and Modern Data Storage for AI",
+  "slides.michael-chen.ai-low-code-architecture": "In the AI and Low-Code Era, Why Does Faster Development Lead to Harder-to-Maintain Architecture?",
+  "slides.sunny-cheng.ddd-comedy-company": "DDD Implementation Journey in a Comedy Company"
 }

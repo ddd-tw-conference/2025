@@ -2,6 +2,8 @@ import React from "react"
 import { X, Clock, Users, Sparkles, Calendar, ChevronRight, User, Tag, BookOpen, Coffee, Wrench } from "lucide-react"
 import { useI18n } from "@/contexts/i18n-context"
 import { getLocalizedText, Session, calculateSessionTimes, SPEAKERS_DATA } from "@/lib/data"
+import { SegmentSlideAction } from "@/components/segment-slide-action"
+import { segmentKeyFromTitle } from "@/lib/segment-key"
 
 interface AgendaLightboxProps {
   open: boolean
@@ -216,6 +218,14 @@ export function AgendaLightbox({ open, onClose, session }: AgendaLightboxProps) 
                               })}
                             </div>
                           </div>
+                        )}
+                        
+                        {/* 投影片下載 - 只在非休息時間顯示 */}
+                        {segment.type !== 'break' && segment.speakerIds.length > 0 && (
+                          <SegmentSlideAction 
+                            segmentKey={segmentKeyFromTitle(segment.title['en'])} 
+                            speakerIds={segment.speakerIds} 
+                          />
                         )}
                         
                         {/* 關鍵字標籤 - 只在非休息時間顯示 */}
