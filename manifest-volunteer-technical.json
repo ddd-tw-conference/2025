@@ -1,0 +1,13 @@
+{
+  "name": "技術組志工 - DDD Taiwan 2025",
+  "short_name": "技術組",
+  "description": "DDD Taiwan 2025 技術組志工管理系統",
+  "start_url": "/volunteer/technical",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#10b981",
+  "categories": ["productivity", "business"],
+  "orientation": "portrait-primary",
+  "scope": "/volunteer/technical",
+  "lang": "zh-TW"
+}
